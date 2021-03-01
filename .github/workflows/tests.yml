@@ -1,0 +1,60 @@
+name: tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  cfn-lint-tests:
+    strategy:
+      max-parallel: 4
+      matrix:
+        python-version: [3.6, 3.7, 3.8]
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      FOLDER: cfn-lint-serverless
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: make -C $FOLDER dev
+      - name: Formatting and Linting
+        run: make -C $FOLDER lint
+      - name: Tests
+        run: make -C $FOLDER test
+      - name: Security baseline
+        run: make -C $FOLDER security-baseline
+      - name: Complexity baseline
+        run: make -C $FOLDER complexity-baseline
+
+  tflint-tests:
+    strategy:
+      max-parallel: 4
+      matrix:
+        golang-version: [1.14, 1.15, 1.16]
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      FOLDER: tflint-ruleset-aws-serverlesss
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Install dependencies
+        run: make -C $FOLDER dev
+      - name: Formatting and Linting
+        run: make -C $FOLDER lint
+      - name: Tests
+        run: make -C $FOLDER test

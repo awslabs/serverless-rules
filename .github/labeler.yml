@@ -1,0 +1,5 @@
+area/cfn-lint:
+  - cfn-lint-serverles/**
+
+area/tflint:
+  - tflint-ruleset-aws-serverless/**
