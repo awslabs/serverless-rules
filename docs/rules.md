@@ -5,7 +5,7 @@ Rules
 
 | Level   | Name                                       | cfn-lint | tflint |
 |---------|--------------------------------------------|----------|--------|
-| Error   | [Lambda Tracing](lambda.md#tracing) | ES1000   | N      |
+| Error   | [Lambda Tracing](lambda.md#tracing)        | ES1000   | Y      |
 
 ## Amazon API Gateway
 

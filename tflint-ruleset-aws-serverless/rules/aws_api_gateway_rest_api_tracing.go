@@ -42,7 +42,7 @@ func (r *AwsAPIGatewayRestStageTracingRule) Link() string {
 	return ""
 }
 
-// Check checks whether "aws_api_gateway_stage" has tracing enabled.
+// Check checks whether "aws_api_gateway_stage" has tracing enabled
 func (r *AwsAPIGatewayRestStageTracingRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
@@ -77,7 +77,5 @@ func (r *AwsAPIGatewayRestStageTracingRule) Check(runner tflint.Runner) error {
 			}
 			return nil
 		})
-
-		return nil
 	})
 }

@@ -42,7 +42,7 @@ func (r *AwsAPIGatewayRestStageLoggingRule) Link() string {
 	return ""
 }
 
-// Check checks whether "aws_api_gateway_stage" has Logging enabled.
+// Check checks whether "aws_api_gateway_stage" has logging enabled
 func (r *AwsAPIGatewayRestStageLoggingRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
