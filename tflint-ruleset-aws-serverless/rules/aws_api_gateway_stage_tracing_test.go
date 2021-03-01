@@ -7,7 +7,7 @@ import (
 	"github.com/terraform-linters/tflint-plugin-sdk/helper"
 )
 
-func Test_AwsAPIGatewayRestStageTracingRule(t *testing.T) {
+func Test_AwsAPIGatewayStageTracingRule(t *testing.T) {
 	cases := []struct {
 		Name     string
 		Content  string
@@ -19,7 +19,7 @@ func Test_AwsAPIGatewayRestStageTracingRule(t *testing.T) {
 resource "aws_api_gateway_stage" "false" {}`,
 			Expected: helper.Issues{
 				{
-					Rule:    NewAwsAPIGatewayRestStageTracingRule(),
+					Rule:    NewAwsAPIGatewayStageTracingRule(),
 					Message: "\"xray_tracing_enabled\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
@@ -37,7 +37,7 @@ resource "aws_api_gateway_stage" "false" {}`,
 		}`,
 			Expected: helper.Issues{
 				{
-					Rule:    NewAwsAPIGatewayRestStageTracingRule(),
+					Rule:    NewAwsAPIGatewayStageTracingRule(),
 					Message: "\"xray_tracing_enabled\" should be set to true.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
@@ -57,7 +57,7 @@ resource "aws_api_gateway_stage" "false" {}`,
 		},
 	}
 
-	rule := NewAwsAPIGatewayRestStageTracingRule()
+	rule := NewAwsAPIGatewayStageTracingRule()
 
 	for _, tc := range cases {
 		runner := helper.TestRunner(t, map[string]string{"resource.tf": tc.Content})

@@ -8,42 +8,42 @@ import (
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
-// AwsAPIGatewayRestStageLoggingRule checks whether "aws_api_gateway_stage" has Logging enabled.
-type AwsAPIGatewayRestStageLoggingRule struct {
+// AwsAPIGatewayStageV2LoggingRule checks whether "aws_api_gateway_stage" has Logging enabled.
+type AwsAPIGatewayStageV2LoggingRule struct {
 	resourceType string
 	blockName    string
 }
 
-// NewAwsAPIGatewayRestStageLoggingRule returns new rule
-func NewAwsAPIGatewayRestStageLoggingRule() *AwsAPIGatewayRestStageLoggingRule {
-	return &AwsAPIGatewayRestStageLoggingRule{
-		resourceType: "aws_api_gateway_stage",
+// NewAwsAPIGatewayStageV2LoggingRule returns new rule
+func NewAwsAPIGatewayStageV2LoggingRule() *AwsAPIGatewayStageV2LoggingRule {
+	return &AwsAPIGatewayStageV2LoggingRule{
+		resourceType: "aws_api_gatewayv2_stage",
 		blockName:    "access_log_settings",
 	}
 }
 
 // Name returns the rule name
-func (r *AwsAPIGatewayRestStageLoggingRule) Name() string {
+func (r *AwsAPIGatewayStageV2LoggingRule) Name() string {
 	return "aws_api_gateway_rest_api_Logging_rule"
 }
 
 // Enabled returns whether the rule is enabled by default
-func (r *AwsAPIGatewayRestStageLoggingRule) Enabled() bool {
+func (r *AwsAPIGatewayStageV2LoggingRule) Enabled() bool {
 	return true
 }
 
 // Severity returns the rule severity
-func (r *AwsAPIGatewayRestStageLoggingRule) Severity() string {
+func (r *AwsAPIGatewayStageV2LoggingRule) Severity() string {
 	return tflint.ERROR
 }
 
 // Link returns the rule reference link
-func (r *AwsAPIGatewayRestStageLoggingRule) Link() string {
+func (r *AwsAPIGatewayStageV2LoggingRule) Link() string {
 	return ""
 }
 
 // Check checks whether "aws_api_gateway_stage" has logging enabled
-func (r *AwsAPIGatewayRestStageLoggingRule) Check(runner tflint.Runner) error {
+func (r *AwsAPIGatewayStageV2LoggingRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
 			Blocks: []hcl.BlockHeaderSchema{

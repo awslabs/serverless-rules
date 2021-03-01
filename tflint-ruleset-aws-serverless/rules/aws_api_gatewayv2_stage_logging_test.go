@@ -7,7 +7,7 @@ import (
 	"github.com/terraform-linters/tflint-plugin-sdk/helper"
 )
 
-func Test_AwsAPIGatewayRestStageLoggingRule(t *testing.T) {
+func Test_AwsAPIGatewayStageV2LoggingRule(t *testing.T) {
 	cases := []struct {
 		Name     string
 		Content  string
@@ -16,16 +16,16 @@ func Test_AwsAPIGatewayRestStageLoggingRule(t *testing.T) {
 		{
 			Name: "missing access_log_settings is invalid",
 			Content: `
-resource "aws_api_gateway_stage" "missing" {
+resource "aws_api_gatewayv2_stage" "missing" {
 }`,
 			Expected: helper.Issues{
 				{
-					Rule:    NewAwsAPIGatewayRestStageLoggingRule(),
+					Rule:    NewAwsAPIGatewayStageV2LoggingRule(),
 					Message: "\"access_log_settings\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 44},
-						End:      hcl.Pos{Line: 2, Column: 44},
+						Start:    hcl.Pos{Line: 2, Column: 46},
+						End:      hcl.Pos{Line: 2, Column: 46},
 					},
 				},
 			},
@@ -33,7 +33,7 @@ resource "aws_api_gateway_stage" "missing" {
 		{
 			Name: "valid",
 			Content: `
-resource "aws_api_gateway_stage" "valid" {
+resource "aws_api_gatewayv2_stage" "valid" {
 	access_log_settings {
 		destination_arn = "ARN"
 		format = "FORMAT"
@@ -43,7 +43,7 @@ resource "aws_api_gateway_stage" "valid" {
 		},
 	}
 
-	rule := NewAwsAPIGatewayRestStageLoggingRule()
+	rule := NewAwsAPIGatewayStageV2LoggingRule()
 
 	for _, tc := range cases {
 		runner := helper.TestRunner(t, map[string]string{"resource.tf": tc.Content})

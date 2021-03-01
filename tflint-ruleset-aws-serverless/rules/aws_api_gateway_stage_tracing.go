@@ -8,42 +8,42 @@ import (
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
-// AwsAPIGatewayRestStageTracingRule checks whether "aws_api_gateway_stage" has tracing enabled.
-type AwsAPIGatewayRestStageTracingRule struct {
+// AwsAPIGatewayStageTracingRule checks whether "aws_api_gateway_stage" has tracing enabled.
+type AwsAPIGatewayStageTracingRule struct {
 	resourceType  string
 	attributeName string
 }
 
-// NewAwsAPIGatewayRestStageTracingRule returns new rule
-func NewAwsAPIGatewayRestStageTracingRule() *AwsAPIGatewayRestStageTracingRule {
-	return &AwsAPIGatewayRestStageTracingRule{
+// NewAwsAPIGatewayStageTracingRule returns new rule
+func NewAwsAPIGatewayStageTracingRule() *AwsAPIGatewayStageTracingRule {
+	return &AwsAPIGatewayStageTracingRule{
 		resourceType:  "aws_api_gateway_stage",
 		attributeName: "xray_tracing_enabled",
 	}
 }
 
 // Name returns the rule name
-func (r *AwsAPIGatewayRestStageTracingRule) Name() string {
+func (r *AwsAPIGatewayStageTracingRule) Name() string {
 	return "aws_api_gateway_rest_api_tracing_rule"
 }
 
 // Enabled returns whether the rule is enabled by default
-func (r *AwsAPIGatewayRestStageTracingRule) Enabled() bool {
+func (r *AwsAPIGatewayStageTracingRule) Enabled() bool {
 	return true
 }
 
 // Severity returns the rule severity
-func (r *AwsAPIGatewayRestStageTracingRule) Severity() string {
+func (r *AwsAPIGatewayStageTracingRule) Severity() string {
 	return tflint.ERROR
 }
 
 // Link returns the rule reference link
-func (r *AwsAPIGatewayRestStageTracingRule) Link() string {
+func (r *AwsAPIGatewayStageTracingRule) Link() string {
 	return ""
 }
 
 // Check checks whether "aws_api_gateway_stage" has tracing enabled
-func (r *AwsAPIGatewayRestStageTracingRule) Check(runner tflint.Runner) error {
+func (r *AwsAPIGatewayStageTracingRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
 			Attributes: []hcl.AttributeSchema{
