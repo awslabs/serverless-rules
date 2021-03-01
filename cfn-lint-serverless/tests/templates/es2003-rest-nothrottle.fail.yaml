@@ -3,9 +3,9 @@ Transform: "AWS::Serverless-2016-10-31"
 
 Resources:
   Api:
-    Type: AWS::Serverless::HttpApi
+    Type: AWS::Serverless::Api
     Properties:
-      AccessLogSettings:
+      AccessLogSetting:
         DestinationArn: " arn:aws:logs:eu-west-1:123456789012:log-group:my-log-group"
         Format: |
           {
@@ -24,7 +24,6 @@ Resources:
             "user_arn" : "$context.identity.userArn",
             "integration_latency": $context.integration.latency
           }
-
       DefinitionBody:
         openapi: "3.0.1"
 
@@ -50,6 +49,7 @@ Resources:
                 type: mock
 
       StageName: prod
-      DefaultRouteSettings:
-        ThrottlingBurstLimit: 1000
-        ThrottlingRateLimit: 10
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+      TracingEnabled: true

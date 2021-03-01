@@ -105,6 +105,54 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
         return matches
 
 
+class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
+    """
+    Ensure API Gateway REST APIs have throttling enabled
+    """
+
+    id = "ES2003"  # noqa: VNE003
+    shortdesc = "API Gateway Throttling"
+    description = "Ensure that API Gateway REST APIs have default throttling limits set."
+    tags = ["apigateway"]
+
+    _message_method_settings = "API Gateway stage {} does not have a default MethodSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."
+    _message_default_route_settings = "API Gateway stage {} does not have a default DefaultRouteSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."
+
+    def match(self, cfn):
+        """
+        Match against API Gateway stages without default throttling
+        """
+
+        matches = []
+
+        # API Gateway REST APIs
+        for key, value in cfn.get_resources(["AWS::ApiGateway::Stage"]).items():
+            print("HI")
+            method_settings = [
+                ms
+                for ms in value.get("Properties", {}).get("MethodSettings", [])
+                if ms.get("HttpMethod") == "*" and ms.get("ResourcePath") == "/*"
+            ] or [{}]
+            default_method_setting = method_settings[0]
+
+            print(default_method_setting)
+
+            if (
+                "ThrottlingBurstLimit" not in default_method_setting
+                or "ThrottlingRateLimit" not in default_method_setting
+            ):
+                matches.append(RuleMatch(["Resources", key], self._message_method_settings.format(key)))
+
+        # API Gateway HTTP APIs
+        for key, value in cfn.get_resources(["AWS::ApiGatewayV2::Stage"]).items():
+            route_settings = value.get("Properties", {}).get("DefaultRouteSettings", {})
+
+            if "ThrottlingBurstLimit" not in route_settings or "ThrottlingRateLimit" not in route_settings:
+                matches.append(RuleMatch(["Resources", key], self._message_default_route_settings.format(key)))
+
+        return matches
+
+
 class ApiGatewayTracingRule(CloudFormationLintRule):
     """
     Ensure API Gateway REST APIs have tracing enabled
@@ -112,10 +160,10 @@ class ApiGatewayTracingRule(CloudFormationLintRule):
 
     id = "ES2002"  # noqa: VNE003
     shortdesc = "API Gateway Tracing"
-    description = "Ensure that API Gateway REST PIs have tracing enabled"
+    description = "Ensure that API Gateway REST APIs have tracing enabled"
     tags = ["apigateway"]
 
-    _message = "API Gateway stage {} does not having the TracingEnabled property set to true."
+    _message = "API Gateway stage {} does not have the TracingEnabled property set to true."
 
     def match(self, cfn):
         """

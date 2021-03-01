@@ -14,15 +14,15 @@ Template = collections.namedtuple("Template", ["filename", "rule", "mode"])
 
 
 def get_templates() -> List[Template]:
-    def parse_filename(folder: str, filename: str) -> Template:
+    def parse_filename(filename: str) -> Template:
         values = filename.split(".")
         rule = values[0].split("-")[0].upper()
         mode = values[1].lower()
 
-        return Template(os.path.join(folder, filename), rule, mode)
+        return Template(filename, rule, mode)
 
     template_folder = os.path.join(os.path.dirname(__file__), "templates")
-    templates = [parse_filename(template_folder, filename) for filename in os.listdir(template_folder)]
+    templates = [parse_filename(filename) for filename in os.listdir(template_folder)]
 
     return templates
 
@@ -54,6 +54,8 @@ def test_template(filename, rule, mode, rules):
     """
     Automatically test all templates in the ./templates/ folder
     """
+
+    filename = os.path.join(os.path.dirname(__file__), "templates", filename)
 
     template = cfnlint.decode.cfn_yaml.load(filename)
     matches = cfnlint.core.run_checks(

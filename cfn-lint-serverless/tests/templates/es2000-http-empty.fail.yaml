@@ -32,3 +32,6 @@ Resources:
                 type: mock
 
       StageName: prod
+      DefaultRouteSettings:
+        ThrottlingBurstLimit: 1000
+        ThrottlingRateLimit: 10
