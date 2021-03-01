@@ -115,8 +115,8 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
     description = "Ensure that API Gateway REST APIs have default throttling limits set."
     tags = ["apigateway"]
 
-    _message_method_settings = "API Gateway stage {} does not have a default MethodSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."
-    _message_default_route_settings = "API Gateway stage {} does not have a default DefaultRouteSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."
+    _message_method_settings = "API Gateway stage {} does not have a default MethodSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."  # noqa: E501
+    _message_default_route_settings = "API Gateway stage {} does not have a default DefaultRouteSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."  # noqa: E501
 
     def match(self, cfn):
         """
