@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  Api:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      AccessLogSettings:
+        DestinationArn: " arn:aws:logs:eu-west-1:123456789012:log-group:my-log-group"
+        Format: |
+          {
+            "stage" : "$context.stage",
+            "request_id" : "$context.requestId",
+            "api_id" : "$context.apiId",
+            "resource_path" : "$context.resourcePath",
+            "resource_id" : "$context.resourceId",
+            "http_method" : "$context.httpMethod",
+            "source_ip" : "$context.identity.sourceIp",
+            "user-agent" : "$context.identity.userAgent",
+            "account_id" : "$context.identity.accountId",
+            "api_key" : "$context.identity.apiKey",
+            "caller" : "$context.identity.caller",
+            "user" : "$context.identity.user",
+            "user_arn" : "$context.identity.userArn",
+            "integration_latency": $context.integration.latency
+          }
+
+      DefinitionBody:
+        openapi: "3.0.1"
+
+        info:
+          title: "test-api"
+          version: 1.0.0
+
+        paths:
+          /:
+            get:
+              responses:
+                "404":
+                  description: "404 File Not Found"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                passthroughBehavior: when_no_match
+                responses:
+                  default:
+                    statusCode: "404"
+                    responseTemplates:
+                      application/json: ""
+                type: mock
+
+      StageName: prod

@@ -1,11 +1,13 @@
-## My Project
+Serverless Rules
+================
 
-TODO: Fill this README out!
+The __Serverless Rules__ are a compilation of rules to validate infrastructure as code template against recommended practices. This currently provides a module for [cfn-lint](https://github.com/aws-cloudformation/cfn-python-lint) and a plugin for [tflint](https://github.com/terraform-linters/tflint).
 
-Be sure to:
+You can find a list of currently supported rules [in the documentation](docs/rules.md).
 
-* Change the title in this README
-* Edit your repository description on GitHub
+## Contributing
+
+See [CONTRIBUTING](CONTRIBUTING.md) to learn how to contribute to this project.
 
 ## Security
 
@@ -13,5 +15,5 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
+This library is licensed under the MIT-0 License. See the [LICENSE](./LICENSE) file.
 
