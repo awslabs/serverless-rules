@@ -5,6 +5,7 @@ Rules for API Gateway resources
 
 import json
 import re
+from typing import List
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
@@ -22,7 +23,7 @@ class ApiGatewayLoggingRule(CloudFormationLintRule):
     _message_access_log_settings = "API Gateway stage {} is missing the AccessLogSetting property."
     _message_destination_arn = "API Gateway stage {} is missing the AccessLogSetting.DestinationArn property."
 
-    def match(self, cfn):
+    def match(self, cfn) -> List[RuleMatch]:
         """
         Match against API Gateway stages without log settings
         """
@@ -118,7 +119,36 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
     _message_method_settings = "API Gateway stage {} does not have a default MethodSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."  # noqa: E501
     _message_default_route_settings = "API Gateway stage {} does not have a default DefaultRouteSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."  # noqa: E501
 
-    def match(self, cfn):
+    def _match_rest_api(self, key: str, value: dict) -> List[RuleMatch]:
+        """
+        Match for REST API
+        """
+
+        method_settings = [
+            ms
+            for ms in value.get("Properties", {}).get("MethodSettings", [])
+            if ms.get("HttpMethod") == "*" and ms.get("ResourcePath") == "/*"
+        ] or [{}]
+        default_method_setting = method_settings[0]
+
+        if "ThrottlingBurstLimit" not in default_method_setting or "ThrottlingRateLimit" not in default_method_setting:
+            return [RuleMatch(["Resources", key], self._message_method_settings.format(key))]
+
+        return []
+
+    def _match_http_api(self, key: str, value: dict) -> List[RuleMatch]:
+        """
+        Match for HTTP API
+        """
+
+        route_settings = value.get("Properties", {}).get("DefaultRouteSettings", {})
+
+        if "ThrottlingBurstLimit" not in route_settings or "ThrottlingRateLimit" not in route_settings:
+            return [RuleMatch(["Resources", key], self._message_default_route_settings.format(key))]
+
+        return []
+
+    def match(self, cfn) -> List[RuleMatch]:
         """
         Match against API Gateway stages without default throttling
         """
@@ -127,28 +157,11 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
 
         # API Gateway REST APIs
         for key, value in cfn.get_resources(["AWS::ApiGateway::Stage"]).items():
-            print("HI")
-            method_settings = [
-                ms
-                for ms in value.get("Properties", {}).get("MethodSettings", [])
-                if ms.get("HttpMethod") == "*" and ms.get("ResourcePath") == "/*"
-            ] or [{}]
-            default_method_setting = method_settings[0]
-
-            print(default_method_setting)
-
-            if (
-                "ThrottlingBurstLimit" not in default_method_setting
-                or "ThrottlingRateLimit" not in default_method_setting
-            ):
-                matches.append(RuleMatch(["Resources", key], self._message_method_settings.format(key)))
+            matches.extend(self._match_rest_api(key, value))
 
         # API Gateway HTTP APIs
         for key, value in cfn.get_resources(["AWS::ApiGatewayV2::Stage"]).items():
-            route_settings = value.get("Properties", {}).get("DefaultRouteSettings", {})
-
-            if "ThrottlingBurstLimit" not in route_settings or "ThrottlingRateLimit" not in route_settings:
-                matches.append(RuleMatch(["Resources", key], self._message_default_route_settings.format(key)))
+            matches.extend(self._match_http_api(key, value))
 
         return matches
 
