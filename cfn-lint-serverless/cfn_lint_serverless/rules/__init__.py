@@ -5,6 +5,7 @@ from .api_gateway import (
     ApiGatewayTracingRule,
 )
 from .lambda_ import LambdaTracingRule
+from .step_functions import StepFunctionsTracingRule
 
 __all__ = [
     "ApiGatewayLoggingRule",
@@ -12,4 +13,5 @@ __all__ = [
     "ApiGatewayDefaultThrottlingRule",
     "ApiGatewayTracingRule",
     "LambdaTracingRule",
+    "StepFunctionsTracingRule",
 ]

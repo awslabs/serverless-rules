@@ -12,7 +12,7 @@ class LambdaTracingRule(CloudFormationLintRule):
     """
 
     id = "WS1000"  # noqa: VNE003
-    shortdesc = "Lambda Logging"
+    shortdesc = "Lambda Tracing"
     description = "Ensure that Lambda functions have tracing enabled"
     tags = ["lambda"]
 

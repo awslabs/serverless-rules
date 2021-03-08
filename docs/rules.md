@@ -51,7 +51,7 @@ Rules
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | Step Functions Tracing                                              |          |        |
+| Warning | Step Functions Tracing                                              | WS5000   |        |
 
 ## Amazon SQS
 
