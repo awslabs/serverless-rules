@@ -5,7 +5,7 @@ Rules
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | [Lambda Tracing](lambda.md#tracing)                                 | ES1000   | Y      |
+| Warning | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | Y      |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
 | Warning | Lambda Star Permissions                                             |          |        |
@@ -23,7 +23,7 @@ Rules
 |---------|---------------------------------------------------------------------|----------|--------|
 | Error   | [API Gateway Logging](api_gateway.md#logging)                       | ES2000   | Y      |
 | Warning | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   |        |
-| Error   | [API Gateway Tracing](api_gateway.md#tracing)                       | ES2002   | Y      |
+| Warning | [API Gateway Tracing](api_gateway.md#tracing)                       | WS2002   | Y      |
 | Warning | [API Gateway Default Throttling](api_gateway.md#default-throttling) | ES2003   |        |
 
 ## Amazon API Gateway HTTP APIs

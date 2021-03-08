@@ -34,7 +34,7 @@ func (r *AwsAPIGatewayStageTracingRule) Enabled() bool {
 
 // Severity returns the rule severity
 func (r *AwsAPIGatewayStageTracingRule) Severity() string {
-	return tflint.ERROR
+	return tflint.WARNING
 }
 
 // Link returns the rule reference link

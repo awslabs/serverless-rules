@@ -11,7 +11,7 @@ class LambdaTracingRule(CloudFormationLintRule):
     Ensure Lambda functions have tracing enabled
     """
 
-    id = "ES1000"  # noqa: VNE003
+    id = "WS1000"  # noqa: VNE003
     shortdesc = "Lambda Logging"
     description = "Ensure that Lambda functions have tracing enabled"
     tags = ["lambda"]

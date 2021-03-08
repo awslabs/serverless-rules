@@ -171,7 +171,7 @@ class ApiGatewayTracingRule(CloudFormationLintRule):
     Ensure API Gateway REST APIs have tracing enabled
     """
 
-    id = "ES2002"  # noqa: VNE003
+    id = "WS2002"  # noqa: VNE003
     shortdesc = "API Gateway Tracing"
     description = "Ensure that API Gateway REST APIs have tracing enabled"
     tags = ["apigateway"]
