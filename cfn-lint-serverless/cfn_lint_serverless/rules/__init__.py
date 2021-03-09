@@ -5,6 +5,7 @@ from .api_gateway import (
     ApiGatewayTracingRule,
 )
 from .appsync import AppSyncTracingRule
+from .eventbridge import EventBridgeDLQRule
 from .lambda_ import LambdaTracingRule
 from .step_functions import StepFunctionsTracingRule
 
@@ -14,6 +15,7 @@ __all__ = [
     "ApiGatewayDefaultThrottlingRule",
     "ApiGatewayTracingRule",
     "AppSyncTracingRule",
+    "EventBridgeDLQRule",
     "LambdaTracingRule",
     "StepFunctionsTracingRule",
 ]
