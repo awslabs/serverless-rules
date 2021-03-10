@@ -32,3 +32,33 @@ class LambdaTracingRule(CloudFormationLintRule):
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
         return matches
+
+
+class LambdaESMDestinationRule(CloudFormationLintRule):
+    """
+    Ensure Lambda event source mappings have a destination configured
+    """
+
+    id = "ES1001"  # noqa: VNE003
+    shortdesc = "Lambda Event Source Mapping Destination"
+    description = "Ensure Lambda event source mappings have a destination configured"
+    tags = ["lambda"]
+
+    _message = "Lambda event source mapping {} should have a DestinationConfig.OnFailure.Destination property."
+
+    def match(self, cfn):
+        """
+        Match against Event Source Mappings without a destination configured
+        """
+
+        matches = []
+
+        for key, value in cfn.get_resources(["AWS::Lambda::EventSourceMapping"]).items():
+            destination = (
+                value.get("Properties", {}).get("DestinationConfig", {}).get("OnFailure", {}).get("Destination", False)
+            )
+
+            if not destination:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches

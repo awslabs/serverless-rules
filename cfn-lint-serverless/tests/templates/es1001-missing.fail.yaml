@@ -1,0 +1,10 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  EventSourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties:
+      Enabled: false
+      FunctionName: my-function
+      EventSourceArn:  arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream
+      StartingPosition: LATEST
