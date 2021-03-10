@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Runtime: python3.8
+      Handler: main.handler
+      Tracing: Active
+      CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:codesigningconfig:config-id
+
+  Permission1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Function.Arn
+      Principal: sns.amazonaws.com
+      Action: lambda:Invoke
+      SourceArn: arn:aws:sns:us-east-1:111122223333:topic3
+
+  Permission2:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref Function
+      Principal: events.amazonaws.com
+      Action: lambda:Invoke
+      SourceArn:  arn:aws:events:us-east-1:111122223333:rule/my-rule
