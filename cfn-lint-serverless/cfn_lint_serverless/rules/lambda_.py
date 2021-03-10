@@ -62,3 +62,31 @@ class LambdaESMDestinationRule(CloudFormationLintRule):
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
         return matches
+
+
+class LambdaCodeSigningRule(CloudFormationLintRule):
+    """
+    Ensure Lambda functions have code signing enabled
+    """
+
+    id = "WS1002"  # noqa: VNE003
+    shortdesc = "Lambda Code Signing"
+    description = "Ensure Lambda functions have code signing enabled"
+    tags = ["lambda"]
+
+    _message = "Lambda function {} should have a CodeSigningConfigArn property."
+
+    def match(self, cfn):
+        """
+        Match against Lambda functions without CodeSigningConfigArn
+        """
+
+        matches = []
+
+        for key, value in cfn.get_resources(["AWS::Lambda::Function"]).items():
+            code_signing = value.get("Properties", {}).get("CodeSigningConfigArn", False)
+
+            if not code_signing:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches

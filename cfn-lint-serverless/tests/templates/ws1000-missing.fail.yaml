@@ -8,3 +8,4 @@ Resources:
       CodeUri: .
       Runtime: python3.8
       Handler: main.handler
+      CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:codesigningconfig:config-id 

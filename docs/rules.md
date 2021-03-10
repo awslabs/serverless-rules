@@ -6,7 +6,8 @@ Rules
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
 | Warning | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | Y      |
-| Error   | EventSourceMapping No Failure Destination                           | ES1001   |        |
+| Error   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   |        |
+| Info    | Lambda Code Signing                                                 | IS1002   |        |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
 | Warning | Lambda Star Permissions                                             |          |        |
