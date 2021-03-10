@@ -6,6 +6,7 @@ Rules
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
 | Warning | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | Y      |
+| Error   | EventSourceMapping No Failure Destination                           | ES1001   |        |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
 | Warning | Lambda Star Permissions                                             |          |        |
@@ -14,7 +15,6 @@ Rules
 | Error   | Async Lambda No Failure Destination                                 |          |        |
 | Warning | Sync Lambda No Duration Alarm                                       |          |        |
 | Warning | Sync Lambda With Destination                                        |          |        |
-| Error   | EventSourceMapping No Failure Destination                           |          |        |
 | Error   | SQS Lambda ReservedConcurrency < 5                                  |          |        |
 
 ## Amazon API Gateway REST APIs
@@ -38,13 +38,13 @@ Rules
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | AppSync Tracing                                                     |          |        |
+| Error   | AppSync Tracing                                                     | WS3000   |        |
 
 ## Amazon EventBridge
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Warning | EventBridge Rule No DLQ                                             |          |        |
+| Error   | EventBridge Rule No DLQ                                             | ES4000   |        |
 | Info    | EventBridge Bus No Rule                                             |          |        |
 
 ## Amazon Step Functions
@@ -57,7 +57,7 @@ Rules
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Warning | SQS Queue No DLQ                                                    |          |        |
+| Error   | SQS Queue No DLQ                                                    |          |        |
 
 ## Amazon SNS
 
