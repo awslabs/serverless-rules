@@ -68,10 +68,8 @@ def test_template(filename, rule, mode, rules):
 
     match_ids = [match.rule.id for match in matches]
 
+    # No non-serverless errors
+    assert len([m for m in match_ids if m[1] != "S"]) == 0
+
     if mode == "fail":
-        # In case of a failure, there should be only one rule matching,
-        # otherwise the test might not be scoped properly.
-        assert match_ids == [rule]
-    else:
-        # In case of a pass, there shouldn't be any error.
-        assert match_ids == []
+        assert rule in match_ids

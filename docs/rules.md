@@ -9,9 +9,9 @@ Rules
 | Error   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   |        |
 | Warning | Lambda Permission Principals                                        | WS1002   |        |
 | Warning | Lambda Star Permissions                                             | WS1003   |        |
+| Warning | Lambda Log Retention                                                | WS1004   |        |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
-| Warning | Lambda LogGroup No Retention                                        |          |        |
 | Error   | Async Lambda No Failure Destination                                 |          |        |
 | Warning | Sync Lambda No Duration Alarm                                       |          |        |
 | Warning | Sync Lambda With Destination                                        |          |        |

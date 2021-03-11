@@ -8,6 +8,7 @@ from .appsync import AppSyncTracingRule
 from .eventbridge import EventBridgeDLQRule
 from .lambda_ import (
     LambdaESMDestinationRule,
+    LambdaLogRetentionRule,
     LambdaPermissionPrincipalsRule,
     LambdaStarPermissionRule,
     LambdaTracingRule,
@@ -22,6 +23,7 @@ __all__ = [
     "AppSyncTracingRule",
     "EventBridgeDLQRule",
     "LambdaESMDestinationRule",
+    "LambdaLogRetentionRule",
     "LambdaPermissionPrincipalsRule",
     "LambdaStarPermissionRule",
     "LambdaTracingRule",
