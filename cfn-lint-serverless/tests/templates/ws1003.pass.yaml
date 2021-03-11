@@ -10,28 +10,53 @@ Resources:
       Handler: main.handler
       Tracing: Active
       CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:codesigningconfig:config-id
-      Events:
-        Topic1:
-          Type: SNS
-          Properties:
-            Topic: arn:aws:sns:us-east-1:111122223333:topic1
-        Topic2:
-          Type: SNS
-          Properties:
-            Topic: arn:aws:sns:us-east-1:111122223333:topic2
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: my-table
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: s3:GetObject
+              Resource: "arn:aws:s3:::my-bucket/*"
 
-  Permission1:
-    Type: AWS::Lambda::Permission
+  Role:
+    Type: AWS::IAM::Role
     Properties:
-      FunctionName: !GetAtt Function.Arn
-      Principal: sns.amazonaws.com
-      Action: lambda:Invoke
-      SourceArn: arn:aws:sns:us-east-1:111122223333:topic3
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: MyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:GetObject
+                Resource: "arn:aws:s3:::my-bucket/*"
 
-  Permission2:
-    Type: AWS::Lambda::Permission
+  NonLambdaRole:
+    Type: AWS::IAM::Role
     Properties:
-      FunctionName: !Ref Function
-      Principal: sns.amazonaws.com
-      Action: lambda:Invoke
-      SourceArn: arn:aws:sns:us-east-1:111122223333:topic4
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: MyPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: s3:*
+                Resource: "arn:aws:s3:::my-bucket/*"

@@ -4,6 +4,7 @@ Rules for Lambda resources
 
 
 from collections import defaultdict
+from typing import List
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
@@ -66,40 +67,12 @@ class LambdaESMDestinationRule(CloudFormationLintRule):
         return matches
 
 
-class LambdaCodeSigningRule(CloudFormationLintRule):
-    """
-    Ensure Lambda functions have code signing enabled
-    """
-
-    id = "WS1002"  # noqa: VNE003
-    shortdesc = "Lambda Code Signing"
-    description = "Ensure Lambda functions have code signing enabled"
-    tags = ["lambda"]
-
-    _message = "Lambda function {} should have a CodeSigningConfigArn property."
-
-    def match(self, cfn):
-        """
-        Match against Lambda functions without CodeSigningConfigArn
-        """
-
-        matches = []
-
-        for key, value in cfn.get_resources(["AWS::Lambda::Function"]).items():
-            code_signing = value.get("Properties", {}).get("CodeSigningConfigArn", False)
-
-            if not code_signing:
-                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
-
-        return matches
-
-
 class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
     """
     Ensure that Lambda functions do not have Lambda permissions with different principals
     """
 
-    id = "WS1003"  # noqa: VNE003
+    id = "WS1002"  # noqa: VNE003
     shortdesc = "Lambda Permission Principals"
     description = "Ensure that Lambda functions do not have Lambda permissions with different principals"
     tags = ["lambda"]
@@ -139,6 +112,69 @@ class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
 
         for key, value in self._get_permissions(cfn).items():
             if len(set(value)) > 1:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches
+
+
+class LambdaStarPermissionRule(CloudFormationLintRule):
+    """
+    Ensure that Lambda functions don't have stars in IAM policy actions
+    """
+
+    id = "WS1003"  # noqa: VNE003
+    shortdesc = "Lambda Star Permission"
+    description = "Ensure that Lambda functions don't have stars in IAM policy actions"
+    tags = ["lambda"]
+
+    _message = "IAM Role {} with Lambda as principal has policy actions with stars"
+
+    def _get_principals(self, properties) -> List[str]:
+        principals = []
+
+        for statement in properties.get("AssumeRolePolicyDocument", {}).get("Statement", []):
+            if "Service" not in statement.get("Principal", {}):
+                continue
+
+            services = statement.get("Principal", {}).get("Service")
+
+            if isinstance(services, str):
+                principals.append(services)
+            elif isinstance(services, list):
+                principals.extend(services)
+            # Ignored for now if it's not a list of str
+
+        return principals
+
+    def _get_actions(self, properties) -> List[str]:
+        """"""
+        actions = []
+
+        for policy in properties.get("Policies", []):
+            for statement in policy.get("PolicyDocument", {}).get("Statement", []):
+
+                action = statement.get("Action")
+
+                if isinstance(action, str):
+                    actions.append(action)
+                elif isinstance(action, list):
+                    actions.extend(action)
+                # Ignored for now if it's not a list of str
+
+        return actions
+
+    def match(self, cfn):
+        """
+        Match against IAM roles with Lambda as principal and stars in actions
+        """
+
+        matches = []
+
+        for key, value in cfn.get_resources(["AWS::IAM::Role"]).items():
+            principals = self._get_principals(value.get("Properties", {}))
+            actions = self._get_actions(value.get("Properties", {}))
+
+            if "lambda.amazonaws.com" in principals and any(["*" in a for a in actions]):
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
         return matches

@@ -7,11 +7,10 @@ Rules
 |---------|---------------------------------------------------------------------|----------|--------|
 | Warning | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | Y      |
 | Error   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   |        |
-| Info    | Lambda Code Signing                                                 | IS1002   |        |
-| Warning | Lambda Permission Principals                                        | WS1003   |        |
+| Warning | Lambda Permission Principals                                        | WS1002   |        |
+| Warning | Lambda Star Permissions                                             | WS1003   |        |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
-| Warning | Lambda Star Permissions                                             |          |        |
 | Warning | Lambda LogGroup No Retention                                        |          |        |
 | Error   | Async Lambda No Failure Destination                                 |          |        |
 | Warning | Sync Lambda No Duration Alarm                                       |          |        |
