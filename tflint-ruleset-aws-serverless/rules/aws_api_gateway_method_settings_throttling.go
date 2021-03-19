@@ -126,29 +126,6 @@ func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Check(runner tflint.Runner) 
 			}
 		}
 
-		// Break early if we're missing one of the two attributes
-		if !burstOk || !rateOk {
-			return nil
-		}
-
-		return runner.EnsureNoError(err, func() error {
-			if throttlingBurstLimit == -1 {
-				runner.EmitIssueOnExpr(
-					r,
-					"\"throttling_burst_limit\" should have a value different than -1.",
-					throttlingBurstLimitAttribute.Expr,
-				)
-			}
-
-			if throttlingRateLimit == -1 {
-				runner.EmitIssueOnExpr(
-					r,
-					"\"throttling_rate_limit\" should have a value different than -1.",
-					throttlingRateLimitAttribute.Expr,
-				)
-			}
-
-			return nil
-		})
+		return nil
 	})
 }
