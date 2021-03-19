@@ -12,9 +12,10 @@ func main() {
 			Name:    "aws-serverless",
 			Version: "0.1.0",
 			Rules: []tflint.Rule{
+				rules.NewAwsAPIGatewayMethodSettingsThrottlingRule(),
 				rules.NewAwsAPIGatewayStageLoggingRule(),
-				rules.NewAwsAPIGatewayStageV2LoggingRule(),
 				rules.NewAwsAPIGatewayStageTracingRule(),
+				rules.NewAwsAppsyncGraphqlAPITracingRule(),
 				rules.NewAwsLambdaFunctionTracingRule(),
 			},
 		},
