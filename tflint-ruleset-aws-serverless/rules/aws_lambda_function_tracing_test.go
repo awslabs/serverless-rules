@@ -1,7 +1,6 @@
 package rules
 
 import (
-	"fmt"
 	"testing"
 
 	hcl "github.com/hashicorp/hcl/v2"
@@ -21,7 +20,7 @@ resource "aws_lambda_function" "this" {}`,
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsLambdaFunctionTracingRule(),
-					Message: fmt.Sprintf("\"tracing_config\" is not present."),
+					Message: "\"tracing_config\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
 						Start:    hcl.Pos{Line: 2, Column: 39},
@@ -39,7 +38,7 @@ resource "aws_lambda_function" "this" {}`,
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsLambdaFunctionTracingRule(),
-					Message: fmt.Sprintf("\"tracing_config.mode\" is not present."),
+					Message: "\"tracing_config.mode\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
 						Start:    hcl.Pos{Line: 3, Column: 19},
@@ -59,7 +58,7 @@ resource "aws_lambda_function" "this" {
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsLambdaFunctionTracingRule(),
-					Message: fmt.Sprintf("\"tracing_config.mode\" should be set to Active."),
+					Message: "\"tracing_config.mode\" should be set to Active.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
 						Start:    hcl.Pos{Line: 4, Column: 10},

@@ -32,7 +32,7 @@ Rules
 |---------|---------------------------------------------------------------------|----------|--------|
 | Error   | [API Gateway Logging](api_gateway.md#logging)                       | ES2000   | Y      |
 | Warning | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   |        |
-| Warning | [API Gateway Default Throttling](api_gateway.md#default-throttling) | ES2003   |        |
+| Warning | [API Gateway Default Throttling](api_gateway.md#default-throttling) | ES2003   | Y      |
 
 ## AWS AppSync
 
