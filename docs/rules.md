@@ -38,7 +38,7 @@ Rules
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | AppSync Tracing                                                     | WS3000   |        |
+| Error   | AppSync Tracing                                                     | WS3000   | Y      |
 
 ## Amazon EventBridge
 
