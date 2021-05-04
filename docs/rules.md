@@ -1,6 +1,16 @@
 Rules
 =====
 
+## Rule levels
+
+A rule can have one of the follow three rule levels: Error, Warning, or Info.
+
+An __Error__ level for a rule means this is a recommended practice for the vast majority of circumstances.
+
+A __Warning__ level means that this is a recommended practice, but you can achieve similar results through a different implementation. For example, you can create alarms through [third party offering](https://aws.amazon.com/lambda/partners/), rather than using AWS CloudWatch.
+
+An __Info__ level means that this does not necessarily align with recommended practices, but can point out potential issues or misconfiguration. For example, an Amazon EventBridge event bus without any rules associated to it, as you might create those rules throught a different template.
+
 ## AWS Lambda
 
 | Level   | Name                                                                | cfn-lint | tflint |
