@@ -23,3 +23,7 @@ complexity-baseline:
 	poetry run xenon --max-absolute C --max-modules A --max-average A cfn_lint_serverless
 
 pr: lint test security-baseline complexity-baseline
+
+release:
+	poetry build
+	poetry publish

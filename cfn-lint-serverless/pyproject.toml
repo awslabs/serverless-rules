@@ -3,6 +3,7 @@ name = "cfn_lint_serverless"
 version = "0.1.0"
 description = "Serverless rules for cfn-lint"
 authors = ["Amazon Web Services"]
+readme = "README.md"
 license = "MIT-0"
 
 [tool.poetry.dependencies]
