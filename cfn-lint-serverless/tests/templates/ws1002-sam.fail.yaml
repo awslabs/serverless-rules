@@ -9,7 +9,7 @@ Resources:
       Runtime: python3.8
       Handler: main.handler
       Tracing: Active
-      CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:codesigningconfig:config-id
+      CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:code-signing-config:csc-d0a6cc682193458f9
 
   Permission1:
     Type: AWS::Lambda::Permission
