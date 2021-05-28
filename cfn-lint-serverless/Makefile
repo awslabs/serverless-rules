@@ -11,7 +11,10 @@ lint: format
 	poetry run flake8 cfn_lint_serverless/* tests/*
 
 test:
-	poetry run pytest -vvv --cov=./ --cov-report=xml
+	PYTHONPATH=".:$$PYTHONPATH" poetry run pytest -vvv --cov=./ --cov-report=xml
+
+test-template:
+	PYTHONPATH=".:$$PYTHONPATH" cfn-lint $(TEMPLATE) -a cfn_lint_serverless.rules
 
 security-baseline:
 	poetry run bandit --baseline bandit.baseline -r cfn_lint_serverless
