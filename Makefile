@@ -1,10 +1,16 @@
 CFN_LINT = cfn-lint-serverless
 TFLINT = tflint-ruleset-aws-serverless
+EXAMPLES = examples
 
 dev:
-	make -C $(CFN_LINT) dev
-	make -C $(TFLINT) dev
+	$(MAKE) -C $(CFN_LINT) dev
+	$(MAKE) -C $(TFLINT) dev
 
 pr:
-	make -C $(CFN_LINT) pr
-	make -C $(TFLINT) pr
+	$(MAKE) -C $(CFN_LINT) pr
+	$(MAKE) -C $(TFLINT) pr
+
+test:
+	$(MAKE) -C $(CFN_LINT) test
+	$(MAKE) -C $(TFLINT) test
+	$(MAKE) -C $(EXAMPLES) test
