@@ -28,5 +28,6 @@ complexity-baseline:
 pr: lint test security-baseline complexity-baseline
 
 release:
-	poetry build
-	poetry publish
+	poetry build -n
+	poetry config pypi-token.pypi ${PYPI_TOKEN}
+	poetry publish -n
