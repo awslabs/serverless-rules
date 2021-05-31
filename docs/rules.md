@@ -48,20 +48,20 @@ An __Info__ level means that this does not necessarily align with recommended pr
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | AppSync Tracing                                                     | WS3000   | Y      |
+| Error   | [AppSync Tracing](appsync.md#tracing) | WS3000   | Y      |
 
 ## Amazon EventBridge
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Error   | EventBridge Rule No DLQ                                             | ES4000   |        |
+| Error   | [EventBridge Rule No DLQ](eventbridge.md#rule-without-dlq) | ES4000   |        |
 | Info    | EventBridge Bus No Rule                                             |          |        |
 
 ## Amazon Step Functions
 
 | Level   | Name                                                                | cfn-lint | tflint |
 |---------|---------------------------------------------------------------------|----------|--------|
-| Warning | Step Functions Tracing                                              | WS5000   |        |
+| Warning | [Step Functions Tracing](step_functions.md#tracing) | WS5000   |        |
 
 ## Amazon SQS
 
