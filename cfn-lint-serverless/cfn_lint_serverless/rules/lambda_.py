@@ -224,14 +224,7 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
         Return the function reference from a LogGroupName Sub intrinsic function
         """
 
-        if "Fn::Sub" in log_group_sub:
-            log_group_name = log_group_sub["Fn::Sub"]
-        elif "Sub" in log_group_sub:
-            log_group_name = log_group_sub["Sub"]
-        else:
-            return None
-
-        match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_name)
+        match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_sub)
 
         if match is not None:
             return ("ref", match["func"])
