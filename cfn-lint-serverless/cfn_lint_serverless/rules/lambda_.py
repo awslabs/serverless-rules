@@ -182,7 +182,7 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
             principals = self._get_principals(value.get("Properties", {}))
             actions = self._get_actions(value.get("Properties", {}))
 
-            if "lambda.amazonaws.com" in principals and any(["*" in a for a in actions]):
+            if "lambda.amazonaws.com" in principals and any([a == "*" or ":*" in a for a in actions]):
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
         return matches

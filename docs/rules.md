@@ -17,9 +17,9 @@ An __Info__ level means that this does not necessarily align with recommended pr
 |---------|---------------------------------------------------------------------|----------|--------|
 | Warning | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | Y      |
 | Error   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   |        |
-| Warning | Lambda Permission Principals                                        | WS1002   |        |
-| Warning | Lambda Star Permissions                                             | WS1003   |        |
-| Warning | Lambda Log Retention                                                | WS1004   |        |
+| Warning | [Lambda Permission Multiple Principals](lambda.md#permission-multiple-principals) | WS1002   |        |
+| Warning | [Lambda Star Permissions](lambda.md#star-permissions) | WS1003   |        |
+| Warning | [Lambda Log Retention](lambda.md#log-retention) | WS1004   |        |
 | Error   | Lambda Deprecated Runtime                                           |          |        |
 | Error   | Lambda No Error Alarm                                               |          |        |
 | Error   | Async Lambda No Failure Destination                                 |          |        |
