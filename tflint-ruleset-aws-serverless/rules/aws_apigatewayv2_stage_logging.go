@@ -24,7 +24,7 @@ func NewAwsAPIGatewayStageV2LoggingRule() *AwsAPIGatewayStageV2LoggingRule {
 
 // Name returns the rule name
 func (r *AwsAPIGatewayStageV2LoggingRule) Name() string {
-	return "aws_api_gateway_rest_api_Logging_rule"
+	return "aws_apigatewayv2_stage_logging_rule"
 }
 
 // Enabled returns whether the rule is enabled by default

@@ -5,6 +5,10 @@ The __Serverless Rules__ are a compilation of rules to validate infrastructure a
 
 You can find a list of currently supported rules [in the documentation](docs/rules.md).
 
+## Usage guide
+
+
+
 ## Contributing
 
 See [CONTRIBUTING](CONTRIBUTING.md) to learn how to contribute to this project.

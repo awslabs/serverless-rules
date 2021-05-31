@@ -5,7 +5,7 @@ Amazon API Gateway Rules
 
 * __Level__: Error
 * __cfn-lint__: ES2003
-* __tflint (REST APIs)__: aws_api_gateay_method_settings_throttling_rule
+* __tflint (REST APIs)__: aws_apigateway_stage_throttling_rule
 * __tflint (HTTP APIs)__: aws_apigatewayv2_stage_throttling_rule
 
 Amazon API Gateway supports defining default limits for an API to prevent it from being overwhelmed by too many requests. This uses a [token bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket), where a token counts for a single request.
@@ -19,8 +19,8 @@ __See:__
 
 * __Level__: Error
 * __cfn-lint__: ES2000
-* __tflint (REST APIs)__: aws_api_gateway_rest_api_Logging_rule
-* __tflint (HTTP APIs)__: aws_api_gateway_rest_api_Logging_rule
+* __tflint (REST APIs)__: aws_apigateway_stage_logging_rule
+* __tflint (HTTP APIs)__: aws_apigatewayv2_stage_logging_rule
 
 Amazon API Gateway can send logs to Amazon CloudWatch Logs and Amazon Kinesis Data Firehose for centralization.
 
@@ -58,7 +58,7 @@ __See:__
 
 * __Level__: Warning
 * __cfn-lint__: WS2002
-* __tflint (REST APIs)__: aws_api_gateway_rest_api_tracing_rule
+* __tflint (REST APIs)__: aws_apigateway_stage_tracing_rule
 * __tflint (HTTP APIs)__: _Not supported_
 
 Amazon API Gateway can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.

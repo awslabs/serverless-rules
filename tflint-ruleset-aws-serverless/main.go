@@ -15,6 +15,8 @@ func main() {
 				rules.NewAwsAPIGatewayMethodSettingsThrottlingRule(),
 				rules.NewAwsAPIGatewayStageLoggingRule(),
 				rules.NewAwsAPIGatewayStageTracingRule(),
+				rules.NewAwsAPIGatewayStageV2LoggingRule(),
+				rules.NewAwsApigatewayV2StageThrottlingRule(),
 				rules.NewAwsAppsyncGraphqlAPITracingRule(),
 				rules.NewAwsLambdaFunctionTracingRule(),
 			},
