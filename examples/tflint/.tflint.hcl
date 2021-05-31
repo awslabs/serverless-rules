@@ -5,5 +5,5 @@ plugin "aws" {
 plugin "aws-serverless" {
   enabled = true
   source = "github.com/aws-samples/serverless-rules/tflint-ruleset-aws-serverless"
-  version = "0.1.0"
+  version = "0.1.3"
 }
