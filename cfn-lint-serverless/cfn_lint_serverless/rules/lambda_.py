@@ -5,7 +5,7 @@ Rules for Lambda resources
 
 import re
 from collections import defaultdict
-from typing import List
+from typing import List, Optional, Tuple, Union
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
@@ -200,12 +200,80 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
 
     _message = "Lambda function {} does not have a corresponding log group with a Retention property"
 
+    def _get_function_from_join(self, log_group_join: list) -> Optional[Tuple[str, str]]:
+        """
+        Return the function reference from a LogGroupName Join intrinsic function
+        """
+
+        # First item in a Join function is a delimiter (string)
+        # Second item is a list of elements that are joined by the delimiter
+        # One of those elements might be the function name
+        for value in log_group_join[1]:
+            if not isinstance(value, dict):
+                continue
+
+            if "Fn::Ref" in value:
+                return ("ref", value["Fn::Ref"])
+            if "Ref" in value:
+                return ("ref", value["Ref"])
+
+        return None
+
+    def _get_function_from_sub(self, log_group_sub: dict) -> Optional[Tuple[str, str]]:
+        """
+        Return the function reference from a LogGroupName Sub intrinsic function
+        """
+
+        if "Fn::Sub" in log_group_sub:
+            log_group_name = log_group_sub["Fn::Sub"]
+        elif "Sub" in log_group_sub:
+            log_group_name = log_group_sub["Sub"]
+        else:
+            return None
+
+        match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_name)
+
+        if match is not None:
+            return ("ref", match["func"])
+
+        return None
+
+    def _get_function_from_log_group(self, log_group_name: Union[dict, str]) -> Optional[Tuple[str, str]]:
+        """
+        Return the function name or reference from a LogGroupName property
+        """
+
+        # Cases where the function name is hardcoded
+        # e.g. '/aws/lambda/static_function_name'
+        if isinstance(log_group_name, str) and log_group_name.find("/aws/lambda/") == 0:
+            return ("name", log_group_name[12:])
+
+        # Shortcut as next tests require log_group_name to be a dict
+        if not isinstance(log_group_name, dict):
+            return None
+
+        # Join functions
+        if "Fn::Join" in log_group_name:
+            return self._get_function_from_join(log_group_name["Fn::Join"])
+        if "Join" in log_group_name:
+            return self._get_function_from_join(log_group_name["Join"])
+
+        # Sub functions
+        if "Fn::Sub" in log_group_name:
+            return self._get_function_from_sub(log_group_name["Fn::Sub"])
+        if "Sub" in log_group_name:
+            return self._get_function_from_sub(log_group_name["Sub"])
+
+        # Default case
+        return None
+
     def _get_valid_functions(self, log_groups):
         """
         Return function names with valid LogGroups
         """
 
-        known = []
+        known_refs = []
+        known_names = []
 
         # Scan log groups for resource names
         for resource in log_groups.values():
@@ -214,28 +282,23 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
                 continue
 
             log_group_name = resource.get("Properties", {}).get("LogGroupName")
-            retention = log_group_name = resource.get("Properties", {}).get("RetentionInDays", None)
+            retention = resource.get("Properties", {}).get("RetentionInDays", None)
 
             # No retention
             if retention is None:
                 continue
 
             # Look for Substitution function
-            if not isinstance(log_group_name, dict):
-                continue
+            retval = self._get_function_from_log_group(log_group_name)
+            if retval is not None:
 
-            if "Fn::Sub" in log_group_name:
-                log_group_name = log_group_name["Fn::Sub"]
-            elif "Sub" in log_group_name:
-                log_group_name = log_group_name["Sub"]
-            else:
-                continue
+                if retval[0] == "ref":
+                    known_refs.append(retval[1])
 
-            match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_name["Fn::Sub"])
-            if match is not None:
-                known.append(match["func"])
+                if retval[0] == "name":
+                    known_names.append(retval[1])
 
-        return known
+        return {"ref": known_refs, "name": known_names}
 
     def match(self, cfn):
         """
@@ -250,8 +313,17 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
         known = self._get_valid_functions(log_groups)
 
         # Scan functions against log groups
-        for function in functions.keys():
-            if function not in known:
-                matches.append(RuleMatch(["Resources", function], self._message.format(function)))
+        for function_ref, function in functions.items():
+            log_group_found = False
+
+            if function_ref in known["ref"]:
+                log_group_found = True
+
+            function_name = function.get("Properties", {}).get("FunctionName", None)
+            if function_name is not None and function_name in known["name"]:
+                log_group_found = True
+
+            if not log_group_found:
+                matches.append(RuleMatch(["Resources", function_ref], self._message.format(function_ref)))
 
         return matches

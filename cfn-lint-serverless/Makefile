@@ -23,7 +23,7 @@ complexity-baseline:
 	$(info Maintenability index)
 	poetry run radon mi cfn_lint_serverless
 	$(info Cyclomatic complexity index)
-	poetry run xenon --max-absolute C --max-modules A --max-average A cfn_lint_serverless
+	poetry run xenon --max-absolute C --max-modules B --max-average A cfn_lint_serverless
 
 pr: lint test security-baseline complexity-baseline
 
