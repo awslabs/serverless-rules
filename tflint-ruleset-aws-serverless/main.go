@@ -10,7 +10,7 @@ func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		RuleSet: &tflint.BuiltinRuleSet{
 			Name:    "aws-serverless",
-			Version: "0.1.0",
+			Version: "0.1.3",
 			Rules: []tflint.Rule{
 				rules.NewAwsAPIGatewayMethodSettingsThrottlingRule(),
 				rules.NewAwsAPIGatewayStageLoggingRule(),

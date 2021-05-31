@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cfn_lint_serverless"
-version = "0.1.2"
+version = "0.1.3"
 description = "Serverless rules for cfn-lint"
 authors = ["Amazon Web Services"]
 readme = "README.md"

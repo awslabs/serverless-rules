@@ -14,3 +14,7 @@ test:
 	$(MAKE) -C $(CFN_LINT) test
 	$(MAKE) -C $(TFLINT) test
 	$(MAKE) -C $(EXAMPLES) test
+
+release-check:
+	grep "version = \"$$RELEASE_TAG_VERSION\"" cfn-lint-serverless/pyproject.toml
+	grep "Version: \"$$RELEASE_TAG_VERSION\"" tflint-ruleset-aws-serverless/main.go
