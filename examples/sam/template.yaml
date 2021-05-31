@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Api:
+    AccessLogSetting:
+      DestinationArn: "arn:aws:logs:eu-west-1:123456789012:log-group:my-log-group"
+      Format: |
+        {
+          "stage" : "$context.stage",
+          "request_id" : "$context.requestId",
+          "api_id" : "$context.apiId",
+          "resource_path" : "$context.resourcePath",
+          "resource_id" : "$context.resourceId",
+          "http_method" : "$context.httpMethod",
+          "source_ip" : "$context.identity.sourceIp",
+          "user-agent" : "$context.identity.userAgent",
+          "account_id" : "$context.identity.accountId",
+          "api_key" : "$context.identity.apiKey",
+          "caller" : "$context.identity.caller",
+          "user" : "$context.identity.user",
+          "user_arn" : "$context.identity.userArn",
+          "integration_latency": $context.integration.latency
+        }
+    MethodSettings:
+      - HttpMethod: "*"
+        ResourcePath: "/*"
+        ThrottlingBurstLimit: 1000
+        ThrottlingRateLimit: 10
+    TracingEnabled: true
+  Function:
+    Runtime: python3.8
+    Tracing: Active
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Method: GET
+            Path: /
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Function}"
+      RetentionInDays: 7

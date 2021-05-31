@@ -9,8 +9,9 @@ Resources:
       Runtime: python3.8
       Handler: main.handler
       Tracing: Active
-
-  LogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub "/aws/lambda/${Function}"
+      Policies:
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action: "*"
+              Resource: "arn:aws:s3:::my-bucket/*"

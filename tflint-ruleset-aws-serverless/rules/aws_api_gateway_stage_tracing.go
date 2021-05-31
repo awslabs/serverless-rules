@@ -24,7 +24,7 @@ func NewAwsAPIGatewayStageTracingRule() *AwsAPIGatewayStageTracingRule {
 
 // Name returns the rule name
 func (r *AwsAPIGatewayStageTracingRule) Name() string {
-	return "aws_api_gateway_rest_api_tracing_rule"
+	return "aws_apigateway_stage_tracing_rule"
 }
 
 // Enabled returns whether the rule is enabled by default

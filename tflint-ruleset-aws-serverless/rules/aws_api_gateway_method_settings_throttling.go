@@ -15,7 +15,7 @@ func NewAwsAPIGatewayMethodSettingsThrottlingRule() *AwsAPIGatewayMethodSettings
 
 // Name returns the rule name
 func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Name() string {
-	return "aws_api_gateay_method_settings_throttling_rule"
+	return "aws_apigateway_stage_throttling_rule"
 }
 
 // Enabled returns whether the rule is enabled by default

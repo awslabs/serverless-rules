@@ -11,7 +11,10 @@ lint: format
 	poetry run flake8 cfn_lint_serverless/* tests/*
 
 test:
-	poetry run pytest -vvv --cov=./ --cov-report=xml
+	PYTHONPATH=".:$$PYTHONPATH" poetry run pytest -vvv --cov=./ --cov-report=xml
+
+test-template:
+	PYTHONPATH=".:$$PYTHONPATH" cfn-lint $(TEMPLATE) -a cfn_lint_serverless.rules
 
 security-baseline:
 	poetry run bandit --baseline bandit.baseline -r cfn_lint_serverless
@@ -20,6 +23,10 @@ complexity-baseline:
 	$(info Maintenability index)
 	poetry run radon mi cfn_lint_serverless
 	$(info Cyclomatic complexity index)
-	poetry run xenon --max-absolute C --max-modules A --max-average A cfn_lint_serverless
+	poetry run xenon --max-absolute C --max-modules B --max-average A cfn_lint_serverless
 
 pr: lint test security-baseline complexity-baseline
+
+release:
+	poetry build
+	poetry publish

@@ -1,0 +1,19 @@
+service: aws-python-rest-api-project
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: '20201221'
+  logRetentionInDays: 14
+  tracing:
+    lambda: true
+    
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: /
+          method: get

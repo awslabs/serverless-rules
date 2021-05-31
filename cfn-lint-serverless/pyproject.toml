@@ -1,13 +1,14 @@
 [tool.poetry]
 name = "cfn_lint_serverless"
-version = "0.1.0"
+version = "0.1.2"
 description = "Serverless rules for cfn-lint"
 authors = ["Amazon Web Services"]
+readme = "README.md"
 license = "MIT-0"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-cfn-lint = "^0.46.0"
+cfn-lint = "~0.49.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"

@@ -5,14 +5,14 @@ Resources:
   Function:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: my_function_name
       CodeUri: .
       Runtime: python3.8
       Handler: main.handler
       Tracing: Active
-      CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:codesigningconfig:config-id
 
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub "/aws/lambda/${Function}"
+      LogGroupName: "/aws/lambda/my_function_name"
       RetentionInDays: 7
