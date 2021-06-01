@@ -41,7 +41,7 @@ __JSON__
 {
   "Resource": {
     "MyEventSourceMapping": {
-      "Type": "AWS::Lambda::EventSourceMapping"
+      "Type": "AWS::Lambda::EventSourceMapping",
       "Properties": {
         // Required properties
         "FunctionName": "my-function",
@@ -50,8 +50,9 @@ __JSON__
 
         // Add an OnFailure destination on the event source mapping
         "DestinationConfig": {
-          "OnFailure":
+          "OnFailure": {
             "Destination": "arn:aws:sqs:us-east-1:111122223333:my-dlq"
+          }
         }
       }
     }
