@@ -164,7 +164,7 @@ export class MyStack extends cdk.Stack {
         handler: 'main.handler',
         runtime: Runtime.PYTHON_3_8,
       }
-    )
+    );
 
     // Explicit log group that refers to the Lambda function
     myLogGroup = new LogGroup(
@@ -173,7 +173,7 @@ export class MyStack extends cdk.Stack {
         logGroupName: `/aws/lambda/${myFunction.functionName}`,
         retention: RetentionDays.ONE_WEEK,
       }
-    )
+    );
   }
 }
 ```
