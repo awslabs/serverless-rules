@@ -73,3 +73,5 @@ def test_template(filename, rule, mode, rules):
 
     if mode == "fail":
         assert rule in match_ids
+    else:
+        assert rule not in match_ids
