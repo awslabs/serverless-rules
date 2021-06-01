@@ -157,7 +157,7 @@ export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    myFunction = new Function(
+    const myFunction = new Function(
       scope, 'MyFunction',
       {
         code: Code.fromAsset('src/hello/'),
@@ -167,7 +167,7 @@ export class MyStack extends cdk.Stack {
     );
 
     // Explicit log group that refers to the Lambda function
-    myLogGroup = new LogGroup(
+    const myLogGroup = new LogGroup(
       scope, 'MyLogGroup',
       {
         logGroupName: `/aws/lambda/${myFunction.functionName}`,
@@ -323,7 +323,7 @@ export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    myTable = new Table(
+    const myTable = new Table(
       scope, 'MyTable',
       {
         partitionKey: {
@@ -333,7 +333,7 @@ export class MyStack extends cdk.Stack {
       },
     );
 
-    myFunction = new Function(
+    const myFunction = new Function(
       scope, 'MyFunction',
       {
         code: Code.fromAsset('src/hello/'),
@@ -495,7 +495,7 @@ export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    myFunction = new Function(
+    const myFunction = new Function(
       scope, 'MyFunction',
       {
         code: Code.fromAsset('src/hello/'),

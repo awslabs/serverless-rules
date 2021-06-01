@@ -17,6 +17,7 @@ If EventBridge was not able to deliver the event after all retries, it can send 
 <summary>CDK</summary>
 
 ```typescript
+import { Function } from '@aws-cdk/aws-lambda';
 import { Rule } from '@aws-cdk/aws-events';
 import * as targets from '@aws-cdk/aws-events-targets';
 
@@ -24,7 +25,7 @@ export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    myFunction = new Function(
+    const myFunction = new Function(
       scope, 'MyFunction',
       {
         code: Code.fromAsset('src/hello/'),
@@ -33,7 +34,7 @@ export class MyStack extends cdk.Stack {
       }
     );
 
-    myRule = new Rule(
+    const myRule = new Rule(
       scope, 'MyRule',
       {
         eventPattern: {

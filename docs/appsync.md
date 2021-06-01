@@ -25,7 +25,7 @@ export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    myApi = new GraphqlApi(
+    const myApi = new GraphqlApi(
       scope, 'MyApi',
       {
         name: 'my-api',
