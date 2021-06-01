@@ -417,6 +417,10 @@ provider:
           # instead of 's3:*' or '*'
           Action: s3:GetObject
           Resource: "arn:aws:s3:::my-bucket/*"
+    
+functions:
+  hello:
+    handler: handler.hello
 ```
 </details>
 
@@ -478,6 +482,107 @@ AWS Lambda can emit traces to AWS X-Ray, which enable visualizing service maps f
 ### Why is this a warning?
 
 You might use [third party solutions](https://aws.amazon.com/lambda/partners/) for monitoring serverless applications. If this is the case, enabling tracing for your AWS Lambda functions might be optional. Refer to the documentation of your monitoring solutions to see if you should enable AWS X-Ray tracing or not.
+
+### Implementations
+
+<details>
+<summary>CDK</summary>
+
+```typescript
+import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
+
+export class MyStack extends cdk.Stack {
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    myFunction = new Function(
+      scope, 'MyFunction',
+      {
+        code: Code.fromAsset('src/hello/'),
+        handler: 'main.handler',
+        runtime: Runtime.PYTHON_3_8,
+        // Enable active tracing
+        tracing: Tracing.ACTIVE,
+      }
+    );
+  }
+}
+```
+</details>
+
+<details>
+<summary>CloudFormation/SAM</summary>
+
+__JSON__
+
+```json
+{
+  "Resources": {
+    "MyFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        // Required properties
+        "CodeUri": ".",
+        "Runtime": "python3.8",
+        "Handler": "main.handler",
+
+        // Enable active tracing
+        "Tracing": "Active"
+      }
+    }
+  }
+}
+```
+
+__YAML__
+
+```yaml
+Resources:
+  MyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      # Required properties
+      CodeUri: .
+      Runtime: python3.8
+      Handler: main.handler
+
+      # Enable active tracing
+      Tracing: Active
+```
+</details>
+
+<details>
+<summary>Serverless Framework</summary>
+
+```yaml
+provider:
+  tracing:
+    # Enable active tracing for Lambda functions
+    lambda: true
+
+functions:
+  hello:
+    handler: handler.hello
+```
+</details>
+
+<details>
+<summary>Terraform</summary>
+
+```hcl
+resource "aws_lambda_function" "this" {
+  function_name = "my-function"
+  runtime       = "python3.8"
+  handler       = "main.handler"
+  filename      = "function.zip"
+
+  # Enable active tracing
+  tracing_config {
+    mode = "Active"
+  }
+}
+```
+</details>
 
 ### See also
 
