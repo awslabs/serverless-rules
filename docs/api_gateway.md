@@ -53,6 +53,7 @@ __JSON__
       "Type": "AWS::Serverless::Api",
       "Properties": {
         "DefinitionUri": "openapi.yaml",
+        "StageName": "prod",
         // Throttling for default methods by setting HttpMethod  to '*' and
         // ResourcePath to '/*'
         "MethodSettings": [{
@@ -75,6 +76,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       DefinitionUri: openapi.yaml
+      StageName: prod
 
       # Throttling for default methods by setting HttpMethod  to '*' and
       # ResourcePath to '/*'
@@ -96,6 +98,7 @@ resources:
       Type: AWS::Serverless::Api
       Properties:
         DefinitionUri: openapi.yaml
+        StageName: prod
 
         # Throttling for default methods by setting HttpMethod  to '*' and
         # ResourcePath to '/*'
@@ -329,6 +332,7 @@ __JSON__
     "Type": "AWS::Serverless::Api",
     "Properties": {
       "DefinitionUri": "openapi.yaml",
+      "StageName": "prod",
 
       // Setup logging for API Gateway
       "AccessLogSetting":{
@@ -348,6 +352,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       DefinitionUri: openapi.yaml
+      StageName: prod
 
       # Setup logging for API Gateway
       AccessLogSetting:
@@ -513,6 +518,7 @@ __JSON__
     "Type": "AWS::Serverless::HttpApi",
     "Properties": {
       "DefinitionUri": "openapi.yaml",
+      "StageName": "prod",
 
       // Setup logging for API Gateway
       "AccessLogSettings":{
@@ -532,6 +538,7 @@ Resources:
     Type: AWS::Serverless::HttpApi
     Properties:
       DefinitionUri: openapi.yaml
+      StageName: prod
 
       # Setup logging for API Gateway
       AccessLogSettings:
@@ -673,11 +680,21 @@ Amazon API Gateway can emit traces to AWS X-Ray, which enable visualizing servic
 <summary>CDK</summary>
 
 ```typescript
+import { RestApi } from '@aws-cdk/aws-apigateway';
+
 export class MyStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    
+    const myApi = new RestApi(
+      scope, 'MyApi',
+      {
+        // Enable tracing on API Gateway
+        deployOptions: {
+          tracingEnabled: true,
+        },
+      }
+    );
   }
 }
 ```
@@ -689,11 +706,34 @@ export class MyStack extends cdk.Stack {
 __JSON__
 
 ```json
+{
+  "Resources": {
+    "Api": {
+      "Type": "AWS::Serverless::Api",
+      "Properties": {
+        "DefinitionUri": "openapi.yaml",
+        "StageName": "prod",
+
+        // Enable tracing on API Gateway
+        "TracingEnabled": true
+      }
+    }
+  }
+}
 ```
 
 __YAML__
 
 ```yaml
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      DefinitionUri: openapi.yaml
+      StageName: prod
+
+      # Enable tracing on API Gateway
+      TracingEnabled: true
 ```
 </details>
 
@@ -701,6 +741,11 @@ __YAML__
 <summary>Serverless Framework</summary>
 
 ```yaml
+provider:
+  name: aws
+  # Enable tracing on API Gateway
+  tracing:
+    apiGateway: true
 ```
 </details>
 
@@ -708,52 +753,36 @@ __YAML__
 <summary>Terraform</summary>
 
 ```hcl
+resource "aws_api_gateway_rest_api" "this" {
+  body = file("openapi.yaml")
+}
+
+resource "aws_api_gateway_deployment" "this" {
+  rest_api_id = aws_api_gateway_rest_api.this.id
+
+  triggers = {
+    redeployment = sha1(jsonencode(aws_api_gateway_rest_api.this.body))
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "this" {
+  deployment_id = aws_api_gateway_deployment.this.id
+  rest_api_id   = aws_api_gateway_rest_api.this.id
+  stage_name    = "prod"
+
+  # Enable tracing on API Gateway
+  xray_tracing_enabled = true
+}
 ```
 </details>
 
 ### Implementations for HTTP APIs
 
-<details>
-<summary>CDK</summary>
-
-```typescript
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
-
-    
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-```
-
-__YAML__
-
-```yaml
-```
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-```
-</details>
-
-<details>
-<summary>Terraform</summary>
-
-```hcl
-```
-</details>
+__Remark__: tracing is not supported for HTTP APIs at the moment.
 
 ### Why is this a warning?
 
