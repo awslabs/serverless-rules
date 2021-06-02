@@ -1,4 +1,4 @@
-change-template: '* $TITLE ($NUMBER) by @$AUTHOR'
+change-template: '* $TITLE (#$NUMBER) by @$AUTHOR'
 categories:
   - title: '📐 New Rules'
     labels:
