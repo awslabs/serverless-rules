@@ -1,5 +1,9 @@
 area/cfn-lint:
-  - cfn-lint-serverles/**
+  - cfn-lint-serverless/**
 
 area/tflint:
   - tflint-ruleset-aws-serverless/**
+
+docs:
+  - docs/**
+  - examples/**

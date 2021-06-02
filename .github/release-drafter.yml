@@ -1,0 +1,36 @@
+change-template: '* $TITLE ($NUMBER) by @$AUTHOR'
+categories:
+  - title: '📐 New Rules'
+    labels:
+      - new-rule
+  - title: '🚀 Enhancements'
+    labels:
+      - feature
+      - enhancement
+  - title: '📚 Documentation Updates'
+    labels:
+      - documentation
+  - title: '🐛 Bug Fixes'
+    labels:
+      - fix
+      - bugfix
+      - bug
+  - title: '🧰 Maintenance'
+    label:
+      - chore
+
+exclude-labels:
+  - skip-changelog
+
+template: |
+  ## Summary
+
+  _Human readable summary of changes_
+
+  ## Changes
+
+  $CHANGES
+
+  ## This release was made possible by the following contributors:
+
+  $CONTRIBUTORS
