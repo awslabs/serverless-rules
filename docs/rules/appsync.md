@@ -15,96 +15,86 @@ You might use [third party solutions](https://aws.amazon.com/lambda/partners/) f
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { GraphqlApi } from '@aws-cdk/aws-appsync';
+    ```typescript
+    import { GraphqlApi } from '@aws-cdk/aws-appsync';
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const myApi = new GraphqlApi(
-      scope, 'MyApi',
-      {
-        name: 'my-api',
-        // Enable active tracing
-        xrayEnabled: true,
+        const myApi = new GraphqlApi(
+          scope, 'MyApi',
+          {
+            name: 'my-api',
+            // Enable active tracing
+            xrayEnabled: true,
+          }
+        );
       }
-    );
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    "GraphQLApi": {
-    "Type": "AWS::AppSync::GraphQLApi",
-    "Properties": {
-      "Name": "api",
-      "AuthenticationType": "AWS_IAM",
-
-      // Enable active tracing
-      "XrayEnabled": true
     }
+    ```
+
+=== "CloudFormation (JSON)"
+
+    ```json
+    {
+      "Resources": {
+        "GraphQLApi": {
+        "Type": "AWS::AppSync::GraphQLApi",
+        "Properties": {
+          "Name": "api",
+          "AuthenticationType": "AWS_IAM",
+
+          // Enable active tracing
+          "XrayEnabled": true
+        }
+        }
+      }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (YAML)"
 
-```yaml
-Resources:
-  GraphQLApi:
-    Type: AWS::AppSync::GraphQLApi
-    Properties:
-      Name: api
-      AuthenticationType: AWS_IAM
+    ```yaml
+    Resources:
+      GraphQLApi:
+        Type: AWS::AppSync::GraphQLApi
+        Properties:
+          Name: api
+          AuthenticationType: AWS_IAM
+
+          # Enable active tracing
+          XrayEnabled: true
+    ```
+
+=== "Serverless Framework"
+
+    ```yaml
+    resources:
+      Resources:
+        GraphQLApi:
+          Type: AWS::AppSync::GraphQLApi
+          Properties:
+            Name: api
+            AuthenticationType: AWS_IAM
+
+            # Enable active tracing
+            XrayEnabled: true
+    ```
+
+=== "Terraform"
+
+    ```tf
+    resource "aws_appsync_graphql_api" "this" {
+      name                = "api"
+      authentication_type = "AWS_IAM"
 
       # Enable active tracing
-      XrayEnabled: true
-```
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-resources:
-  Resources:
-    GraphQLApi:
-      Type: AWS::AppSync::GraphQLApi
-      Properties:
-        Name: api
-        AuthenticationType: AWS_IAM
-
-        # Enable active tracing
-        XrayEnabled: true
-```
-</details>
-
-<details>
-<summary>Terraform</summary>
-
-```hcl
-resource "aws_appsync_graphql_api" "this" {
-  name                = "api"
-  authentication_type = "AWS_IAM"
-
-  # Enable active tracing
-  xray_enabled = true
-}
-```
-</details>
+      xray_enabled = true
+    }
+    ```
 
 ### See also
 

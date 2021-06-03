@@ -11,120 +11,110 @@ An AWS Lambda event source mapping is used to read from streams and poll-based e
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { EventSourceMapping, SqsDlq, StartingPosition } from '@aws-cdk/aws-lambda';
+    ```typescript
+    import { EventSourceMapping, SqsDlq, StartingPosition } from '@aws-cdk/aws-lambda';
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    new EventSourceMapping(scope, "MyEventSourceMapping", {
-      target: myFunction,
-      eventSourceArn: 'arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream',
-      startingPosition: StartingPosition.LATEST,
-      onFailure: SqsDlq(mySqsQueue),
-    });
-  }
-}
-```
-</details>
+        new EventSourceMapping(scope, "MyEventSourceMapping", {
+          target: myFunction,
+          eventSourceArn: 'arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream',
+          startingPosition: StartingPosition.LATEST,
+          onFailure: SqsDlq(mySqsQueue),
+        });
+      }
+    }
+    ```
 
-<details>
-<summary>CloudFormation/SAM</summary>
+=== "CloudFormation (JSON)"
 
-__JSON__
+    ```json
+    {
+      "Resource": {
+        "MyEventSourceMapping": {
+          "Type": "AWS::Lambda::EventSourceMapping",
+          "Properties": {
+            // Required properties
+            "FunctionName": "my-function",
+            "EventSourceArn": "arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream",
+            "StartingPosition": "LATEST",
 
-```json
-{
-  "Resource": {
-    "MyEventSourceMapping": {
-      "Type": "AWS::Lambda::EventSourceMapping",
-      "Properties": {
-        // Required properties
-        "FunctionName": "my-function",
-        "EventSourceArn": "arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream",
-        "StartingPosition": "LATEST",
-
-        // Add an OnFailure destination on the event source mapping
-        "DestinationConfig": {
-          "OnFailure": {
-            "Destination": "arn:aws:sqs:us-east-1:111122223333:my-dlq"
+            // Add an OnFailure destination on the event source mapping
+            "DestinationConfig": {
+              "OnFailure": {
+                "Destination": "arn:aws:sqs:us-east-1:111122223333:my-dlq"
+              }
+            }
           }
         }
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (YAML)"
 
-```yaml
-Resources:
-  MyEventSourceMapping:
-    Type: AWS::Lambda::EventSourceMapping
-    Properties:
-      # Required properties
-      FunctionName: my-function
-      EventSourceArn: arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream
-      StartingPosition: LATEST
+    ```yaml
+    Resources:
+      MyEventSourceMapping:
+        Type: AWS::Lambda::EventSourceMapping
+        Properties:
+          # Required properties
+          FunctionName: my-function
+          EventSourceArn: arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream
+          StartingPosition: LATEST
+
+          # Add an OnFailure destination on the event source mapping
+          DestinationConfig:
+            OnFailure:
+              Destination: arn:aws:sqs:us-east-1:111122223333:my-dlq 
+    ```
+
+=== "Serverless Framework"
+
+    ```yaml
+    functions:
+      MyFunction:
+        handler: hello.handler
+
+    resources:
+      Resources:
+        MyEventSourceMapping:
+          Type: AWS::Lambda::EventSourceMapping
+          Properties:
+            # Required properties
+            FunctionName:
+              Fn::Ref: MyFunction
+            EventSourceArn: arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream
+            StartingPosition: LATEST
+
+            # Add an OnFailure destination on the event source mapping
+            DestinationConfig:
+              OnFailure:
+                Destination: arn:aws:sqs:us-east-1:111122223333:my-dlq 
+    ```
+
+=== "Terraform"
+
+    ```tf
+    resource "aws_lambda_event_source_mapping" "this" {
+      # Required fields
+      event_source_arn  = "arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream"
+      function_name     = "my-function"
+      starting_position = "LATEST"
 
       # Add an OnFailure destination on the event source mapping
-      DestinationConfig:
-        OnFailure:
-          Destination: arn:aws:sqs:us-east-1:111122223333:my-dlq 
-```
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-functions:
-  MyFunction:
-    handler: hello.handler
-
-resources:
-  Resources:
-    MyEventSourceMapping:
-      Type: AWS::Lambda::EventSourceMapping
-      Properties:
-        # Required properties
-        FunctionName:
-          Fn::Ref: MyFunction
-        EventSourceArn: arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream
-        StartingPosition: LATEST
-
-        # Add an OnFailure destination on the event source mapping
-        DestinationConfig:
-          OnFailure:
-            Destination: arn:aws:sqs:us-east-1:111122223333:my-dlq 
-```
-</details>
-
-<details>
-<summary>Terraform</summary>
-
-```hcl
-resource "aws_lambda_event_source_mapping" "this" {
-  # Required fields
-  event_source_arn  = "arn:aws:dynamodb:us-east-1:111122223333:table/my-table/stream/my-stream"
-  function_name     = "my-function"
-  starting_position = "LATEST"
-
-  # Add an OnFailure destination on the event source mapping
-  destination_config {
-    on_failure {
-      destination_arn = "arn:aws:sqs:us-east-1:111122223333:my-dlq"
+      destination_config {
+        on_failure {
+          destination_arn = "arn:aws:sqs:us-east-1:111122223333:my-dlq"
+        }
+      }
     }
-  }
-}
-```
+    ```
 
-</details>
 
 ### See also
 
@@ -146,133 +136,122 @@ Since `serverless-rules` evaluate infrastructure as code template, it cannot che
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
-import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
+    ```typescript
+    import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
+    import { LogGroup, RetentionDays } from '@aws-cdk/aws-logs';
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const myFunction = new Function(
-      scope, 'MyFunction',
-      {
-        code: Code.fromAsset('src/hello/'),
-        handler: 'main.handler',
-        runtime: Runtime.PYTHON_3_8,
-      }
-    );
+        const myFunction = new Function(
+          scope, 'MyFunction',
+          {
+            code: Code.fromAsset('src/hello/'),
+            handler: 'main.handler',
+            runtime: Runtime.PYTHON_3_8,
+          }
+        );
 
-    // Explicit log group that refers to the Lambda function
-    const myLogGroup = new LogGroup(
-      scope, 'MyLogGroup',
-      {
-        logGroupName: `/aws/lambda/${myFunction.functionName}`,
-        retention: RetentionDays.ONE_WEEK,
-      }
-    );
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    // Lambda function
-    "Function": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "CodeUri": ".",
-        "Runtime": "python3.8",
-        "Handler": "main.handler",
-        "Tracing": "Active"
-      }
-    },
-
-    // Explicit log group that refers to the Lambda function
-    "LogGroup": {
-      "Type": "AWS::Logs::LogGroup",
-      "Properties": {
-        "LogGroupName": {
-          "Fn::Sub": "/aws/lambda/${Function}"
-        },
-        // Explicit retention time
-        "RetentionInDays": 7
+        // Explicit log group that refers to the Lambda function
+        const myLogGroup = new LogGroup(
+          scope, 'MyLogGroup',
+          {
+            logGroupName: `/aws/lambda/${myFunction.functionName}`,
+            retention: RetentionDays.ONE_WEEK,
+          }
+        );
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (JSON)"
 
-```yaml
-Resources:
-  Function:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: .
-      Runtime: python3.8
-      Handler: main.handler
-      Tracing: Active
+    ```json
+    {
+      "Resources": {
+        // Lambda function
+        "Function": {
+          "Type": "AWS::Serverless::Function",
+          "Properties": {
+            "CodeUri": ".",
+            "Runtime": "python3.8",
+            "Handler": "main.handler",
+            "Tracing": "Active"
+          }
+        },
 
-  # Explicit log group that refers to the Lambda function
-  LogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub "/aws/lambda/${Function}"
+        // Explicit log group that refers to the Lambda function
+        "LogGroup": {
+          "Type": "AWS::Logs::LogGroup",
+          "Properties": {
+            "LogGroupName": {
+              "Fn::Sub": "/aws/lambda/${Function}"
+            },
+            // Explicit retention time
+            "RetentionInDays": 7
+          }
+        }
+      }
+    }
+    ```
+
+=== "CloudFormation (YAML)"
+
+    ```yaml
+    Resources:
+      Function:
+        Type: AWS::Serverless::Function
+        Properties:
+          CodeUri: .
+          Runtime: python3.8
+          Handler: main.handler
+          Tracing: Active
+
+      # Explicit log group that refers to the Lambda function
+      LogGroup:
+        Type: AWS::Logs::LogGroup
+        Properties:
+          LogGroupName: !Sub "/aws/lambda/${Function}"
+          # Explicit retention time
+          RetentionInDays: 7
+    ```
+
+=== "Serverless Framework"
+
+    ```yaml
+    provider:
+      name: aws
+      runtime: python3.8
+      lambdaHashingVersion: '20201221'
+      # This will automatically create the log group with retention
+      logRetentionInDays: 14
+        
+    functions:
+      hello:
+        handler: handler.hello
+    ```
+
+=== "Terraform"
+
+    ```tf
+    resource "aws_lambda_function" "this" {
+      function_name = "my-function"
+      handler       = "main.handler"
+      runtime       = "python3.8"
+      filename      = "function.zip"
+      role          = "arn:aws:iam::111122223333:role/my-function-role"
+    }
+
+    # Explicit log group
+    resource "aws_cloudwatch_log_group" "this" {
+      name              = "/aws/lambda/{aws_lambda_function.this.function_name}
       # Explicit retention time
-      RetentionInDays: 7
-```
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-provider:
-  name: aws
-  runtime: python3.8
-  lambdaHashingVersion: '20201221'
-  # This will automatically create the log group with retention
-  logRetentionInDays: 14
-    
-functions:
-  hello:
-    handler: handler.hello
-
-```
-</details>
-
-<details>
-<summary>Terraform</summary>
-
-```hcl
-resource "aws_lambda_function" "this" {
-  function_name = "my-function"
-  handler       = "main.handler"
-  runtime       = "python3.8"
-  filename      = "function.zip"
-  role          = "arn:aws:iam::111122223333:role/my-function-role"
-}
-
-# Explicit log group
-resource "aws_cloudwatch_log_group" "this" {
-  name              = "/aws/lambda/{aws_lambda_function.this.function_name}
-  # Explicit retention time
-  retention_in_days = 7
-}
-```
-</details>
+      retention_in_days = 7
+    }
+    ```
 
 ### See also
 
@@ -291,166 +270,157 @@ You can use resource-based policies to grant permission to other AWS services to
 In general, it's better to deploy multiple Lambda functions with different function handlers for each invocation source.
 
 ### Implementations
-<details>
-<summary>CDK</summary>
 
-```typescript
-import { ServicePrincipal } from '@aws-cdk/aws-iam';
-import { Function } from '@aws-cdk/aws-lambda';
-import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
+=== "CDK"
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    ```typescript
+    import { ServicePrincipal } from '@aws-cdk/aws-iam';
+    import { Function } from '@aws-cdk/aws-lambda';
+    import { SnsEventSource } from '@aws-cdk/aws-lambda-event-sources';
 
-    const myFunction = new Function(
-      scope, 'MyFunction',
-      {
-        code: Code.fromAsset('src/hello/'),
-        handler: 'main.handler',
-        runtime: Runtime.PYTHON_3_8,
-      }
-    );
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    // This will implicitely grant those SNS topics the permission to invoke
-    // the Lambda function. As both come from SNS, this is a single principal
-    // ('sns.amazonaws.com') and thus will not trigger the rule.
-    myFunction.addEventSource(new SnsEventSource(myTopic1));
-    myFunction.addEventSource(new SnsEventSource(myTopic2));
-  }
-}
-```
-</details>
+        const myFunction = new Function(
+          scope, 'MyFunction',
+          {
+            code: Code.fromAsset('src/hello/'),
+            handler: 'main.handler',
+            runtime: Runtime.PYTHON_3_8,
+          }
+        );
 
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    "MyFunction": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "CodeUri": ".",
-        "Runtime": "python3.8",
-        "Handler": "main.handler",
         // This will implicitely grant those SNS topics the permission to invoke
         // the Lambda function. As both come from SNS, this is a single principal
         // ('sns.amazonaws.com') and thus will not trigger the rule.
-        "Events": {
-          "Topic1": {
-            "Type": "SNS",
-            "Properties": {
-              "Topic": arn:aws:sns:us-east-1:111122223333:topic1
-            }
-          }
-          "Topic2": {
-            "Type": "SNS",
-            "Properties": {
-              "Topic": arn:aws:sns:us-east-1:111122223333:topic2
+        myFunction.addEventSource(new SnsEventSource(myTopic1));
+        myFunction.addEventSource(new SnsEventSource(myTopic2));
+      }
+    }
+    ```
+
+=== "CloudFormation (JSON)"
+
+    ```json
+    {
+      "Resources": {
+        "MyFunction": {
+          "Type": "AWS::Serverless::Function",
+          "Properties": {
+            "CodeUri": ".",
+            "Runtime": "python3.8",
+            "Handler": "main.handler",
+            // This will implicitely grant those SNS topics the permission to invoke
+            // the Lambda function. As both come from SNS, this is a single principal
+            // ('sns.amazonaws.com') and thus will not trigger the rule.
+            "Events": {
+              "Topic1": {
+                "Type": "SNS",
+                "Properties": {
+                  "Topic": arn:aws:sns:us-east-1:111122223333:topic1
+                }
+              }
+              "Topic2": {
+                "Type": "SNS",
+                "Properties": {
+                  "Topic": arn:aws:sns:us-east-1:111122223333:topic2
+                }
+              }
             }
           }
         }
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (YAML)"
 
-```yaml
-Resources:
-  MyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: .
-      Runtime: python3.8
-      Handler: main.handler
-      Tracing: Active
-      # This will implicitely grant those SNS topics the permission to invoke
-      # the Lambda function. As both come from SNS, this is a single principal
-      # ('sns.amazonaws.com') and thus will not trigger the rule.
-      Events:
-        Topic1:
-          Type: SNS
-          Properties:
-            Topic: arn:aws:sns:us-east-1:111122223333:topic1
-        Topic2:
-          Type: SNS
-          Properties:
-            Topic: arn:aws:sns:us-east-1:111122223333:topic2
-```
-</details>
+    ```yaml
+    Resources:
+      MyFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          CodeUri: .
+          Runtime: python3.8
+          Handler: main.handler
+          Tracing: Active
+          # This will implicitely grant those SNS topics the permission to invoke
+          # the Lambda function. As both come from SNS, this is a single principal
+          # ('sns.amazonaws.com') and thus will not trigger the rule.
+          Events:
+            Topic1:
+              Type: SNS
+              Properties:
+                Topic: arn:aws:sns:us-east-1:111122223333:topic1
+            Topic2:
+              Type: SNS
+              Properties:
+                Topic: arn:aws:sns:us-east-1:111122223333:topic2
+    ```
 
-<details>
-<summary>Serverless Framework</summary>
+=== "Serverless Framework"
 
-```yaml
-functions:
-  hello:
-    handler: handler.hello
-    # This will implicitely grant those SNS topics the permission to invoke
-    # the Lambda function. As both come from SNS, this is a single principal
-    # ('sns.amazonaws.com') and thus will not trigger the rule.
-    events:
-      - sns: topic1
-      - sns: topic2
-```
-</details>
+    ```yaml
+    functions:
+      hello:
+        handler: handler.hello
+        # This will implicitely grant those SNS topics the permission to invoke
+        # the Lambda function. As both come from SNS, this is a single principal
+        # ('sns.amazonaws.com') and thus will not trigger the rule.
+        events:
+          - sns: topic1
+          - sns: topic2
+    ```
 
-<details>
-<summary>Terraform</summary>
+=== "Terraform"
 
-```hcl
-resource "aws_iam_role" "this" {
-  name = "my-function-role"
-  assume_role_policy = data.aws_iam_policy_document.assume.json
+    ```tf
+    resource "aws_iam_role" "this" {
+      name = "my-function-role"
+      assume_role_policy = data.aws_iam_policy_document.assume.json
 
-  inline_policy {
-    name = "FunctionPolicy"
-    policy = data.aws_iam_policy_document.this.json
-  }
-}
-
-data "aws_iam_policy_document" "assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type       = "Service"
-      identifiers = ["lambda.amazonaws.com"]
+      inline_policy {
+        name = "FunctionPolicy"
+        policy = data.aws_iam_policy_document.this.json
+      }
     }
-  }
-}
 
-data "aws_iam_policy_document" "this" {
-  statement {
-    # Tightly scoped permissions to just 'dynamodb:Query'
-    # instead of 'dynamodb:*' or '*'
-    actions = ["dynamodb:Query"]
-    resources = ["arn:aws:dynamodb:eu-west-1:111122223333:table/my-table"]
-  }
-}
+    data "aws_iam_policy_document" "assume" {
+      statement {
+        actions = ["sts:AssumeRole"]
+        principals {
+          type       = "Service"
+          identifiers = ["lambda.amazonaws.com"]
+        }
+      }
+    }
 
-resource "aws_lambda_function" "this" {
-  function_name = "my-function"
-  handler       = "main.handler"
-  runtime       = "python3.8"
-  filename      = "function.zip"
-  role          = aws_iam_role.this.arn
-}
+    data "aws_iam_policy_document" "this" {
+      statement {
+        # Tightly scoped permissions to just 'dynamodb:Query'
+        # instead of 'dynamodb:*' or '*'
+        actions = ["dynamodb:Query"]
+        resources = ["arn:aws:dynamodb:eu-west-1:111122223333:table/my-table"]
+      }
+    }
 
-# Add a Lambda permission for Amazon EventBridge
-resource "aws_lambda_permission" "this" {
-  statement_id  = "AllowExecutionFromEventBridge"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.this.function_name
-  principal     = "events.amazonaws.com"
-}
-```
-</details>
+    resource "aws_lambda_function" "this" {
+      function_name = "my-function"
+      handler       = "main.handler"
+      runtime       = "python3.8"
+      filename      = "function.zip"
+      role          = aws_iam_role.this.arn
+    }
+
+    # Add a Lambda permission for Amazon EventBridge
+    resource "aws_lambda_permission" "this" {
+      statement_id  = "AllowExecutionFromEventBridge"
+      action        = "lambda:InvokeFunction"
+      function_name = aws_lambda_function.this.function_name
+      principal     = "events.amazonaws.com"
+    }
+    ```
 
 ### Why is this a warning?
 
@@ -474,160 +444,150 @@ If your Lambda function need a broad range of permissions, you do not know ahead
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { AttributeType, Table } from '@aws-cdk/aws-dynamodb';
-import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
+    ```typescript
+    import { AttributeType, Table } from '@aws-cdk/aws-dynamodb';
+    import { Code, Function, Runtime } from '@aws-cdk/aws-lambda';
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const myTable = new Table(
-      scope, 'MyTable',
-      {
-        partitionKey: {
-          name: 'id',
-          type: AttributeType.STRING,
-        }
-      },
-    );
+        const myTable = new Table(
+          scope, 'MyTable',
+          {
+            partitionKey: {
+              name: 'id',
+              type: AttributeType.STRING,
+            }
+          },
+        );
 
-    const myFunction = new Function(
-      scope, 'MyFunction',
-      {
-        code: Code.fromAsset('src/hello/'),
-        handler: 'main.handler',
-        runtime: Runtime.PYTHON_3_8,
-      }
-    );
+        const myFunction = new Function(
+          scope, 'MyFunction',
+          {
+            code: Code.fromAsset('src/hello/'),
+            handler: 'main.handler',
+            runtime: Runtime.PYTHON_3_8,
+          }
+        );
 
-    // Grant read access to the DynamoDB table
-    table.grantReadData(myFunction);
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    "MyFunction": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        "CodeUri": ".",
-        "Runtime": "python3.8",
-        "Handler": "main.handler",
-
-        "Policies": [{
-          "Version": "2012-10-17",
-          "Statement": [{
-            "Effect": "Allow",
-            // Tightly scoped permissions to just 's3:GetObject'
-            // instead of 's3:*' or '*'
-            "Action": "s3:GetObject",
-            "Resource": "arn:aws:s3:::my-bucket/*"
-          }]
-        }]
+        // Grant read access to the DynamoDB table
+        table.grantReadData(myFunction);
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (JSON)"
 
-```yaml
-Resources:
-  MyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: .
-      Runtime: python3.8
-      Handler: main.handler
+    ```json
+    {
+      "Resources": {
+        "MyFunction": {
+          "Type": "AWS::Serverless::Function",
+          "Properties": {
+            "CodeUri": ".",
+            "Runtime": "python3.8",
+            "Handler": "main.handler",
 
-      Policies:
-        - Version: "2012-10-17"
-          Statement:
+            "Policies": [{
+              "Version": "2012-10-17",
+              "Statement": [{
+                "Effect": "Allow",
+                // Tightly scoped permissions to just 's3:GetObject'
+                // instead of 's3:*' or '*'
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::my-bucket/*"
+              }]
+            }]
+          }
+        }
+      }
+    }
+    ```
+
+=== "CloudFormation (YAML)"
+
+    ```yaml
+    Resources:
+      MyFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          CodeUri: .
+          Runtime: python3.8
+          Handler: main.handler
+
+          Policies:
+            - Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  # Tightly scoped permissions to just 's3:GetObject'
+                  # instead of 's3:*' or '*'
+                  Action: s3:GetObject
+                  Resource: "arn:aws:s3:::my-bucket/*"
+    ```
+
+=== "Serverless Framework"
+
+    ```yaml
+    provider:
+      name: aws
+      iam:
+        role:
+          name: my-function-role
+          statements:
             - Effect: Allow
               # Tightly scoped permissions to just 's3:GetObject'
               # instead of 's3:*' or '*'
               Action: s3:GetObject
               Resource: "arn:aws:s3:::my-bucket/*"
-```
-</details>
+        
+    functions:
+      hello:
+        handler: handler.hello
+    ```
 
-<details>
-<summary>Serverless Framework</summary>
+=== "Terraform"
 
-```yaml
-provider:
-  name: aws
-  iam:
-    role:
-      name: my-function-role
-      statements:
-        - Effect: Allow
-          # Tightly scoped permissions to just 's3:GetObject'
-          # instead of 's3:*' or '*'
-          Action: s3:GetObject
-          Resource: "arn:aws:s3:::my-bucket/*"
-    
-functions:
-  hello:
-    handler: handler.hello
-```
-</details>
+    ```tf
+    resource "aws_iam_role" "this" {
+      name = "my-function-role"
+      assume_role_policy = data.aws_iam_policy_document.assume.json
 
-<details>
-<summary>Terraform</summary>
-
-```hcl
-resource "aws_iam_role" "this" {
-  name = "my-function-role"
-  assume_role_policy = data.aws_iam_policy_document.assume.json
-
-  inline_policy {
-    name = "FunctionPolicy"
-    policy = data.aws_iam_policy_document.this.json
-  }
-}
-
-data "aws_iam_policy_document" "assume" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type       = "Service"
-      identifiers = ["lambda.amazonaws.com"]
+      inline_policy {
+        name = "FunctionPolicy"
+        policy = data.aws_iam_policy_document.this.json
+      }
     }
-  }
-}
 
-data "aws_iam_policy_document" "this" {
-  statement {
-    # Tightly scoped permissions to just 'dynamodb:Query'
-    # instead of 'dynamodb:*' or '*'
-    actions = ["dynamodb:Query"]
-    resources = ["arn:aws:dynamodb:eu-west-1:111122223333:table/my-table"]
-  }
-}
+    data "aws_iam_policy_document" "assume" {
+      statement {
+        actions = ["sts:AssumeRole"]
+        principals {
+          type       = "Service"
+          identifiers = ["lambda.amazonaws.com"]
+        }
+      }
+    }
 
-resource "aws_lambda_function" "this" {
-  function_name = "my-function"
-  handler       = "main.handler"
-  runtime       = "python3.8"
-  filename      = "function.zip"
-  role          = aws_iam_role.this.arn
-}
-```
-</details>
+    data "aws_iam_policy_document" "this" {
+      statement {
+        # Tightly scoped permissions to just 'dynamodb:Query'
+        # instead of 'dynamodb:*' or '*'
+        actions = ["dynamodb:Query"]
+        resources = ["arn:aws:dynamodb:eu-west-1:111122223333:table/my-table"]
+      }
+    }
+
+    resource "aws_lambda_function" "this" {
+      function_name = "my-function"
+      handler       = "main.handler"
+      runtime       = "python3.8"
+      filename      = "function.zip"
+      role          = aws_iam_role.this.arn
+    }
+    ```
 
 ### See also
 * [Serverless Lens: Identity and Access Management](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/identity-and-access-management.html)
@@ -647,104 +607,94 @@ You might use [third party solutions](https://aws.amazon.com/lambda/partners/) f
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
+    ```typescript
+    import { Code, Function, Runtime, Tracing } from '@aws-cdk/aws-lambda';
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const myFunction = new Function(
-      scope, 'MyFunction',
-      {
-        code: Code.fromAsset('src/hello/'),
-        handler: 'main.handler',
-        runtime: Runtime.PYTHON_3_8,
-        // Enable active tracing
-        tracing: Tracing.ACTIVE,
-      }
-    );
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    "MyFunction": {
-      "Type": "AWS::Serverless::Function",
-      "Properties": {
-        // Required properties
-        "CodeUri": ".",
-        "Runtime": "python3.8",
-        "Handler": "main.handler",
-
-        // Enable active tracing
-        "Tracing": "Active"
+        const myFunction = new Function(
+          scope, 'MyFunction',
+          {
+            code: Code.fromAsset('src/hello/'),
+            handler: 'main.handler',
+            runtime: Runtime.PYTHON_3_8,
+            // Enable active tracing
+            tracing: Tracing.ACTIVE,
+          }
+        );
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (JSON)"
 
-```yaml
-Resources:
-  MyFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      # Required properties
-      CodeUri: .
-      Runtime: python3.8
-      Handler: main.handler
+    ```json
+    {
+      "Resources": {
+        "MyFunction": {
+          "Type": "AWS::Serverless::Function",
+          "Properties": {
+            // Required properties
+            "CodeUri": ".",
+            "Runtime": "python3.8",
+            "Handler": "main.handler",
+
+            // Enable active tracing
+            "Tracing": "Active"
+          }
+        }
+      }
+    }
+    ```
+
+=== "CloudFormation (YAML)"
+
+    ```yaml
+    Resources:
+      MyFunction:
+        Type: AWS::Serverless::Function
+        Properties:
+          # Required properties
+          CodeUri: .
+          Runtime: python3.8
+          Handler: main.handler
+
+          # Enable active tracing
+          Tracing: Active
+    ```
+
+=== "Serverless Framework"
+
+    ```yaml
+    provider:
+      tracing:
+        # Enable active tracing for Lambda functions
+        lambda: true
+
+    functions:
+      hello:
+        handler: handler.hello
+    ```
+
+=== "Terraform"
+
+    ```tf
+    resource "aws_lambda_function" "this" {
+      function_name = "my-function"
+      runtime       = "python3.8"
+      handler       = "main.handler"
+      filename      = "function.zip"
 
       # Enable active tracing
-      Tracing: Active
-```
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-provider:
-  tracing:
-    # Enable active tracing for Lambda functions
-    lambda: true
-
-functions:
-  hello:
-    handler: handler.hello
-```
-</details>
-
-<details>
-<summary>Terraform</summary>
-
-```hcl
-resource "aws_lambda_function" "this" {
-  function_name = "my-function"
-  runtime       = "python3.8"
-  handler       = "main.handler"
-  filename      = "function.zip"
-
-  # Enable active tracing
-  tracing_config {
-    mode = "Active"
-  }
-}
-```
-</details>
+      tracing_config {
+        mode = "Active"
+      }
+    }
+    ```
 
 ### See also
 

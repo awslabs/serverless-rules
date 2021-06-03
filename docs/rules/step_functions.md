@@ -15,154 +15,143 @@ You might use [third party solutions](https://aws.amazon.com/lambda/partners/) f
 
 ### Implementations
 
-<details>
-<summary>CDK</summary>
+=== "CDK"
 
-```typescript
-import { Function } from '@aws-cdk/aws-lambda';
-import { StateMachine } from '@aws-cdk/aws-stepfunctions';
-import * as tasks from '@aws-cdk/aws-stepfunctions-
+    ```typescript
+    import { Function } from '@aws-cdk/aws-lambda';
+    import { StateMachine } from '@aws-cdk/aws-stepfunctions';
+    import * as tasks from '@aws-cdk/aws-stepfunctions-
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-    const myFunction = new Function(
-      scope, 'MyFunction',
-      {
-        code: Code.fromAsset('src/hello/'),
-        handler: 'main.handler',
-        runtime: Runtime.PYTHON_3_8,
-      }
-    );
+        const myFunction = new Function(
+          scope, 'MyFunction',
+          {
+            code: Code.fromAsset('src/hello/'),
+            handler: 'main.handler',
+            runtime: Runtime.PYTHON_3_8,
+          }
+        );
 
-    const myJob = tasks.LambdaInvoke(
-      scope, 'MyJob',
-      {
-        lambdaFunction: myFunction,
-      },
-    );
+        const myJob = tasks.LambdaInvoke(
+          scope, 'MyJob',
+          {
+            lambdaFunction: myFunction,
+          },
+        );
 
-    const myStateMachine = new StateMachine(
-      scope, 'MyStateMachine',
-      {
-        definition: myJob,
-        // Enable tracing on Step Functions
-        tracingEnabled: true,
-      }
-    );
-  }
-}
-```
-</details>
-
-<details>
-<summary>CloudFormation/SAM</summary>
-
-__JSON__
-
-```json
-{
-  "Resources": {
-    "StateMachine": {
-      "Type": "AWS::StepFunctions::StateMachine",
-      "Properties": {
-        "DefinitionString": "{ \"StartAt\": \"HelloWorld\", \"States\": { \"HelloWorld\": { \"Type\": \"Task\", \"Resource\": \"arn:aws:lambda:us-east-1:111122223333:function:HelloFunction\", \"End\": \"true\" }}}",
-        "RoleArn": "arn:aws:iam::111122223333:role/service-role/StatesExecutionRole",
-
-        // Enable active tracing for Step Functions
-        "TracingConfiguration": {
-          "Enabled": true
-        }
+        const myStateMachine = new StateMachine(
+          scope, 'MyStateMachine',
+          {
+            definition: myJob,
+            // Enable tracing on Step Functions
+            tracingEnabled: true,
+          }
+        );
       }
     }
-  }
-}
-```
+    ```
 
-__YAML__
+=== "CloudFormation (JSON)"
 
-```yaml
-Resources:
-  StateMachine:
-    Type: AWS::StepFunctions::StateMachine
-    Properties:
-      DefinitionString: |
-        {
-          "StartAt": "HelloWorld",
-          "States": {
-            "HelloWorld": {
-              "Type": "Task",
-              "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
-              "End": "true"
+    ```json
+    {
+      "Resources": {
+        "StateMachine": {
+          "Type": "AWS::StepFunctions::StateMachine",
+          "Properties": {
+            "DefinitionString": "{ \"StartAt\": \"HelloWorld\", \"States\": { \"HelloWorld\": { \"Type\": \"Task\", \"Resource\": \"arn:aws:lambda:us-east-1:111122223333:function:HelloFunction\", \"End\": \"true\" }}}",
+            "RoleArn": "arn:aws:iam::111122223333:role/service-role/StatesExecutionRole",
+
+            // Enable active tracing for Step Functions
+            "TracingConfiguration": {
+              "Enabled": true
             }
           }
         }
-      RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole
+      }
+    }
+    ```
 
-      # Enable active tracing for Step Functions
-      TracingConfiguration:
-        Enabled: true
-```
+=== "CloudFormation YAML"
 
-</details>
-
-<details>
-<summary>Serverless Framework</summary>
-
-```yaml
-resources:
-  Resources:
-    StateMachine:
-      Type: AWS::StepFunctions::StateMachine
-      Properties:
-        DefinitionString: |
-          {
-            "StartAt": "HelloWorld",
-            "States": {
-              "HelloWorld": {
-                "Type": "Task",
-                "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
-                "End": "true"
+    ```yaml
+    Resources:
+      StateMachine:
+        Type: AWS::StepFunctions::StateMachine
+        Properties:
+          DefinitionString: |
+            {
+              "StartAt": "HelloWorld",
+              "States": {
+                "HelloWorld": {
+                  "Type": "Task",
+                  "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
+                  "End": "true"
+                }
               }
             }
-          }
-        RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole
+          RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole
 
-        # Enable active tracing for Step Functions
-        TracingConfiguration:
-          Enabled: true
-```
-</details>
+          # Enable active tracing for Step Functions
+          TracingConfiguration:
+            Enabled: true
+    ```
 
-<details>
-<summary>Terraform</summary>
+=== "Serverless Framework"
 
-```hcl
-resource "aws_sfn_state_machine" "this" {
-  name     = "my-state-machine"
-  role_arn = "arn:aws:iam::111122223333:role/my-state-machine-role"
+    ```yaml
+    resources:
+      Resources:
+        StateMachine:
+          Type: AWS::StepFunctions::StateMachine
+          Properties:
+            DefinitionString: |
+              {
+                "StartAt": "HelloWorld",
+                "States": {
+                  "HelloWorld": {
+                    "Type": "Task",
+                    "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
+                    "End": "true"
+                  }
+                }
+              }
+            RoleArn: arn:aws:iam::111122223333:role/service-role/StatesExecutionRole
 
-  definition = <<EOF
-{
-  "StartAt": "HelloWorld",
-  "States": {
-    "HelloWorld": {
-      "Type": "Task",
-      "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
-      "End": "true"
+            # Enable active tracing for Step Functions
+            TracingConfiguration:
+              Enabled: true
+    ```
+    
+=== "Terraform"
+
+    ```tf
+    resource "aws_sfn_state_machine" "this" {
+      name     = "my-state-machine"
+      role_arn = "arn:aws:iam::111122223333:role/my-state-machine-role"
+
+      definition = <<EOF
+    {
+      "StartAt": "HelloWorld",
+      "States": {
+        "HelloWorld": {
+          "Type": "Task",
+          "Resource": "arn:aws:lambda:us-east-1:111122223333:function:HelloFunction",
+          "End": "true"
+        }
+      }
     }
-  }
-}
-EOF
+    EOF
 
-  # Enable active tracing for Step Functions
-  tracing_configuration {
-    enabled = true
-  }
-}
-```
-</details>
+      # Enable active tracing for Step Functions
+      tracing_configuration {
+        enabled = true
+      }
+    }
+    ```
 
 ### See also
 

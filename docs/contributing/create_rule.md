@@ -21,63 +21,54 @@ Please use the following template when writing documentation for a rule. Each bl
 _Short explanation on the rule_
 
 ### Implementations
-<details>
-<summary>CDK</summary>
 
-```typescript
-// Imports here
+=== "CDK"
 
-export class MyStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-    super(scope, id, props);
+    ```typescript
+    // Imports here
 
-    // Implementation
-  }
-}
-```
-</details>
+    export class MyStack extends cdk.Stack {
+      constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+        super(scope, id, props);
 
-<details>
-<summary>CloudFormation/SAM</summary>
+        // Implementation
+      }
+    }
+    ```
 
-__JSON__
+=== "CloudFormation (JSON)"
 
-```json
-{
-  "Resources": {
-    // Add resources here
-  }
-}
-```
+    ```json
+    {
+      "Resources": {
+        // Add resources here
+      }
+    }
+    ```
 
-__YAML__
+=== "CloudFormation (YAML)"
 
-```yaml
-Resources:
-  # Add resources here
-```
-</details>
+    ```yaml
+    Resources:
+      # Add resources here
+    ```
 
-<details>
-<summary>Serverless Framework</summary>
+=== "Serverless Framework"
 
-```yaml
-provider:
-  name: aws
-  # Add provider-specific configuration here
+    ```yaml
+    provider:
+      name: aws
+      # Add provider-specific configuration here
 
-resources:
-  # Add resources here
-```
-</details>
+    resources:
+      # Add resources here
+    ```
 
-<details>
-<summary>Terraform</summary>
+=== "Terraform"
 
-```hcl
-# Add Terraform resources here
-```
-</details>
+    ```tf
+    # Add Terraform resources here
+    ```
 
 ### See also
 
