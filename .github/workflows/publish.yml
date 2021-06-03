@@ -40,3 +40,13 @@ jobs:
         env:
           PYPI_USERNAME: __token__
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+
+  update_docs:
+    needs: publish
+    runs-on: ubuntu
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
