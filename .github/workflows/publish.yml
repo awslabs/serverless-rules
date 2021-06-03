@@ -43,7 +43,7 @@ jobs:
 
   update_docs:
     needs: publish
-    runs-on: ubuntu
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Deploy docs
