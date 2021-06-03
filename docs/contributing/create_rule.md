@@ -1,9 +1,15 @@
-Creating a new rule
-===================
+Creating rules
+==============
+
+If you are thinking of creating or proposing a new rule, please follow the process outline below. The first step before any rule creating is to [submit an issue](#create-an-issue) to collect feedback from other members of the community.
+
+## Create an issue
+
+Before starting the implementation of a new rule, please [create an issue using the _New rule_ template](https://github.com/awslabs/serverless-rules/issues/new?assignees=&labels=feature-request%2C+triage&template=rule.md&title=). This will allow members of the community to provide feedback on its implementation, if it meets the needs of most serverless users, if it's the right level, etc.
 
 ## Template for documentation
 
-Please use the following template when writing documentation for a rule. Each block goes into the proper Markdown file for that service. For example, a new rule for AWS Lambda goes into the [lambda.md](lambda.md) document.
+Please use the following template when writing documentation for a rule. Each block goes into the proper Markdown file for that service. For example, a new rule for AWS Lambda goes into the [lambda.md](../rules/lambda.md) file.
 
 ~~~markdown
 ## _Rule name_
