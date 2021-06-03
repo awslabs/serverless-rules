@@ -31,7 +31,7 @@ To get started with Serverless Rules and [tflint](https://github.com/terraform-l
 ```hcl
 plugin "aws-serverless" {
   enabled = true
-  version = "0.1.0"
+  version = "0.1.5"
   source = "github.com/aws-samples/serverless-rules/tflint-ruleset-aws-serverless"
 }
 ```
