@@ -1,4 +1,4 @@
-module github.com/aws-samples/serverless-rules/tflint-ruleset-aws-serverless
+module github.com/awslabs/serverless-rules/tflint-ruleset-aws-serverless
 
 go 1.15
 

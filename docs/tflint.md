@@ -12,7 +12,7 @@ plugin "aws-serverless" {
   enabled = true
   # Replace this with the latest version
   version = "0.1.5"
-  source = "github.com/aws-samples/serverless-rules/tflint-ruleset-aws-serverless"
+  source = "github.com/awslabs/serverless-rules/tflint-ruleset-aws-serverless"
 }
 ```
 

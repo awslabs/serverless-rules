@@ -20,3 +20,4 @@ release-check:
 	grep "Version: \"$$RELEASE_TAG_VERSION\"" tflint-ruleset-aws-serverless/main.go
 	grep "version = \"$$RELEASE_TAG_VERSION\"" README.md
 	grep "version = \"$$RELEASE_TAG_VERSION\"" docs/tflint.md
+	grep "version = \"$$RELEASE_TAG_VERSION\"" examples/tflint/.tflint.hcl
