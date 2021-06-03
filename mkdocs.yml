@@ -19,6 +19,10 @@ nav:
 
 theme:
   name: material
+  palette:
+    scheme: default
+    primary: teal
+    accent: deep orange
   logo: images/aws-logo-light.svg
   favicon: images/aws-logo-light.svg
   features:
