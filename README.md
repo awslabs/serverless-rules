@@ -8,20 +8,25 @@ __PUBLIC PREVIEW__: this project is currently in __public preview__ to get feedb
 You can find a list of currently supported rules [in the documentation](docs/rules.md).
 
 ## Usage guide
+### cfn-lint
 
-__For `cfn-lint`__
+To get started with Serverless Rules and [cfn-lint](https://github.com/aws-cloudformation/cfn-lint), install `cfn-lint-serverless` module: `pip install cfn-lint cfn-lint-serverless`
+
+You can now instruct `cfn-lint` to use Serverless Rules module installed previously via `--append-rules` or `-a` for short:
 
 ```bash
-# To use this project with cfn-lint, you need to install the cfn-lint-serverless python module
-pip install cfn-lint cfn-lint-serverless
-
-# You can then run cfn-lint with the additional rules
 cfn-lint my_template.yaml -a cfn_lint_serverless.rules
 ```
 
-__For `tflint`__
+You can try with a Serverless Application Model (SAM) example provided in this repository by running:
 
-You can add the `aws-serverless` plugin to your .tflint.hcl configuration file:
+```bash
+cfn-lint examples/sam/template.yaml -a cfn_lint_serverless.rules
+```
+
+### tflint
+
+To get started with Serverless Rules and [tflint](https://github.com/terraform-linters/tflint) for Terraform, you can add `aws-serverless` plugin in your `.tflint.hcl` configuration file:
 
 ```hcl
 plugin "aws-serverless" {
@@ -42,4 +47,3 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 ## License
 
 This library is licensed under the MIT-0 License. See the [LICENSE](./LICENSE) file.
-
