@@ -7,6 +7,9 @@ edit_uri: edit/develop/docs
 
 nav:
   - Homepage: index.md
+  - Usage:
+    - "With cfn-lint": cfn-lint.md
+    - "With tflint": tflint.md
   - Rules:
     - Home: rules/index.md
     - "API Gateway": rules/api_gateway.md
