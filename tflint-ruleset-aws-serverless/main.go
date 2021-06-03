@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/aws-samples/serverless-rules/tflint-ruleset-aws-serverless/rules"
+	"github.com/awslabs/serverless-rules/tflint-ruleset-aws-serverless/rules"
 	"github.com/terraform-linters/tflint-plugin-sdk/plugin"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )

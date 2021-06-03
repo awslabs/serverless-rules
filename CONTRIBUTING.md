@@ -21,7 +21,7 @@ reported the issue. Please try to include as much information as you can. Detail
 
 ### Proposing New Rules
 
-When proposing a new rule, make sure to use the [New Rule template](https://github.com/aws-samples/serverless-rules/issues/new?assignees=&labels=feature-request%2C+triage&template=rule.md&title=). Rules must also meet certain criteria before they can be integrated into this project:
+When proposing a new rule, make sure to use the [New Rule template](https://github.com/awslabs/serverless-rules/issues/new?assignees=&labels=feature-request%2C+triage&template=rule.md&title=). Rules must also meet certain criteria before they can be integrated into this project:
 
 * __Is it specific to serverless on AWS?__ We bias for serverless services within AWS, such as AWS Lambda, Amazon API Gateway, AWS AppSync, etc.
 * __Are they useful for the majority of serverless workloads?__
