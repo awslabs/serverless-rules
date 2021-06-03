@@ -9,7 +9,6 @@ dev:
 pr:
 	$(MAKE) -C $(CFN_LINT) pr
 	$(MAKE) -C $(TFLINT) pr
-	release-check
 
 test:
 	$(MAKE) -C $(CFN_LINT) test
