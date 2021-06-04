@@ -5,7 +5,7 @@ AWS Step Functions Rules
 
 * __Level__: Warning
 * __cfn-lint__: WS5000
-* __tflint__: _Not implemented_
+* __tflint__: aws_sfn_state_machine_tracing
 
 AWS Step Functions can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.
 
