@@ -9,6 +9,7 @@ dev:
 pr:
 	$(MAKE) -C $(CFN_LINT) pr
 	$(MAKE) -C $(TFLINT) pr
+	$(MAKE) -C $(EXAMPLES) test
 
 test:
 	$(MAKE) -C $(CFN_LINT) test
