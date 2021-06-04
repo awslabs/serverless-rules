@@ -61,7 +61,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
-| __Warning__ | [Step Functions Tracing](step_functions.md#tracing) | WS5000   |_Not implemented_|
+| __Warning__ | [Step Functions Tracing](step_functions.md#tracing) | WS5000   | aws_sfn_state_machine_tracing |
 
 ## Amazon SQS
 
