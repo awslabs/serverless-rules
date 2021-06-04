@@ -5,11 +5,20 @@ on:
     types:
       - published
 
+permissions:
+  contents: write
+
 jobs:
-  publish:
+  run_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set release notes tag
+        run: |
+          export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
+          echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+      - name: Check version tags
+        run: make release-check
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
@@ -18,31 +27,55 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.16
+      - name: Install dependencies
+        run: make dev
+      - name: Run all checks
+        run: make pr
+
+  publish_pypi:
+    needs: run_tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Set release notes tag
         run: |
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
-      - name: Ensure version in cfn-lint-serverless
-        run: |
-          grep "version = \"${RELEASE_TAG_VERSION}\"" cfn-lint-serverless/pyproject.toml
-      - name: Ensure version in tflint-ruleset-aws-serverless
-        run: |
-          grep "Version: \"${RELEASE_TAG_VERSION}\"" tflint-ruleset-aws-serverless/main.go
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
       - name: Install dependencies
-        run: |
-          make dev
-      - name: Run all checks
-        run: |
-          make pr
+        run: make -C cfn-lint-serverless dev
       - name: Upload to PyPi
-        run: |
-          make -C cfn-lint-serverless release
+        run: make -C cfn-lint-serverless release
         env:
           PYPI_USERNAME: __token__
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
+  publish_go:
+    needs: run_tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v2
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --rm-dist
+          workdir: tflint-ruleset-aws-serverless/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   update_docs:
-    needs: publish
+    needs:
+      - publish_pypi
+      - publish_go
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
