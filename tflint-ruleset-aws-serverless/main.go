@@ -11,15 +11,7 @@ func main() {
 		RuleSet: &tflint.BuiltinRuleSet{
 			Name:    "aws-serverless",
 			Version: "0.1.5",
-			Rules: []tflint.Rule{
-				rules.NewAwsAPIGatewayMethodSettingsThrottlingRule(),
-				rules.NewAwsAPIGatewayStageLoggingRule(),
-				rules.NewAwsAPIGatewayStageTracingRule(),
-				rules.NewAwsAPIGatewayStageV2LoggingRule(),
-				rules.NewAwsApigatewayV2StageThrottlingRule(),
-				rules.NewAwsAppsyncGraphqlAPITracingRule(),
-				rules.NewAwsLambdaFunctionTracingRule(),
-			},
+			Rules:   rules.Rules,
 		},
 	})
 }
