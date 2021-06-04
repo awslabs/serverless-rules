@@ -5,7 +5,7 @@ AWS Lambda Rules
 
 * __Level__: Error
 * __cfn-lint__: ES1001
-* __tflint__: _Not implemented_
+* __tflint__: aws_lambda_event_source_mapping_failure_destination
 
 An AWS Lambda event source mapping is used to read from streams and poll-based event sources. You can configure the event source mapping to send invocation records to another services such as Amazon SNS or Amazon SQS when it discards an event batch.
 
