@@ -1,0 +1,68 @@
+package rules
+
+import (
+    hcl "github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
+)
+
+// TODO: Write the rule's description here
+// {{ .Env.RULE_NAME_CC }} checks ...
+type {{ .Env.RULE_NAME_CC }}Rule struct {
+    resourceType  string
+    attributeName string
+}
+
+// New{{ .Env.RULE_NAME_CC }}Rule returns new rule with default attributes
+func New{{ .Env.RULE_NAME_CC }}Rule() *{{ .Env.RULE_NAME_CC }}Rule {
+	return &{{ .Env.RULE_NAME_CC }}Rule{
+		// TODO: Write resource type and attribute name here
+		resourceType:  "...",
+		attributeName: "...",
+	}
+}
+
+// Name returns the rule name
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Name() string {
+	return "{{ .Env.RULE_NAME }}"
+}
+
+// Enabled returns whether the rule is enabled by default
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Enabled() bool {
+	// TODO: Determine whether the rule is enabled by default
+	return true
+}
+
+// Severity returns the rule severity
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Severity() string {
+	// TODO: Determine the rule's severiry
+	return tflint.ERROR
+}
+
+// Link returns the rule reference link
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Link() string {
+	return ""
+}
+
+// TODO: Write the details of the inspection
+// Check checks ...
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Check(runner tflint.Runner) error {
+	// TODO: Write the implementation here. See this documentation for what tflint.Runner can do.
+	//       https://pkg.go.dev/github.com/terraform-linters/tflint-plugin-sdk/tflint#Runner
+
+	return runner.WalkResourceAttributes(r.resourceType, r.attributeName, func(attribute *hcl.Attribute) error {
+		var val string
+		err := runner.EvaluateExpr(attribute.Expr, &val, nil)
+
+		return runner.EnsureNoError(err, func() error {
+			if val == "" {
+				runner.EmitIssueOnExpr(
+					r,
+					"TODO",
+					attribute.Expr,
+				)
+			}
+			return nil
+		})
+	})
+}

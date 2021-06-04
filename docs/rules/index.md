@@ -16,7 +16,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
 | __Warning__ | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | aws_lambda_function_tracing_rule |
-| __Error__   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   |_Not implemented_|
+| __Error__   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   | aws_lambda_event_source_mapping_failure_destination |
 | __Warning__ | [Lambda Permission Multiple Principals](lambda.md#permission-multiple-principals) | WS1002   |_Not implemented_|
 | __Warning__ | [Lambda Star Permissions](lambda.md#star-permissions) | WS1003   |_Not implemented_|
 | __Warning__ | [Lambda Log Retention](lambda.md#log-retention) | WS1004   |_Not implemented_|
