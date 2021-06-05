@@ -9,12 +9,10 @@ dev:
 pr:
 	$(MAKE) -C $(CFN_LINT) pr
 	$(MAKE) -C $(TFLINT) pr
-	$(MAKE) -C $(EXAMPLES) test
 
 test:
 	$(MAKE) -C $(CFN_LINT) test
 	$(MAKE) -C $(TFLINT) test
-	$(MAKE) -C $(EXAMPLES) test
 
 release-check:
 	grep "version = \"$$RELEASE_TAG_VERSION\"" cfn-lint-serverless/pyproject.toml
