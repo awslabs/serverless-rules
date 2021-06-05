@@ -10,9 +10,10 @@ builds:
       - amd64
       - arm
       - arm64
+    binary: tflint-ruleset-aws-serverless
 archives:
   - id: zip
-    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    name_template: "tflint-ruleset-aws-serverless_{{ .Os }}_{{ .Arch }}"
     format: zip
     files:
       - none*
