@@ -79,6 +79,69 @@ sls package --package output/
 cfn-lint output/cloudformation-template-*.json -a cfn_lint_serverless.rules
 ```
 
+## Continuous integration
+
+You can use Serverless Rules and `cfn-lint` with your continuous integration tool to automatically check CloudFormation templates with rules from this project. For example, you can validate on pull requests, merge to your main branch, or before deploying to production.
+
+If there are any issue with your template, `cfn-lint` will return a non-zero error code, which will cause CodeBuild to fail the workflow. You can find more information about `cfn-lint` return codes in [its documentation](https://github.com/aws-cloudformation/cfn-lint).
+
+### AWS CodeBuild
+
+Assuming that your template is stored as `template.yaml` at the root of your repository, you can create a [buildspec file](https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html) such as this one:
+
+```yaml
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: "3.8"
+    commands:
+      # Install cfn-lint-serverless
+      - pip install cfn-lint cfn-lint-serverless
+  pre_build:
+    commands:
+      # TODO: replace here with your template name if you are not
+      # using 'template.yaml'.
+      - cfn-lint template.yaml -a cfn_lint_serverless.rules
+```
+
+If you want to run `cfn-lint` with other frameworks that synthesizes to CloudFormation, see how you can generate a CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
+
+### GitHub Actions
+
+Assuming that your template is stored as `template.yaml` at the root of your repository, and that you are using `main` as your target branch for pull requests, you can create a GitHub actions workflow file such as this one:
+
+```yaml
+name: cfn-lint-serverless
+
+on:
+  pull_request:
+    branches:
+      # TODO: replace this if you are not using 'main' as your target
+      # branch for pull requests.
+      - main
+
+jobs:
+  cfn-lint-serverless:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install cfn-lint-serverless
+        # Install cfn-lint-serverless
+        run: pip install cfn-lint cfn-lint-serverless
+      - name: Lint CloudFormation template
+        # TODO: replace here with your template name if you are not
+        # using 'template.yaml'.
+        run: cfn-lint template.yaml -a cfn_lint_serverless.rules
+```
+
+If you want to run `cfn-lint` with other frameworks that synthesizes to CloudFormation, see how you can generate a CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
+
 ## IDE integration
 
 ### Visual Studio Code
