@@ -11,7 +11,7 @@ You can enable the Serverless Rules plugin by adding a plugin section in the `.t
 plugin "aws-serverless" {
   enabled = true
   version = "0.1.6"
-  source = "github.com/awslabs/serverless-rules/tflint-ruleset-aws-serverless"
+  source = "github.com/awslabs/serverless-rules"
 }
 ```
 
