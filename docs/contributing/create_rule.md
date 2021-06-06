@@ -1,7 +1,7 @@
 Creating rules
 ==============
 
-If you are thinking of creating or proposing a new rule, please follow the process outline below. The first step before any rule creating is to [submit an issue](#create-an-issue) to collect feedback from other members of the community.
+If you are thinking of creating or proposing a new rule, please follow the process outline below. The first step before adding a new rule is to [submit an issue](#create-an-issue) to collect feedback from other members of the community.
 
 ## Create an issue
 

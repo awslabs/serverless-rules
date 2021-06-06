@@ -9,7 +9,7 @@ Amazon EventBridge Rules
 
 Sometimes, an event isn't successfully delivered to the target(s) specified in a rule. By default, EventBridge will retry for 24 hours and up to 185 times, but you can customize the retry policy.
 
-If EventBridge was not able to deliver the event after all retries, it can send that event to a dead-letter queue to prevent the loss of that event, and allow you to inspect and remediate the underlying issue.
+If EventBridge cannot deliver an event after all its retries, it can send it to a dead-letter queue. You can then inspect the event and remediate the underlying issue.
 
 ### Implementations
 

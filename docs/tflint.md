@@ -3,7 +3,7 @@
 
 ## Installation
 
-This plugin depends on [tflint being installed](https://github.com/terraform-linters/tflint#installation). If you are using `tflint` version 0.29 or newer, you can leverage the `tflint --init` command to automatically install the plugin. Otherwise, you will need to download the `tflint-ruleset-aws-serverless` binary corresponding to your system from the [releases page](https://github.com/awslabs/serverless-rules/releases).
+This plugin depends on [tflint](https://github.com/terraform-linters/tflint#installation). If you use `tflint` version 0.29 or newer, you can leverage the `tflint --init` command to automatically install the plugin. Otherwise, you will need to download the `tflint-ruleset-aws-serverless` binary corresponding to your system from the [releases page](https://github.com/awslabs/serverless-rules/releases).
 
 You can enable the Serverless Rules plugin by adding a plugin section in the `.tflint.hcl` file in your project:
 

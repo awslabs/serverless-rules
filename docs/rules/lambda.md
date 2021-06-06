@@ -7,7 +7,7 @@ AWS Lambda Rules
 * __cfn-lint__: ES1001
 * __tflint__: aws_lambda_event_source_mapping_failure_destination
 
-An AWS Lambda event source mapping is used to read from streams and poll-based event sources. You can configure the event source mapping to send invocation records to another services such as Amazon SNS or Amazon SQS when it discards an event batch.
+An AWS Lambda event source mapping reads from streams and poll-based event sources to invoke your functions. You can configure the event source mapping to send invocation records to another service such as Amazon SNS or Amazon SQS when it discards an event batch.
 
 ### Implementations
 
@@ -132,7 +132,7 @@ By default, CloudWatch log groups created by Lambda functions have an unlimited 
 
 ### Why is this a warning?
 
-Since `serverless-rules` evaluate infrastructure as code template, it cannot check if you use a solution that will automatically change the configuration of log groups after the fact.
+Since `serverless-rules` evaluate infrastructure-as-code template, it cannot check if you use a solution that will automatically change the configuration of log groups after the fact.
 
 ### Implementations
 
@@ -267,7 +267,7 @@ Since `serverless-rules` evaluate infrastructure as code template, it cannot che
 
 You can use resource-based policies to grant permission to other AWS services to invoke your Lambda functions. Different AWS services usually send different payloads to Lambda functions. If multiple services can invoke the same function, this function needs to handle the different types of payload properly, or this could cause unexpected behavior.
 
-In general, it's better to deploy multiple Lambda functions with different function handlers for each invocation source.
+In general, it's better to create multiple Lambda functions with different function handlers for each invocation source.
 
 ### Implementations
 
@@ -435,11 +435,11 @@ You might have a valid reason for invoking a Lambda function from different even
 * __cfn-lint__: WS1003
 * __tflint__: _Not implemented_
 
- With Lambda functions, it’s recommended that you follow least-privileged access and only allow the access needed to perform a given operation. Attaching a role with more permissions than necessary can open up your systems for abuse.
+ With Lambda functions, you should follow least-privileged access and only allow the access needed to perform a given operation. Attaching a role with more permissions than necessary can open up your systems for abuse.
 
  ### Why is this a warning?
 
-If your Lambda function need a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.
+If your Lambda function needs a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.
 
 
 ### Implementations
@@ -599,7 +599,7 @@ If your Lambda function need a broad range of permissions, you do not know ahead
 * __cfn-lint__: WS1000
 * __tflint__: aws_lambda_function_tracing_rule
 
-AWS Lambda can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.
+AWS Lambda can emit traces to AWS X-Ray, which enables visualizing service maps for faster troubleshooting.
 
 ### Why is this a warning?
 

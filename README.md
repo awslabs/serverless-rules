@@ -34,9 +34,11 @@ cfn-lint examples/sam/template.yaml -a cfn_lint_serverless.rules
 
 ### tflint
 
-To get started with Serverless Rules and [tflint](https://github.com/terraform-linters/tflint) for Terraform, you can add `aws-serverless` plugin in your `.tflint.hcl` configuration file:
+This plugin depends on [tflint](https://github.com/terraform-linters/tflint#installation). If you use `tflint` version 0.29 or newer, you can leverage the `tflint --init` command to automatically install the plugin. Otherwise, you will need to download the `tflint-ruleset-aws-serverless` binary corresponding to your system from the [releases page](https://github.com/awslabs/serverless-rules/releases).
 
-```hcl
+You can enable the Serverless Rules plugin by adding a plugin section in the `.tflint.hcl` file in your project:
+
+```terraform
 plugin "aws-serverless" {
   enabled = true
   version = "0.1.6"

@@ -608,7 +608,7 @@ You can customize the log format that Amazon API Gateway uses to send logs. Stru
 
 ### Why is this a warning?
 
-The rule in `serverless-rules` only check if the log structured is JSON-formatted.
+The rule in `serverless-rules` only checks if the structured log is JSON-formatted.
 
 While CloudWatch Logs Insights will automatically discover fields in JSON log entries, you can use the `parse` command to parse custom log entries to extract fields from custom format.
 
@@ -732,7 +732,7 @@ Amazon API Gateway can emit traces to AWS X-Ray, which enable visualizing servic
 
 ### Implementations for HTTP APIs
 
-__Remark__: tracing is not supported for HTTP APIs at the moment.
+__Remark__: HTTP APIs do not support tracing at the moment.
 
 ### Why is this a warning?
 

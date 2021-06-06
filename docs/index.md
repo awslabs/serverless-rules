@@ -3,9 +3,9 @@ title: Homepage
 description: Serverless Rules
 ---
 
-__Serverless Rules__ are a compilation of rules to validate infrastructure as code template against recommended practices. This currently provides a module for [cfn-lint](https://github.com/aws-cloudformation/cfn-python-lint) and a plugin for [tflint](https://github.com/terraform-linters/tflint).
+__Serverless Rules__ are a compilation of rules to validate infrastructure-as-code template against recommended practices. This currently provides a module for [cfn-lint](https://github.com/aws-cloudformation/cfn-python-lint) and a plugin for [tflint](https://github.com/terraform-linters/tflint).
 
-You can use those rules to get quick feedback on recommended practices while building a serverless application, as part of automated code review process, or as guardrails before deploying to production.
+You can use those rules to get quick feedback on recommended practices while building a serverless application, as part of an automated code review process, or as guardrails before deploying to production.
 
 !!! danger "Public preview"
     This project is currently in __public preview__ to get feedback from the serverless community. APIs, tools, and rules might change between the beginning of public preview and version 1.
