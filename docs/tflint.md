@@ -32,22 +32,52 @@ tflint
 
 ### Sample outputs
 
-If the Terraform configuration files fulfill the requirements for all the rules, `tflint` will return an empty output:
+If the Terraform configuration files fulfill the requirements for all the rules, `tflint` will return an empty output. Otherwise, `tflint` will output recommendations.
 
-```
-$ tflint
-$
-```
+=== "Matching template"
 
-If there are potential improvements to your templates, `tflint` will output recommendations:
+    ```bash
+    $ tflint
+    $
+    ```
 
-```
-$ tflint
-1 issue(s) found:
+=== "With recommendations"
 
-Warning: "tracing_config" is not present. (aws_lambda_function_tracing_rule)
+    ```bash
+    $ tflint
+    1 issue(s) found:
 
-    on main.tf line 20:
+    Warning: "tracing_config" is not present. (aws_lambda_function_tracing_rule)
 
-$
-```
+        on main.tf line 20:
+
+    $
+    ```
+
+### Ignoring rules
+
+Serverless Rules is a compilation of __recommended practices__ and you might have a valid reason to ignore specific rules. While we recommend that you keep Error-level rules enabled, all other rules contain explanations on when you can safely ignore those rules. See [the Lambda Tracing rule](rules/lambda/#tracing) for an example of such explanation.
+
+Rules in `tflint` can be disabled either through the `--disable-rule` command-line argument or with the `.tflint.hcl` configuration file in the current working directory. See the [`tflint` user guide](https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/config.md) for more information.
+
+=== "Command line"
+
+    ```bash
+    # Disable the aws_lambda_function_tracing_rule rule
+    tflint --disable-rule aws_lambda_function_tracing_rule
+    ```
+
+=== ".tflint.hcl"
+
+    ```terraform
+    plugin "aws-serverless" {
+      enabled = true
+      version = "0.1.6"
+      source = "github.com/awslabs/serverless-rules"
+    }
+
+    # Disable the aws_lambda_function_tracing_rule rule
+    rule "aws_lambda_function_tracing_rule" {
+      enabled = false
+    }
+    ```
