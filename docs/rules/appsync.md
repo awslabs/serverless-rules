@@ -7,7 +7,7 @@ AWS AppSync Rules
 * __cfn-lint__: WS3000
 * __tflint__: aws_appsync_graphql_api_tracing_rule
 
-AWS AppSync can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.
+AWS AppSync can emit traces to AWS X-Ray, which enables visualizing service maps for faster troubleshooting.
 
 ### Why is this a warning?
 
