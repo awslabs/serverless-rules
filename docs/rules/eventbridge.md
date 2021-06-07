@@ -5,7 +5,7 @@ Amazon EventBridge Rules
 
 * __Level__: Error
 * __cfn-lint__: ES4000
-* __tflint__: _Not implemented_
+* __tflint__: aws_cloudwatch_event_target_no_dlq
 
 Sometimes, an event isn't successfully delivered to the target(s) specified in a rule. By default, EventBridge will retry for 24 hours and up to 185 times, but you can customize the retry policy.
 

@@ -54,7 +54,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
-| __Error__   | [EventBridge Rule No DLQ](eventbridge.md#rule-without-dlq)          | ES4000   |_Not implemented_|
+| __Error__   | [EventBridge Rule No DLQ](eventbridge.md#rule-without-dlq)          | ES4000   | aws_cloudwatch_event_target_no_dlq |
 | __Info__    | EventBridge Bus No Rule                                             |_Not implemented_|_Not implemented_|
 
 ## Amazon Step Functions
