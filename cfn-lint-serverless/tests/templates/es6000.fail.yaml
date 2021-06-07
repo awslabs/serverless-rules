@@ -1,0 +1,5 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  Queue:
+    Type: AWS::SQS::Queue

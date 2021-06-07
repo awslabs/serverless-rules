@@ -67,7 +67,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
-| __Error__   | SQS Queue No DLQ                                                    |_Not implemented_|_Not implemented_|
+| __Error__   | [SQS Queue No Redrive Policy](sqs.md#no-redrive-policy)             | ES6000   | aws_sqs_queue_redrive_policy |
 
 ## Amazon SNS
 
