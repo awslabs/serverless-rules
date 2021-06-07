@@ -7,7 +7,7 @@ Amazon SQS Rules
 * __cfn-lint__: ES6000
 * __tflint__: aws_sqs_queue_redrive_policy
 
-You can configure the redrive policy on an Amazon SQS queue. With a redrive policy, you can define how many times the SQS will make the messages available for consumers. After that, SQS will send it to the dead-letter queue specified in the policy.
+You can configure the redrive policy on an Amazon SQS queue. With a redrive policy, you can define how many times SQS will make the messages available for consumers. After that, SQS will send it to the dead-letter queue specified in the policy.
 
 ### Implementations
 
@@ -89,7 +89,8 @@ You can configure the redrive policy on an Amazon SQS queue. With a redrive poli
 === "Terraform"
 
     ```tf
-    resource "aws_sqs_queue" "terraform_queue" {
+    resource "aws_sqs_queue" "this" {
+      # Configure the redrive policy for the queue
       redrive_policy = jsonencode({
         deadLetterTargetArn = "arn:aws:sqs:us-east-2:111122224444:my-dlq"
         maxReceiveCount     = 4

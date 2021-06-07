@@ -73,4 +73,4 @@ An __Info__ level means that this does not necessarily align with recommended pr
 
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
-| __Error__   | SNS Topic No DLQ                                                    |_Not implemented_|_Not implemented_|
+| __Error__   | [SNS Subscription No Redrive Policy](sns.md#no-redrive-policy)      | ES7000 | aws_sns_topic_subscription_redrive_policy |
