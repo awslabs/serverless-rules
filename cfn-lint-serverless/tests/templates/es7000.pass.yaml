@@ -9,6 +9,5 @@ Resources:
       TopicArn: "my-topic-arn"
       RedrivePolicy: |
         {
-          "deadLetterTargetArn": "my-sqs-arn",
-          "maxReceiveCount": 4
+          "deadLetterTargetArn": "my-sqs-arn"
         }

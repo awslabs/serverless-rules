@@ -16,6 +16,7 @@ nav:
     - AppSync: rules/appsync.md
     - EventBridge: rules/eventbridge.md
     - Lambda: rules/lambda.md
+    - SNS: rules/sns.md
     - SQS: rules/sqs.md
     - "Step Functions": rules/step_functions.md
   - Contributing:
