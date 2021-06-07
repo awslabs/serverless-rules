@@ -1,57 +1,51 @@
 package rules
 
 import (
-    hcl "github.com/hashicorp/hcl/v2"
+	"fmt"
+
+	hcl "github.com/hashicorp/hcl/v2"
 	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
-// TODO: Write the rule's description here
-// {{ .Env.RULE_NAME_CC }} checks ...
-type {{ .Env.RULE_NAME_CC }}Rule struct {
-    resourceType  string
+// AwsCloudwatchEventTargetNoDlq checks if there is a DLQ configured on EventBridge targets
+type AwsCloudwatchEventTargetNoDlqRule struct {
+	resourceType  string
 	blockName     string
-    attributeName string
+	attributeName string
 }
 
-// New{{ .Env.RULE_NAME_CC }}Rule returns new rule with default attributes
-func New{{ .Env.RULE_NAME_CC }}Rule() *{{ .Env.RULE_NAME_CC }}Rule {
-	return &{{ .Env.RULE_NAME_CC }}Rule{
-		// TODO: Write resource type and attribute name here
-		resourceType:  "...",
-		blockName:     "...",
-		attributeName: "...",
+// NewAwsCloudwatchEventTargetNoDlqRule returns new rule with default attributes
+func NewAwsCloudwatchEventTargetNoDlqRule() *AwsCloudwatchEventTargetNoDlqRule {
+	return &AwsCloudwatchEventTargetNoDlqRule{
+		resourceType:  "aws_cloudwatch_event_target",
+		blockName:     "dead_letter_config",
+		attributeName: "arn",
 	}
 }
 
 // Name returns the rule name
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Name() string {
-	return "{{ .Env.RULE_NAME }}"
+func (r *AwsCloudwatchEventTargetNoDlqRule) Name() string {
+	return "aws_cloudwatch_event_target_no_dlq"
 }
 
 // Enabled returns whether the rule is enabled by default
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Enabled() bool {
-	// TODO: Determine whether the rule is enabled by default
+func (r *AwsCloudwatchEventTargetNoDlqRule) Enabled() bool {
 	return true
 }
 
 // Severity returns the rule severity
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Severity() string {
-	// TODO: Determine the rule's severiry
+func (r *AwsCloudwatchEventTargetNoDlqRule) Severity() string {
 	return tflint.ERROR
 }
 
 // Link returns the rule reference link
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Link() string {
+func (r *AwsCloudwatchEventTargetNoDlqRule) Link() string {
 	return ""
 }
 
-// TODO: Write the details of the inspection
-// Check checks ...
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Check(runner tflint.Runner) error {
-	// TODO: Write the implementation here. See this documentation for what tflint.Runner can do.
-	//       https://pkg.go.dev/github.com/terraform-linters/tflint-plugin-sdk/tflint#Runner
-
+// Check checks if there is a DLQ configured on EventBridge targets
+func (r *AwsCloudwatchEventTargetNoDlqRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		// Block
 
@@ -103,14 +97,6 @@ func (r *{{ .Env.RULE_NAME_CC }}Rule) Check(runner tflint.Runner) error {
 			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
 			if err != nil {
 				return err
-			}
-
-			if attrValue != "true" {
-				runner.EmitIssueOnExpr(
-					r,
-					fmt.Sprintf("\"%s\" should be set to true.", r.attributeName),
-					attribute.Expr,
-				)
 			}
 		}
 
