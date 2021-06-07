@@ -5,5 +5,9 @@ area/tflint:
   - tflint-ruleset-aws-serverless/**
 
 documentation:
-  - docs/**
-  - examples/**
+  - any:
+      - docs/**
+      - examples/**
+    all: 
+      - "!cfn-lint-serverless/**"
+      - "!tflint-ruleset-aws-serverless/**"
