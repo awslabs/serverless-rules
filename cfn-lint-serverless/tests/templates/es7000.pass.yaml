@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  Subscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: https
+      Endpoint: https://example.com/
+      TopicArn: "my-topic-arn"
+      RedrivePolicy: |
+        {
+          "deadLetterTargetArn": "my-sqs-arn",
+          "maxReceiveCount": 4
+        }

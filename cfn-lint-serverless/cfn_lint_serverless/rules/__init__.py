@@ -13,6 +13,7 @@ from .lambda_ import (
     LambdaStarPermissionRule,
     LambdaTracingRule,
 )
+from .sns import SnsNoRedrivePolicyRule
 from .sqs import SqsNoRedrivePolicyRule
 from .step_functions import StepFunctionsTracingRule
 
@@ -28,6 +29,7 @@ __all__ = [
     "LambdaPermissionPrincipalsRule",
     "LambdaStarPermissionRule",
     "LambdaTracingRule",
+    "SnsNoRedrivePolicyRule",
     "SqsNoRedrivePolicyRule",
     "StepFunctionsTracingRule",
 ]
