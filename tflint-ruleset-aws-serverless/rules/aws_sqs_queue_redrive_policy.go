@@ -42,8 +42,7 @@ func (r *AwsSqsQueueRedrivePolicyRule) Link() string {
 	return ""
 }
 
-// TODO: Write the details of the inspection
-// Check checks ...
+// Check checks if an SQS Queue has a redrive policy configured
 func (r *AwsSqsQueueRedrivePolicyRule) Check(runner tflint.Runner) error {
 	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
 		// Attribute
