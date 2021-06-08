@@ -106,7 +106,7 @@ cfn-lint output/cloudformation-template-*.json -a cfn_lint_serverless.rules
 
 You can use Serverless Rules and `cfn-lint` with your continuous integration tool to automatically check CloudFormation templates with rules from this project. For example, you can validate on pull requests, merge to your main branch, or before deploying to production.
 
-If there are any issues with your template, `cfn-lint` will return a non-zero error code, which will cause CodeBuild to fail the workflow. You can find more information about `cfn-lint` return codes in [its documentation](https://github.com/aws-cloudformation/cfn-lint).
+If there are any issues with your template, `cfn-lint` will return a non-zero error code. You can find more information about `cfn-lint` return codes in [its documentation](https://github.com/aws-cloudformation/cfn-lint).
 
 ### AWS CodeBuild
 

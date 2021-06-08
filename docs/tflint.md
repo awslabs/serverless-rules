@@ -81,3 +81,74 @@ Rules in `tflint` can be disabled either through the `--disable-rule` command-li
       enabled = false
     }
     ```
+
+## Continuous integration
+
+You can use Serverless Rules and `tflint` with your continuous integration tool to automatically check CloudFormation templates with rules from this project. For example, you can validate on pull requests, merge to your main branch, or before deploying to production.
+
+If there are any issues with your template, `tflint` will return a non-zero error code.
+
+### AWS CodeBuild
+
+Assuming that you are storing your terraform configuration files and a `.tflint.hcl` file at the root of your repository, you can create a [buildspec file](https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html) such as this one.
+
+!!! important
+
+    Make sure that you include the __aws-serverless__ plugin into your `.tflint.hcl` configuration file, otherwise tflint will not install this ruleset. See [Installation](#installation) for more information.
+
+=== "Sample buildspec"
+
+    ```yaml
+    env:
+      variables:
+        # TODO: replace "v0.29.0" with the latest version of tflint
+        TFLINT_VERSION: "0.29.0"
+        TFLINT_OS: "amd64"
+
+    phases:
+      install:
+        commands:
+          # Install tflint
+          - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TFLINT_OS}.zip -O tflint.zip
+          - unzip tflint.zip
+          # Install tflint plugins
+          - ./tflint --init
+      pre_build:
+        commands:
+          - ./tflint
+    ```
+
+### GitHub Actions
+
+Assuming that you are storing your terraform configuration files and a `.tflint.hcl` file at the root of your repository, and that you are using `main` as your target branch for pull requests, you can create a GitHub actions workflow file such as this one:
+
+!!! important
+
+    Make sure that you include the __aws-serverless__ plugin into your `.tflint.hcl` configuration file, otherwise tflint will not install this ruleset. See [Installation](#installation) for more information.
+
+=== "GitHub Actions workflow"
+
+    ```yaml
+    name: tflint-serverless
+
+    on:
+      pull_request:
+        branches:
+          # TODO: replace this if you are not using 'main' as your target
+          # branch for pull requests.
+          - main
+
+    jobs:
+      tflint-serverless:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: Setup TFLint
+            uses: terraform-linters/setup-tflint@v1
+            with:
+              tflint_version: v0.29.0
+          - name: Install Terraform plugins
+            run: tflint --init
+          - name: Lint Terraform files
+            run: tflint
+    ```
