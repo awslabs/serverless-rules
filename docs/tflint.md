@@ -10,7 +10,7 @@ You can enable the Serverless Rules plugin by adding a plugin section in the `.t
 ```terraform
 plugin "aws-serverless" {
   enabled = true
-  version = "0.1.6"
+  version = "0.1.7"
   source = "github.com/awslabs/serverless-rules"
 }
 ```

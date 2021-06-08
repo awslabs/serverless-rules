@@ -10,7 +10,7 @@ func main() {
 	plugin.Serve(&plugin.ServeOpts{
 		RuleSet: &tflint.BuiltinRuleSet{
 			Name:    "aws-serverless",
-			Version: "0.1.6",
+			Version: "0.1.7",
 			Rules:   rules.Rules,
 		},
 	})
