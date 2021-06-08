@@ -23,3 +23,19 @@ To learn how to use Serverless Rules, see the detailed usage guide for each plug
 
 * [With `cfn-lint`](cfn-lint.md)
 * [With `tflint`](tflint.md)
+
+## Frequently asked questions
+
+### How is this different from `cfn-lint` or `tflint-ruleset-aws`?
+
+`cfn-lint` and `tflint` main goals are to find possible errors in templates and configuration files before you try to deploy resources to AWS. By comparison, __Serverless Rules__ goes one step further by providing prescriptive guidance based on the [AWS Well-Architected pillars](https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc).
+
+For example, you can define AWS Lambda functions without tracing enabled, which is valid for both CloudFormation and Terraform. This project adds [a rule on Lambda tracing](rules/lambda.md#tracing) as a recommended practice for Operational Excellence.
+
+### Why use `cfn-lint` instead of `cfn-guard` or `cfn_nag`?
+
+[`cfn-guard`](https://github.com/aws-cloudformation/cloudformation-guard) provides developers with a simplified language to define polices and validate JSON- or YAML- formatted documents. You can use that tool to create your own rules that match your compliance needs or internal recommended practices. [`cfn_nag`](https://github.com/stelligent/cfn_nag) provides a set of default rules with a strong focus on security. You can [extend it](https://stelligent.com/2020/02/27/custom-rule-distribution-enhancements-for-cfn_nag/) in ruby to create custom rules.
+
+By comparison, [`cfn-lint`](https://github.com/aws-cloudformation/cfn-lint) provides a set of default rules focused on validating templates against the [CloudFormation resource specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and you can create your own rule with Python modules.
+
+For __Serverless Rules__, using a programming language like Python or Ruby gives more flexibility when defining complex rules integrating multiple resources, such as checking if [a Lambda function has a log group with retention configured](rules/lambda.md#log-retention).
