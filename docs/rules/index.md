@@ -32,7 +32,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
 | __Error__   | [API Gateway Logging](api_gateway.md#logging)                       | ES2000   | aws_apigateway_stage_logging_rule |
-| __Warning__ | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   |_Not implemented_|
+| __Warning__ | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   | aws_api_gateway_stage_structured_logging |
 | __Warning__ | [API Gateway Tracing](api_gateway.md#tracing)                       | WS2002   | aws_apigateway_stage_tracing_rule |
 | __Warning__ | [API Gateway Default Throttling](api_gateway.md#default-throttling) | ES2003   | aws_apigateway_stage_throttling_rule |
 
@@ -41,7 +41,7 @@ An __Info__ level means that this does not necessarily align with recommended pr
 | Level       | Name                                                                | cfn-lint | tflint |
 |:-----------:|---------------------------------------------------------------------|:--------:|:------:|
 | __Error__   | [API Gateway Logging](api_gateway.md#logging)                       | ES2000   | aws_apigatewayv2_stage_logging_rule |
-| __Warning__ | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   |_Not implemented_|
+| __Warning__ | [API Gateway Structured Logging](api_gateway.md#structured-logging) | WS2001   | aws_apigatewayv2_stage_structured_logging |
 | __Warning__ | [API Gateway Default Throttling](api_gateway.md#default-throttling) | ES2003   | aws_apigatewayv2_stage_throttling_rule |
 
 ## AWS AppSync

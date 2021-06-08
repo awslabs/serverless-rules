@@ -10,6 +10,11 @@ test:
 	go test ./...
 
 pr: lint test
+ifneq ($(shell grep -oP "^\t+New[A-Za-z0-9]+\(\)," rules/provider.go | wc -l), $(shell grep -oP "^func New[A-Za-z0-9]+\(\)" rules/* | wc -l))
+	$(error Mismatch in rule count ($(shell grep -oP "^\t+New[A-Za-z0-9]+\(\)," rules/provider.go | wc -l) vs $(shell grep -oP "^func New[A-Za-z0-9]+\(\)" rules/* | wc -l)) - check rules/provider.go)
+else
+	$(info Match in rule count)
+endif
 
 build:
 	go build
