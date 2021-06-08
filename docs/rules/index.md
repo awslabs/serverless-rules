@@ -18,9 +18,9 @@ An __Info__ level means that this does not necessarily align with recommended pr
 | __Warning__ | [Lambda Tracing](lambda.md#tracing)                                 | WS1000   | aws_lambda_function_tracing_rule |
 | __Error__   | [EventSourceMapping Failure Destination](lambda.md#eventsourcemapping-failure-destination) | ES1001   | aws_lambda_event_source_mapping_failure_destination |
 | __Warning__ | [Lambda Permission Multiple Principals](lambda.md#permission-multiple-principals) | WS1002   |_Not implemented_|
-| __Warning__ | [Lambda Star Permissions](lambda.md#star-permissions) | WS1003   |_Not implemented_|
-| __Warning__ | [Lambda Log Retention](lambda.md#log-retention) | WS1004   |_Not implemented_|
-| __Error__   | Lambda Deprecated Runtime                                           |_Not implemented_|_Not implemented_|
+| __Warning__ | [Lambda Star Permissions](lambda.md#star-permissions)               | WS1003   |_Not implemented_|
+| __Warning__ | [Lambda Log Retention](lambda.md#log-retention)                     | WS1004   |_Not implemented_|
+| __Error__   | [Lambda EOL Runtime](lambda.md##nd-of-life-runtime)                 | _E2531_  | aws_lambda_function_eol_runtime |
 | __Error__   | Lambda No Error Alarm                                               |_Not implemented_|_Not implemented_|
 | __Error__   | Async Lambda No Failure Destination                                 |_Not implemented_|_Not implemented_|
 | __Warning__ | Sync Lambda No Duration Alarm                                       |_Not implemented_|_Not implemented_|
