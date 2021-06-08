@@ -12,6 +12,7 @@ var Rules = []tflint.Rule{
 	NewAwsApigatewayV2StageThrottlingRule(),
 	NewAwsAppsyncGraphqlAPITracingRule(),
 	NewAwsCloudwatchEventTargetNoDlqRule(),
+	NewAwsLambdaFunctionEolRuntimeRule(),
 	NewAwsLambdaEventSourceMappingFailureDestinationRule(),
 	NewAwsLambdaFunctionTracingRule(),
 	NewAwsSfnStateMachineTracingRule(),
