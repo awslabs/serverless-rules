@@ -602,7 +602,8 @@ Amazon API Gateway can send logs to Amazon CloudWatch Logs and Amazon Kinesis Da
 
 * __Level__: Error
 * __cfn-lint__: WS2001
-* __tflint__: _Not implemented_
+* __tflint (REST APIs)__: aws_api_gateway_stage_structured_logging
+* __tflint (HTTP APIs)__: aws_apigatewayv2_stage_structured_logging
 
 You can customize the log format that Amazon API Gateway uses to send logs. Structured logging makes it easier to derive queries to answer arbitrary questions about the health of your application.
 
