@@ -22,9 +22,9 @@ An __Info__ level means that this does not necessarily align with recommended pr
 | __Warning__ | [Lambda Log Retention](lambda.md#log-retention)                     | WS1004   |_Not implemented_|
 | __Error__   | [Lambda Default Memory Size](lambda.md#default-memory-size)         | ES1005   | aws_lambda_function_default_memory |
 | __Error__   | [Lambda Default Timeout](lambda.md#default-timeout)                 | ES1006   | aws_lambda_function_default_timeout |
+| __Error__   | [Async Lambda Failure Destination](lambda.md#async-failure-destination) | ES1007 |_Not implemented_|
 | __Error__   | [Lambda EOL Runtime](lambda.md#end-of-life-runtime)                 | _E2531_  | aws_lambda_function_eol_runtime |
 | __Error__   | Lambda No Error Alarm                                               |_Not implemented_|_Not implemented_|
-| __Error__   | Async Lambda No Failure Destination                                 |_Not implemented_|_Not implemented_|
 | __Warning__ | Sync Lambda No Duration Alarm                                       |_Not implemented_|_Not implemented_|
 | __Warning__ | Sync Lambda With Destination                                        |_Not implemented_|_Not implemented_|
 | __Error__   | SQS Lambda ReservedConcurrency < 5                                  |_Not implemented_|_Not implemented_|
