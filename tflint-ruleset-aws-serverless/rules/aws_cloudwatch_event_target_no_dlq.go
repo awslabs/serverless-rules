@@ -41,7 +41,7 @@ func (r *AwsCloudwatchEventTargetNoDlqRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsCloudwatchEventTargetNoDlqRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/eventbridge/rule_without_dlq/"
 }
 
 // Check checks if there is a DLQ configured on EventBridge targets

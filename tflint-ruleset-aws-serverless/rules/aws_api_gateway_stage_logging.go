@@ -39,7 +39,7 @@ func (r *AwsAPIGatewayStageLoggingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsAPIGatewayStageLoggingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/api_gateway/logging/"
 }
 
 // Check checks whether "aws_api_gateway_stage" has logging enabled

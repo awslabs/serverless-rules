@@ -41,7 +41,7 @@ func (r *AwsSfnStateMachineTracingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsSfnStateMachineTracingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/step_functions/tracing/"
 }
 
 // TODO: Write the details of the inspection

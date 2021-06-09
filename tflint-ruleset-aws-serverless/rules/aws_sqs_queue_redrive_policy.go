@@ -39,7 +39,7 @@ func (r *AwsSqsQueueRedrivePolicyRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsSqsQueueRedrivePolicyRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/sqs/redrive_policy/"
 }
 
 // Check checks if an SQS Queue has a redrive policy configured

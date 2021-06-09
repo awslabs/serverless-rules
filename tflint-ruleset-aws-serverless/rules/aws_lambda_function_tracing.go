@@ -41,7 +41,7 @@ func (r *AwsLambdaFunctionTracingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsLambdaFunctionTracingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/tracing/"
 }
 
 // Check checks whether "aws_lambda_function" has tracing enabled

@@ -42,7 +42,7 @@ func (r *AwsApigatewayV2StageStructuredLoggingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsApigatewayV2StageStructuredLoggingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/api_gateway/structured_logging/"
 }
 
 // Check checks if API Gateway logging format is in JSON

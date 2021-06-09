@@ -1,15 +1,20 @@
-Amazon SQS Rules
-================
+# SQS Redrive Policy
 
-## No Redrive Policy
+__Level__: Error
+{: class="badge badge-red" }
 
-* __Level__: Error
-* __cfn-lint__: ES6000
-* __tflint__: aws_sqs_queue_redrive_policy
+__Initial version__: 0.1.7
+{: class="badge badge-blue" }
+
+__cfn-lint__: ES6000
+{: class="badge" }
+
+__tflint__: aws_sqs_queue_redrive_policy
+{: class="badge" }
 
 You can configure the redrive policy on an Amazon SQS queue. With a redrive policy, you can define how many times SQS will make the messages available for consumers. After that, SQS will send it to the dead-letter queue specified in the policy.
 
-### Implementations
+## Implementations
 
 === "CDK"
 
@@ -98,7 +103,7 @@ You can configure the redrive policy on an Amazon SQS queue. With a redrive poli
     }
     ```
 
-### See also
+## See also
 
 * [Serverless Lens: Failure Management](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/failure-management.html)
 * [Amazon SQS dead-letter-queues](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)

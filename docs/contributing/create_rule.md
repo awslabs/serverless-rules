@@ -46,18 +46,26 @@ class __Rule(CloudFormationLintRule):
 
 ## Template for documentation
 
-Please use the following template when writing documentation for a rule. Each block goes into the proper Markdown file for that service. For example, a new rule for AWS Lambda goes into the [lambda.md](../rules/lambda.md) file.
+Please use the following template when writing documentation for a rule. Each rule goes into a separate markdown file into the relevant service folder. For example, a rule for AWS Lambda would go into the `docs/rules/lambda/` folder.
 
 ~~~markdown
-## _Rule name_
+# _Service Name Rule name_
 
-* __Level__: _Rule level_
-* __cfn-lint__: _cfn-lint rule ID_
-* __tflint__: _tflint rule name_
+__Level__: _Rule level_
+{: class="badge badge-red" }
+
+__Initial version__: _release version_
+{: class="badge badge-blue" }
+
+__cfn-lint__: _cfn-lint rule ID_
+{: class="badge" }
+
+__tflint__: _tflint rule name_
+{: class="badge" }
 
 _Short explanation on the rule_
 
-### Implementations
+## Implementations
 
 === "CDK"
 
@@ -107,7 +115,7 @@ _Short explanation on the rule_
     # Add Terraform resources here
     ```
 
-### See also
+## See also
 
 * _List of links to the relevant documentation, from sources such as AWS Well-Architected, service documentation, etc._
 ~~~

@@ -43,7 +43,7 @@ func (r *AwsApigatewayV2StageThrottlingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsApigatewayV2StageThrottlingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/api_gateway/default_throttling/"
 }
 
 // Check checks whether "aws_apigatewayv2_stage" has has default throttling values

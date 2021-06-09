@@ -37,7 +37,7 @@ func (r *AwsAppsyncGraphqlAPITracingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsAppsyncGraphqlAPITracingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/appsync/tracing/"
 }
 
 // Check checks whether "aws_appsync_graphql_api" has tracing enabled
