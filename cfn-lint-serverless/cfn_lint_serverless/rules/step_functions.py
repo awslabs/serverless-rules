@@ -14,6 +14,7 @@ class StepFunctionsTracingRule(CloudFormationLintRule):
     id = "WS5000"  # noqa: VNE003
     shortdesc = "Step Functions Tracing"
     description = "Ensure that Step Functions state machines have tracing enabled"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/step_functions/tracing/"
     tags = ["stepfunctions"]
 
     _message = "Step Functions state machine {} should have TracingConfiguration.Enabled set to true."

@@ -18,6 +18,7 @@ class ApiGatewayLoggingRule(CloudFormationLintRule):
     id = "ES2000"  # noqa: VNE003
     shortdesc = "API Gateway Logging"
     description = "Ensure that API Gateway REST and HTTP APIs have logging enabled"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/logging/"
     tags = ["apigateway"]
 
     _message_access_log_settings = "API Gateway stage {} is missing the AccessLogSetting property."
@@ -59,6 +60,7 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
     id = "WS2001"  # noqa: VNE003
     shortdesc = "API Gateway Structured Logging"
     description = "Ensure that API Gateway REST and HTTP APIs are using structured logs"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/structured_logging/"
     tags = ["apigateway"]
 
     _message = "API Gateway stage {} is not using structured logging for the AccessLogSetting.Format property."
@@ -114,6 +116,7 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
     id = "ES2003"  # noqa: VNE003
     shortdesc = "API Gateway Throttling"
     description = "Ensure that API Gateway REST APIs have default throttling limits set."
+    source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/default_throttling/"
     tags = ["apigateway"]
 
     _message_method_settings = "API Gateway stage {} does not have a default MethodSettings property with ThrottlingBurstLimit and ThrottlingRateLimit."  # noqa: E501
@@ -174,6 +177,7 @@ class ApiGatewayTracingRule(CloudFormationLintRule):
     id = "WS2002"  # noqa: VNE003
     shortdesc = "API Gateway Tracing"
     description = "Ensure that API Gateway REST APIs have tracing enabled"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/tracing/"
     tags = ["apigateway"]
 
     _message = "API Gateway stage {} does not have the TracingEnabled property set to true."

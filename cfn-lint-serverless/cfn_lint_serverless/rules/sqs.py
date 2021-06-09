@@ -14,6 +14,7 @@ class SqsNoRedrivePolicyRule(CloudFormationLintRule):
     id = "ES6000"  # noqa: VNE003
     shortdesc = "SQS No Redrive Policy"
     description = "Ensure SQS queues have a redrive policy configured"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/sqs/redrive_policy/"
     tags = ["sqs"]
 
     _message = "SQS Queue {} should have a RedrivePolicy property configured."
