@@ -327,7 +327,7 @@ class LambdaDefaultMemorySizeRule(CloudFormationLintRule):
     Ensure that Lambda functions have an explicit memory value
     """
 
-    id = "WS1005"  # noqa: VNE003
+    id = "ES1005"  # noqa: VNE003
     shortdesc = "Lambda Default Memory Size"
     description = "Ensure that Lambda functions have an explicit memory value"
     tags = ["lambda"]
@@ -355,7 +355,7 @@ class LambdaDefaultTimeoutRule(CloudFormationLintRule):
     Ensure that Lambda functions have an explicit timeout value
     """
 
-    id = "WS1006"  # noqa: VNE003
+    id = "ES1006"  # noqa: VNE003
     shortdesc = "Lambda Default Timeout"
     description = "Ensure that Lambda functions have an explicit timeout value"
     tags = ["lambda"]

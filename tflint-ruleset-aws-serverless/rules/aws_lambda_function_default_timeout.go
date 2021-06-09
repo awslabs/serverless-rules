@@ -34,7 +34,7 @@ func (r *AwsLambdaFunctionDefaultTimeoutRule) Enabled() bool {
 
 // Severity returns the rule severity
 func (r *AwsLambdaFunctionDefaultTimeoutRule) Severity() string {
-	return tflint.WARNING
+	return tflint.ERROR
 }
 
 // Link returns the rule reference link
