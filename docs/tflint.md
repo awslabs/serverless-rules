@@ -152,3 +152,27 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
           - name: Lint Terraform files
             run: tflint
     ```
+
+### GitLab
+
+Assuming that you are storing your terraform configuration files and a `.tflint.hcl` file at the root of your repository, you can create a `.gitlab-ci.yml` file such as this one:
+
+=== ".gitlab-ci.yml"
+
+    ```yaml
+    tflint-serverless:
+      variables:
+        # TODO: replace "v0.29.0" with the latest version of tflint
+        TFLINT_VERSION: "0.29.0"
+        TFLINT_OS: "amd64"
+      only:
+        - merge_requests
+      script:
+        # Install tflint
+        - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TFLINT_OS}.zip -O tflint.zip
+        - unzip tflint.zip
+        # Install tflint plugins
+        - ./tflint --init
+        # Run tflint
+        - ./tflint
+    ```
