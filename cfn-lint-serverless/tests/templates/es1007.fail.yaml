@@ -1,0 +1,74 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Function:
+    Runtime: python3.8
+    Handler: main.handler
+
+Resources:
+  CloudWatchEventFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        CloudWatchEvent:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source: ["my-service"]
+
+  EventBridgeRuleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        EventBridgeRule:
+          Type: EventBridgeRule
+          Properties:
+            Pattern:
+              source: ["my-service"]
+
+  IoTRuleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        IoTRule:
+          Type: IoTRule
+          Properties:
+            Sql: "SELECT * FROM 'topic/subtopic'"
+
+  S3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        S3:
+          Type: S3
+          Properties:
+            Bucket: !Ref MyBucket
+            Events: s3:ObjectCreated:*
+
+  ScheduleFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        Schedule:
+          Type: Schedule
+          Properties:
+            Schedule: "rate(5 minutes)"
+
+  SNSFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Events:
+        SNS:
+          Type: SNS
+          Properties:
+            Topic: my-sns-topic
+
+  MyBucket:
+    Type: AWS::S3::Bucket
