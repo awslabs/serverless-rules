@@ -7,6 +7,43 @@ If you are thinking of creating or proposing a new rule, please follow the proce
 
 Before starting the implementation of a new rule, please [create an issue using the _New rule_ template](https://github.com/awslabs/serverless-rules/issues/new?assignees=&labels=feature-request%2C+triage&template=rule.md&title=). This will allow members of the community to provide feedback on its implementation, if it meets the needs of most serverless users, if it's the right level, etc.
 
+## Template for `cfn-lint` rules
+
+```python
+# TODO: set the rule name
+class __Rule(CloudFormationLintRule):
+    # TODO: set docstring
+    """
+    Ensure that ...
+    """
+
+    # TODO: update these values
+    id = "..." # noqa: VNE003
+    shortdesc = "..."
+    description = "Ensure that ..."
+    tags = ["lambda"]
+
+    _message = "... {} ..."
+
+    def match(self, cfn):
+        # TODO: update docstring
+        """
+        Match against ...
+        """
+
+        matches = []
+
+        # TODO: set resource type
+        for key, value in cfn.get_resources(["..."]).items():
+            # TODO: set property name
+            prop = value.get("Properties", {}).get("...", None)
+
+            if prop is None:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches
+```
+
 ## Template for documentation
 
 Please use the following template when writing documentation for a rule. Each block goes into the proper Markdown file for that service. For example, a new rule for AWS Lambda goes into the [lambda.md](../rules/lambda.md) file.
