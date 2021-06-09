@@ -532,7 +532,7 @@ You might have a valid reason for invoking a Lambda function from different even
 
  With Lambda functions, you should follow least-privileged access and only allow the access needed to perform a given operation. Attaching a role with more permissions than necessary can open up your systems for abuse.
 
- ### Why is this a warning?
+### Why is this a warning?
 
 If your Lambda function needs a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.
 
