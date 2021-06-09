@@ -14,6 +14,7 @@ class AppSyncTracingRule(CloudFormationLintRule):
     id = "WS3000"  # noqa: VNE003
     shortdesc = "AppSync Tracing"
     description = "Ensure AppSync GraphQL APIs have tracing enabled"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/appsync/tracing/"
     tags = ["appsync"]
 
     _message = "AppSync GraphQL API {} should have XrayEnabled set to true."

@@ -14,6 +14,7 @@ class EventBridgeDLQRule(CloudFormationLintRule):
     id = "ES4000"  # noqa: VNE003
     shortdesc = "EventBridge DLQ"
     description = "Ensure Event Bridge rules have a DLQ configured"
+    source_url = "https://awslabs.github.io/serverless-rules/rules/eventbridge/rule_without_dlq/"
     tags = ["stepfunctions"]
 
     _message = "EventBridge rule {} should have a DeadLetterConfig.Arn property for all its Targets."
