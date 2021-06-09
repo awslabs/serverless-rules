@@ -39,7 +39,7 @@ func (r *AwsLambdaFunctionDefaultTimeoutRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsLambdaFunctionDefaultTimeoutRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/default_timeout/"
 }
 
 // Check checks if there is an explicit timeout

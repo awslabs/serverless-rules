@@ -39,7 +39,7 @@ func (r *AwsLambdaFunctionDefaultMemoryRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsLambdaFunctionDefaultMemoryRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/default_memory_size/"
 }
 
 // Check checks if there is an explicit memory size

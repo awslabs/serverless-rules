@@ -41,7 +41,7 @@ func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/sns/redrive_policy/"
 }
 
 // Check checks that an SNS subscription has a redrive policy configured

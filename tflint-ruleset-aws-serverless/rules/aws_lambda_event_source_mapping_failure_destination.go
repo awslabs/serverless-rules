@@ -46,7 +46,7 @@ func (r *AwsLambdaEventSourceMappingFailureDestinationRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsLambdaEventSourceMappingFailureDestinationRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/eventsourcemapping_failure_destination/"
 }
 
 // Check checks if aws_lambda_event_source_mapping as a destination on_failure configured

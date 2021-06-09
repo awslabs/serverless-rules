@@ -30,7 +30,7 @@ func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/api_gateway/default_throttling/"
 }
 
 // Check checks whether default "aws_api_gateway_method_settings" have throttling values

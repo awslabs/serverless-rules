@@ -54,7 +54,7 @@ func (r *AwsLambdaFunctionEolRuntimeRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsLambdaFunctionEolRuntimeRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/end_of_life_runtime/"
 }
 
 // Check checks if the runtime is marked as end-of-life
