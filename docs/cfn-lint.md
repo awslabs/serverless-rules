@@ -169,6 +169,27 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
 
 If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
 
+### GitLab
+
+Assuming that your template is stored as `template.yaml` at the root of your repository, you can create a `.gitlab-ci.yml` file such as this one:
+
+=== ".gitlab-ci.yml"
+
+    ```yaml
+    cfn-lint-serverless:
+      image: python:latest
+      only:
+        - merge_requests
+      script:
+        # Install cfn-lint-serverless
+        - pip install cfn-lint cfn-lint-serverless
+        # TODO: replace here with your template name if you are not
+        # using 'template.yaml'.
+        - cfn-lint template.yaml -a cfn_lint_serverless.rules
+    ```
+
+If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
+
 ## IDE integration
 
 ### Visual Studio Code
