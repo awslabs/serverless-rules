@@ -53,7 +53,7 @@ If the template fulfills the requirements for all rules, `cfn-lint` will return 
 
 Serverless Rules is a set of recommended practices. 
 
-We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda.md#tracing), contain detailed scenarios on when it’s safe to ignore them.
+We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda/tracing.md), contain detailed scenarios on when it’s safe to ignore them.
 
 When needed, you can ignore any specific rule that doesn’t match your environment.
 

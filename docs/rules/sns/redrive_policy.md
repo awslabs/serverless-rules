@@ -1,15 +1,20 @@
-Amazon SNS Rules
-================
+# SNS Redrive Policy
 
-## No Redrive Policy
+__Level__: Error
+{: class="badge badge-red" }
 
-* __Level__: Error
-* __cfn-lint__: ES7000
-* __tflint__: aws_sns_topic_subscription_redrive_policy
+__Initial version__: 0.1.7
+{: class="badge badge-blue" }
+
+__cfn-lint__: ES7000
+{: class="badge" }
+
+__tflint__: aws_sns_topic_subscription_redrive_policy
+{: class="badge" }
 
 You can configure the redrive policy on an Amazon SNS subscription. If SNS cannot deliver the message after the number of attempts set in its delivery policy, SNS will send it to the dead-letter queue specified in the redrive policy.
 
-### Implementations
+## Implementations
 
 === "CDK"
 
@@ -128,7 +133,7 @@ You can configure the redrive policy on an Amazon SNS subscription. If SNS canno
     }
     ```
 
-### See also
+## See also
 
 * [Amazon SNS message delivery retries](https://docs.aws.amazon.com/sns/latest/dg/sns-message-delivery-retries.html)
 * [Amazon SNS dead-letter queues (DLQs)](https://docs.aws.amazon.com/sns/latest/dg/sns-dead-letter-queues.html)

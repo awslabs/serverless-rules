@@ -30,7 +30,7 @@ To learn how to use Serverless Rules, see the detailed usage guide for each plug
 
 Serverless Rules is a set of recommended practices. 
 
-We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda.md#tracing), contain detailed scenarios on when it’s safe to ignore them.
+We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda/tracing.md), contain detailed scenarios on when it’s safe to ignore them.
 
 When needed, you can ignore any specific rule that doesn’t match your environment.
 
@@ -38,7 +38,7 @@ When needed, you can ignore any specific rule that doesn’t match your environm
 
 `cfn-lint` and `tflint` main goals are to find possible errors in templates and configuration files before you try to deploy resources to AWS. By comparison, __Serverless Rules__ goes one step further by providing prescriptive guidance based on the [AWS Well-Architected pillars](https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc).
 
-For example, you can define AWS Lambda functions without tracing enabled, which is valid for both CloudFormation and Terraform. This project adds [a rule on Lambda tracing](rules/lambda.md#tracing) as a recommended practice for Operational Excellence.
+For example, you can define AWS Lambda functions without tracing enabled, which is valid for both CloudFormation and Terraform. This project adds [a rule on Lambda tracing](rules/lambda/tracing.md) as a recommended practice for Operational Excellence.
 
 ### Why use `cfn-lint` instead of `cfn-guard` or `cfn_nag`?
 
@@ -46,4 +46,4 @@ For example, you can define AWS Lambda functions without tracing enabled, which 
 
 By comparison, [`cfn-lint`](https://github.com/aws-cloudformation/cfn-lint) provides a set of default rules focused on validating templates against the [CloudFormation resource specification](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-resource-specification.html) and you can create your own rule with Python modules.
 
-For __Serverless Rules__, using a programming language like Python or Ruby gives more flexibility when defining complex rules integrating multiple resources, such as checking if [a Lambda function has a log group with retention configured](rules/lambda.md#log-retention).
+For __Serverless Rules__, using a programming language like Python or Ruby gives more flexibility when defining complex rules integrating multiple resources, such as checking if [a Lambda function has a log group with retention configured](rules/lambda/log_retention.md).

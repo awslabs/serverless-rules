@@ -1,19 +1,24 @@
-AWS Step Functions Rules
-========================
+# Step Functions Tracing
 
-## Tracing
+__Level__: Warning
+{: class="badge badge-yellow" }
 
-* __Level__: Warning
-* __cfn-lint__: WS5000
-* __tflint__: aws_sfn_state_machine_tracing
+__Initial version__: 0.1.3
+{: class="badge badge-blue" }
+
+__cfn-lint__: WS5000
+{: class="badge" }
+
+__tflint__: aws_sfn_state_machine_tracing
+{: class="badge" }
 
 AWS Step Functions can emit traces to AWS X-Ray, which enables visualizing service maps for faster troubleshooting.
 
-### Why is this a warning?
+## Why is this a warning?
 
 You might use [third party solutions](https://aws.amazon.com/lambda/partners/) for monitoring serverless applications. If this is the case, enabling tracing for Step Functions might be optional. Refer to the documentation of your monitoring solutions to see if you should enable AWS X-Ray tracing or not.
 
-### Implementations
+## Implementations
 
 === "CDK"
 
@@ -153,7 +158,7 @@ You might use [third party solutions](https://aws.amazon.com/lambda/partners/) f
     }
     ```
 
-### See also
+## See also
 
 * [Serverless Lens: Distributed Tracing](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/distributed-tracing.html)
 * [AWS X-Ray and Step Functions](https://docs.aws.amazon.com/step-functions/latest/dg/concepts-xray-tracing.html)

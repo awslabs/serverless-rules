@@ -1,17 +1,22 @@
-Amazon EventBridge Rules
-========================
+# EventBridge Rule without DLQ
 
-## Rule without DLQ
+__Level__: Error
+{: class="badge badge-red" }
 
-* __Level__: Error
-* __cfn-lint__: ES4000
-* __tflint__: aws_cloudwatch_event_target_no_dlq
+__Initial version__: 0.1.3
+{: class="badge badge-blue" }
+
+__cfn-lint__: ES4000
+{: class="badge" }
+
+__tflint__: aws_cloudwatch_event_target_no_dlq
+{: class="badge" }
 
 Sometimes, an event isn't successfully delivered to the target(s) specified in a rule. By default, EventBridge will retry for 24 hours and up to 185 times, but you can customize the retry policy.
 
 If EventBridge cannot deliver an event after all its retries, it can send it to a dead-letter queue. You can then inspect the event and remediate the underlying issue.
 
-### Implementations
+## Implementations
 
 === "CDK"
 
@@ -141,6 +146,6 @@ If EventBridge cannot deliver an event after all its retries, it can send it to 
     }
     ```
 
-### See also
+## See also
 
 * [Event retry policy and using dead-letter queues](https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-rule-dlq.html)
