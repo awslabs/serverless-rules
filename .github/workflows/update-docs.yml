@@ -1,4 +1,4 @@
-name: release-drafter
+name: update-docs
 
 on:
   push:
@@ -6,9 +6,11 @@ on:
       - main
 
 jobs:
-  update_release_draft:
+  update_docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - uses: actions/checkout@v2
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
