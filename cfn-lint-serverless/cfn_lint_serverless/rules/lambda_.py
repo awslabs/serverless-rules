@@ -320,3 +320,59 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
                 matches.append(RuleMatch(["Resources", function_ref], self._message.format(function_ref)))
 
         return matches
+
+
+class LambdaDefaultMemorySizeRule(CloudFormationLintRule):
+    """
+    Ensure that Lambda functions have an explicit memory value
+    """
+
+    id = "WS1005"  # noqa: VNE003
+    shortdesc = "Lambda Default Memory Size"
+    description = "Ensure that Lambda functions have an explicit memory value"
+    tags = ["lambda"]
+
+    _message = "Lambda function {} does not have a MemorySize property"
+
+    def match(self, cfn):
+        """
+        Match against Lambda functions without an explicity MemorySize
+        """
+
+        matches = []
+
+        for key, value in cfn.get_resources(["AWS::Lambda::Function"]).items():
+            memory_size = value.get("Properties", {}).get("MemorySize", None)
+
+            if memory_size is None:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches
+
+
+class LambdaDefaultTimeoutRule(CloudFormationLintRule):
+    """
+    Ensure that Lambda functions have an explicit timeout value
+    """
+
+    id = "WS1006"  # noqa: VNE003
+    shortdesc = "Lambda Default Timeout"
+    description = "Ensure that Lambda functions have an explicit timeout value"
+    tags = ["lambda"]
+
+    _message = "Lambda function {} does not have a Timeout property"
+
+    def match(self, cfn):
+        """
+        Match against Lambda functions without an explicity Timeout
+        """
+
+        matches = []
+
+        for key, value in cfn.get_resources(["AWS::Lambda::Function"]).items():
+            timeout = value.get("Properties", {}).get("Timeout", None)
+
+            if timeout is None:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        return matches

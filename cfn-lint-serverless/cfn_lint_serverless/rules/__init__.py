@@ -7,6 +7,8 @@ from .api_gateway import (
 from .appsync import AppSyncTracingRule
 from .eventbridge import EventBridgeDLQRule
 from .lambda_ import (
+    LambdaDefaultMemorySizeRule,
+    LambdaDefaultTimeoutRule,
     LambdaESMDestinationRule,
     LambdaLogRetentionRule,
     LambdaPermissionPrincipalsRule,
@@ -29,6 +31,8 @@ __all__ = [
     "LambdaPermissionPrincipalsRule",
     "LambdaStarPermissionRule",
     "LambdaTracingRule",
+    "LambdaDefaultMemorySizeRule",
+    "LambdaDefaultTimeoutRule",
     "SnsNoRedrivePolicyRule",
     "SqsNoRedrivePolicyRule",
     "StepFunctionsTracingRule",
