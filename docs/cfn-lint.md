@@ -51,7 +51,11 @@ If the template fulfills the requirements for all rules, `cfn-lint` will return 
 
 ### Ignoring rules
 
-Serverless Rules is a compilation of __recommended practices__, and you might have a valid reason to ignore specific rules. While we recommend that you keep Error-level rules enabled, all other rules contain explanations on when you can safely ignore those rules. See [the Lambda Tracing rule](rules/lambda/#tracing) for an example of such explanation.
+Serverless Rules is a set of recommended practices. 
+
+We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda.md#tracing), contain detailed scenarios on when it’s safe to ignore them.
+
+When needed, you can ignore any specific rule that doesn’t match your environment.
 
 Rules in `cfn-lint` can be disabled either through the `--ignore-checks`/`-i` command line argument, or with the `.cfnlintrc` configuration file in the current working directory. See the [`cfn-lint` documentation](https://github.com/aws-cloudformation/cfn-lint#configuration) for more information.
 

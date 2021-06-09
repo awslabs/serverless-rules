@@ -56,7 +56,11 @@ If the Terraform configuration files fulfill the requirements for all the rules,
 
 ### Ignoring rules
 
-Serverless Rules is a compilation of __recommended practices__ and you might have a valid reason to ignore specific rules. While we recommend that you keep Error-level rules enabled, all other rules contain explanations on when you can safely ignore those rules. See [the Lambda Tracing rule](rules/lambda/#tracing) for an example of such explanation.
+Serverless Rules is a set of recommended practices. 
+
+We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda.md#tracing), contain detailed scenarios on when it’s safe to ignore them.
+
+When needed, you can ignore any specific rule that doesn’t match your environment.
 
 Rules in `tflint` can be disabled either through the `--disable-rule` command-line argument or with the `.tflint.hcl` configuration file in the current working directory. See the [`tflint` user guide](https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/config.md) for more information.
 

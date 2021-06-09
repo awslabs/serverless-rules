@@ -26,6 +26,14 @@ To learn how to use Serverless Rules, see the detailed usage guide for each plug
 
 ## Frequently asked questions
 
+### Can I ignore some of the rules in this project?
+
+Serverless Rules is a set of recommended practices. 
+
+We recommend you to keep Error-level rules enabled. Non-error rules, for example [Lambda Tracing](rules/lambda.md#tracing), contain detailed scenarios on when it’s safe to ignore them.
+
+When needed, you can ignore any specific rule that doesn’t match your environment.
+
 ### How is this different from `cfn-lint` or `tflint-ruleset-aws`?
 
 `cfn-lint` and `tflint` main goals are to find possible errors in templates and configuration files before you try to deploy resources to AWS. By comparison, __Serverless Rules__ goes one step further by providing prescriptive guidance based on the [AWS Well-Architected pillars](https://aws.amazon.com/architecture/well-architected/?wa-lens-whitepapers.sort-by=item.additionalFields.sortDate&wa-lens-whitepapers.sort-order=desc).
