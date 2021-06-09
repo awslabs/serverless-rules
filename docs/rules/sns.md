@@ -24,7 +24,7 @@ You can configure the redrive policy on an Amazon SNS subscription. If SNS canno
 
         // Dead letter queue
         const myDLQ = new Queue(
-          scope, "MyDLQ",
+          scope, 'MyDLQ',
         );
 
         // SNS Topic
