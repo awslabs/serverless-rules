@@ -1,8 +1,8 @@
 ---
 name: New Rule
 about: Suggest a new rule
-title: ""
-labels: feature-request, triage
+title: "rule: "
+labels: new-rule, triage
 assignees: ""
 ---
 
@@ -12,6 +12,9 @@ assignees: ""
 * Related issue(s), if known: 
 * Meets the need of 80% of users: (yes/no)
 * Do you need help implementing this rule: (yes/no)
+* `cfn-lint` rule ID: 
+* `tflint` rule name: 
+* Rule level: _(Error/Warning/Info)_
 * Approved by: 
 * Reviewed by: 
 
@@ -21,4 +24,4 @@ assignees: ""
 
 ## Rule level
 
-> Explaination for the desired level for this rule. See [the documentation on rules](https://github.com/aws-samples/serverless-rules/blob/main/docs/rules.md) for more information on the rule levels.
+> Explaination for the desired level for this rule. See [the documentation on rules](https://awslabs.github.io/serverless-rules/rules/) for more information on the rule levels.
