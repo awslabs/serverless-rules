@@ -24,10 +24,6 @@ An __Info__{: class="badge badge-blue" } level means that this does not necessar
 | __Error__{: class="badge badge-red" }      | [Lambda Default Timeout](lambda/default_timeout.md)                 | ES1006   | aws_lambda_function_default_timeout |
 | __Error__{: class="badge badge-red" }      | [Async Lambda Failure Destination](lambda/async_failure_destination.md) | ES1007 |_Not implemented_|
 | __Error__{: class="badge badge-red" }      | [Lambda EOL Runtime](lambda/end_of_life_runtime.md)                 | _E2531_  | aws_lambda_function_eol_runtime |
-| __Error__{: class="badge badge-red" }      | Lambda No Error Alarm                                               |_Not implemented_|_Not implemented_|
-| __Warning__{: class="badge badge-yellow" } | Sync Lambda No Duration Alarm                                       |_Not implemented_|_Not implemented_|
-| __Warning__{: class="badge badge-yellow" } | Sync Lambda With Destination                                        |_Not implemented_|_Not implemented_|
-| __Error__{: class="badge badge-red" }      | SQS Lambda ReservedConcurrency < 5                                  |_Not implemented_|_Not implemented_|
 
 ## Amazon API Gateway REST APIs
 
@@ -57,7 +53,6 @@ An __Info__{: class="badge badge-blue" } level means that this does not necessar
 | Level                                      | Name                                                                | cfn-lint | tflint |
 |:------------------------------------------:|---------------------------------------------------------------------|:--------:|:------:|
 | __Error__{: class="badge badge-red" }      | [EventBridge Rule Without DLQ](eventbridge/rule_without_dlq.md)     | ES4000   | aws_cloudwatch_event_target_no_dlq |
-| __Info__{: class="badge badge-blue" }      | EventBridge Bus No Rule                                             |_Not implemented_|_Not implemented_|
 
 ## Amazon SNS
 
