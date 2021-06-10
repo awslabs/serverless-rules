@@ -276,6 +276,24 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
 
 If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
 
+## Existing stacks
+
+If you want to check if a stack already deployed to AWS matches the recommended practices from Serverless Rules, you can download the CloudFormation template and run `cfn-lint` locally.
+
+=== "Existing stack"
+
+    ```bash
+    STACK_NAME="your-cloudformation-stack-name"
+
+    # Retrieve the template from AWS CloudFormation
+    aws cloudformation get-template \
+        --stack-name $STACK_NAME \
+        --query 'TemplateBody' > template.json
+
+    # Run cfn-lint
+    cfn-lint template.json -a cfn_lint_serverless.rules
+    ```
+
 ## IDE integration
 
 ### Visual Studio Code
