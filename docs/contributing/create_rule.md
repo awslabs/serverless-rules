@@ -21,6 +21,7 @@ class __Rule(CloudFormationLintRule):
     id = "..." # noqa: VNE003
     shortdesc = "..."
     description = "Ensure that ..."
+    source_url = "..."
     tags = ["lambda"]
 
     _message = "... {} ..."
