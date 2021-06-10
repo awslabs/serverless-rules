@@ -122,6 +122,33 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
           - ./tflint
     ```
 
+=== "With JUnit report"
+
+    ```yaml
+    env:
+      variables:
+        # TODO: replace "v0.29.0" with the latest version of tflint
+        TFLINT_VERSION: "0.29.0"
+        TFLINT_OS: "amd64"
+
+    phases:
+      install:
+        commands:
+          # Install tflint
+          - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TFLINT_OS}.zip -O tflint.zip
+          - unzip tflint.zip
+          # Install tflint plugins
+          - ./tflint --init
+      pre_build:
+        commands:
+          - ./tflint -f junit > tflint_report.xml
+
+    reports:
+      tflint:
+        files:
+          - tflint_report.xml
+    ```
+
 ### GitHub Actions
 
 Assuming that you are storing your terraform configuration files and a `.tflint.hcl` file at the root of your repository, and that you are using `main` as your target branch for pull requests, you can create a GitHub actions workflow file such as this one:
@@ -130,7 +157,7 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
 
     Make sure that you include the __aws-serverless__ plugin into your `.tflint.hcl` configuration file, otherwise tflint will not install this ruleset. See [Installation](#installation) for more information.
 
-=== "GitHub Actions workflow"
+=== "Sample workflow"
 
     ```yaml
     name: tflint-serverless
@@ -157,11 +184,44 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
             run: tflint
     ```
 
+=== "With JUnit report"
+
+    ```yaml
+    name: tflint-serverless
+
+    on:
+      pull_request:
+        branches:
+          # TODO: replace this if you are not using 'main' as your target
+          # branch for pull requests.
+          - main
+
+    jobs:
+      tflint-serverless:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: Setup TFLint
+            uses: terraform-linters/setup-tflint@v1
+            with:
+              tflint_version: v0.29.0
+          - name: Install Terraform plugins
+            run: tflint --init
+          - name: Lint Terraform files
+            run: tflint -f junit > tflint_report.xml
+          - name: Publish test report
+            uses: mikepenz/action-junit-report@v2
+            # Only run this step on failure
+            if: ${{ failure() }}
+            with:
+              report_paths: cfn_lint_report.xml
+    ```
+
 ### GitLab
 
 Assuming that you are storing your terraform configuration files and a `.tflint.hcl` file at the root of your repository, you can create a `.gitlab-ci.yml` file such as this one:
 
-=== ".gitlab-ci.yml"
+=== "Sample file"
 
     ```yaml
     tflint-serverless:
@@ -179,4 +239,28 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
         - ./tflint --init
         # Run tflint
         - ./tflint
+    ```
+
+=== "With JUnit report"
+
+    ```yaml
+    tflint-serverless:
+      variables:
+        # TODO: replace "v0.29.0" with the latest version of tflint
+        TFLINT_VERSION: "0.29.0"
+        TFLINT_OS: "amd64"
+      only:
+        - merge_requests
+      script:
+        # Install tflint
+        - wget https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_${TFLINT_OS}.zip -O tflint.zip
+        - unzip tflint.zip
+        # Install tflint plugins
+        - ./tflint --init
+        # Run tflint
+        - ./tflint -f junit > tflint_report.xml
+      artifacts:
+        when: always
+        reports:
+          junit: cfn_lint_report.xml
     ```

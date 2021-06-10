@@ -135,13 +135,37 @@ Assuming that you are storing your template as `template.yaml` at the root of yo
           - cfn-lint template.yaml -a cfn_lint_serverless.rules
     ```
 
+=== "With JUnit report"
+
+    ```yaml
+    version: 0.2
+
+    phases:
+      install:
+        runtime-versions:
+          python: "3.8"
+        commands:
+          # Install cfn-lint-serverless
+          - pip install cfn-lint cfn-lint-serverless
+      pre_build:
+        commands:
+          # TODO: replace here with your template name if you are not
+          # using 'template.yaml'.
+          - cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml
+    
+    reports:
+      cfn-lint:
+        files:
+          - cfn_lint_report.xml
+    ```
+
 If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
 
 ### GitHub Actions
 
 Assuming that your template is stored as `template.yaml` at the root of your repository and that you are using `main` as your target branch for pull requests, you can create a GitHub actions workflow file such as this one:
 
-=== "GitHub Actions workflow"
+=== "Sample workflow"
 
     ```yaml
     name: cfn-lint-serverless
@@ -171,13 +195,52 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
             run: cfn-lint template.yaml -a cfn_lint_serverless.rules
     ```
 
+=== "With JUnit report"
+
+    ```yaml
+    name: cfn-lint-serverless
+
+    on:
+      pull_request:
+        branches:
+          # TODO: replace this if you are not using 'main' as your target
+          # branch for pull requests.
+          - main
+
+    jobs:
+      cfn-lint-serverless:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v2
+          - name: Set up Python 3.8
+            uses: actions/setup-python@v2
+            with:
+              python-version: "3.8"
+          - name: Install cfn-lint-serverless
+            # Install cfn-lint-serverless
+            run: pip install cfn-lint cfn-lint-serverless
+          - name: Lint CloudFormation template
+            # TODO: replace here with your template name if you are not
+            # using 'template.yaml'.
+            run: cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml
+            # Annotate PR based on cfn-lint's findings
+          - name: Publish test report
+            uses: mikepenz/action-junit-report@v2
+            # Only run this step on failure
+            if: ${{ failure() }}
+            with:
+              report_paths: cfn_lint_report.xml
+    ```
+
+
+
 If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
 
 ### GitLab
 
 Assuming that your template is stored as `template.yaml` at the root of your repository, you can create a `.gitlab-ci.yml` file such as this one:
 
-=== ".gitlab-ci.yml"
+=== "Sample file"
 
     ```yaml
     cfn-lint-serverless:
@@ -190,6 +253,25 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
         # TODO: replace here with your template name if you are not
         # using 'template.yaml'.
         - cfn-lint template.yaml -a cfn_lint_serverless.rules
+    ```
+
+=== "With JUnit report"
+
+    ```yaml
+    cfn-lint-serverless:
+      image: python:latest
+      only:
+        - merge_requests
+      script:
+        # Install cfn-lint-serverless
+        - pip install cfn-lint cfn-lint-serverless
+        # TODO: replace here with your template name if you are not
+        # using 'template.yaml'.
+        - cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml
+      artifacts:
+        when: always
+        reports:
+          junit: cfn_lint_report.xml
     ```
 
 If you want to run `cfn-lint` with other frameworks, see how you can generate CloudFormation templates in the [Other frameworks](#other-frameworks) section of this documentation.
