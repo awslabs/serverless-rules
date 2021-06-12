@@ -1,6 +1,8 @@
 package rules
 
 import (
+	"fmt"
+	"sort"
 	"testing"
 
 	hcl "github.com/hashicorp/hcl/v2"
@@ -188,6 +190,52 @@ resource "aws_lambda_permission" "b" {
 		if err := rule.Check(runner); err != nil {
 			t.Fatalf("Unexpected error occurred: %s", err)
 		}
+
+		sort.Slice(tc.Expected, func(i, j int) bool {
+			vi, vj := tc.Expected[i], tc.Expected[j]
+			if vi.Rule.Name() != vj.Rule.Name() {
+				return vi.Rule.Name() < vj.Rule.Name()
+			} else if vi.Message != vj.Message {
+				return vi.Message < vj.Message
+			} else if vi.Range.Filename != vj.Range.Filename {
+				return vi.Range.Filename < vj.Range.Filename
+			} else if vi.Range.Start.Line != vj.Range.Start.Line {
+				return vi.Range.Start.Line < vj.Range.Start.Line
+			} else if vi.Range.Start.Column != vj.Range.Start.Column {
+				return vi.Range.Start.Column < vj.Range.Start.Column
+			} else if vi.Range.End.Line != vj.Range.End.Line {
+				return vi.Range.End.Line < vj.Range.End.Line
+			} else if vi.Range.End.Column != vj.Range.End.Column {
+				return vi.Range.End.Column < vj.Range.End.Column
+			} else {
+				return false
+			}
+
+		})
+		sort.Slice(runner.Issues, func(i, j int) bool {
+			vi, vj := runner.Issues[i], runner.Issues[j]
+			if vi.Rule.Name() != vj.Rule.Name() {
+				return vi.Rule.Name() < vj.Rule.Name()
+			} else if vi.Message != vj.Message {
+				return vi.Message < vj.Message
+			} else if vi.Range.Filename != vj.Range.Filename {
+				return vi.Range.Filename < vj.Range.Filename
+			} else if vi.Range.Start.Line != vj.Range.Start.Line {
+				return vi.Range.Start.Line < vj.Range.Start.Line
+			} else if vi.Range.Start.Column != vj.Range.Start.Column {
+				return vi.Range.Start.Column < vj.Range.Start.Column
+			} else if vi.Range.End.Line != vj.Range.End.Line {
+				return vi.Range.End.Line < vj.Range.End.Line
+			} else if vi.Range.End.Column != vj.Range.End.Column {
+				return vi.Range.End.Column < vj.Range.End.Column
+			} else {
+				return false
+			}
+
+		})
+
+		fmt.Printf("%+v\n", tc.Expected)
+		fmt.Printf("%+v\n", runner.Issues)
 
 		helper.AssertIssues(t, tc.Expected, runner.Issues)
 	}
