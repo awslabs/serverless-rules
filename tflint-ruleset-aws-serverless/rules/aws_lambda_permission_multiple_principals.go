@@ -105,14 +105,6 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) 
 
 		permissions[functionNameVal][principalVal] = append(permissions[functionNameVal][principalVal], principal.Expr)
 
-		// if principalVal != "true" {
-		// 	runner.EmitIssueOnExpr(
-		// 		r,
-		// 		fmt.Sprintf("\"%s\" should be set to true.", r.principal),
-		// 		principal.Expr,
-		// 	)
-		// }
-
 		return nil
 	})
 

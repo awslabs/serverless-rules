@@ -9,7 +9,7 @@ __Initial version__: 0.1.8
 __cfn-lint__: ES1007
 {: class="badge" }
 
-__tflint__: _Not implemented_
+__tflint__: aws_lambda_event_invoke_config_async_on_failure
 {: class="badge" }
 
 Several AWS services, such as Amazon S3, Amazon SNS, or Amazon EventBridge, invoke Lambda functions asynchronously to process events. When you invoke a function asynchronously, you don't wait for a response from the function code. You hand off the event to Lambda and Lambda handles the rest.

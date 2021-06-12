@@ -22,7 +22,7 @@ An __Info__{: class="badge badge-blue" } level means that this does not necessar
 | __Warning__{: class="badge badge-yellow" } | [Lambda Log Retention](lambda/log_retention.md)                     | WS1004   |_Not implemented_|
 | __Error__{: class="badge badge-red" }      | [Lambda Default Memory Size](lambda/default_memory_size.md)         | ES1005   | aws_lambda_function_default_memory |
 | __Error__{: class="badge badge-red" }      | [Lambda Default Timeout](lambda/default_timeout.md)                 | ES1006   | aws_lambda_function_default_timeout |
-| __Error__{: class="badge badge-red" }      | [Async Lambda Failure Destination](lambda/async_failure_destination.md) | ES1007 |_Not implemented_|
+| __Error__{: class="badge badge-red" }      | [Async Lambda Failure Destination](lambda/async_failure_destination.md) | ES1007 | aws_lambda_event_invoke_config_async_on_failure |
 | __Error__{: class="badge badge-red" }      | [Lambda EOL Runtime](lambda/end_of_life_runtime.md)                 | _E2531_  | aws_lambda_function_eol_runtime |
 
 ## Amazon API Gateway REST APIs

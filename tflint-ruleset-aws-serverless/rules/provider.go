@@ -20,6 +20,7 @@ var Rules = []tflint.Rule{
 	NewAwsLambdaFunctionDefaultMemoryRule(),
 	NewAwsLambdaFunctionDefaultTimeoutRule(),
 	NewAwsLambdaPermissionMultiplePrincipalsRule(),
+	NewAwsLambdaEventInvokeConfigAsyncOnFailureRule(),
 	NewAwsSfnStateMachineTracingRule(),
 	NewAwsSnsTopicSubscriptionRedrivePolicyRule(),
 	NewAwsSqsQueueRedrivePolicyRule(),
