@@ -1,7 +1,6 @@
 package rules
 
 import (
-	"fmt"
 	"sort"
 	"testing"
 
@@ -233,9 +232,6 @@ resource "aws_lambda_permission" "b" {
 			}
 
 		})
-
-		fmt.Printf("%+v\n", tc.Expected)
-		fmt.Printf("%+v\n", runner.Issues)
 
 		helper.AssertIssues(t, tc.Expected, runner.Issues)
 	}
