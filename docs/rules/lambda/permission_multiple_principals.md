@@ -9,7 +9,7 @@ __Initial version__: 0.1.3
 __cfn-lint__: WS1002
 {: class="badge" }
 
-__tflint__: _Not implemented_
+__tflint__: aws_lambda_permission_multiple_principals
 {: class="badge" }
 
 You can use resource-based policies to grant permission to other AWS services to invoke your Lambda functions. Different AWS services usually send different payloads to Lambda functions. If multiple services can invoke the same function, this function needs to handle the different types of payload properly, or this could cause unexpected behavior.
