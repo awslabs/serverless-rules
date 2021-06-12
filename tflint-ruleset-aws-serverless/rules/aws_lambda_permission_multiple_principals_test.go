@@ -61,6 +61,68 @@ resource "aws_lambda_permission" "b" {
 }
 
 resource "aws_lambda_permission" "c" {
+	function_name = "my-function"
+	principal = "apigateway.amazonaws.com"
+}
+
+resource "aws_lambda_permission" "d" {
+	function_name = "my-function"
+	principal = "sqs.amazonaws.com"
+}
+`,
+			Expected: helper.Issues{
+				{
+					Rule:    NewAwsLambdaPermissionMultiplePrincipalsRule(),
+					Message: `different "principal" values for the same function_name.`,
+					Range: hcl.Range{
+						Filename: "resource.tf",
+						Start:    hcl.Pos{Line: 4, Column: 14},
+						End:      hcl.Pos{Line: 4, Column: 36},
+					},
+				},
+				{
+					Rule:    NewAwsLambdaPermissionMultiplePrincipalsRule(),
+					Message: `different "principal" values for the same function_name.`,
+					Range: hcl.Range{
+						Filename: "resource.tf",
+						Start:    hcl.Pos{Line: 9, Column: 14},
+						End:      hcl.Pos{Line: 9, Column: 33},
+					},
+				},
+				{
+					Rule:    NewAwsLambdaPermissionMultiplePrincipalsRule(),
+					Message: `different "principal" values for the same function_name.`,
+					Range: hcl.Range{
+						Filename: "resource.tf",
+						Start:    hcl.Pos{Line: 14, Column: 14},
+						End:      hcl.Pos{Line: 14, Column: 40},
+					},
+				},
+				{
+					Rule:    NewAwsLambdaPermissionMultiplePrincipalsRule(),
+					Message: `different "principal" values for the same function_name.`,
+					Range: hcl.Range{
+						Filename: "resource.tf",
+						Start:    hcl.Pos{Line: 19, Column: 14},
+						End:      hcl.Pos{Line: 19, Column: 33},
+					},
+				},
+			},
+		},
+		{
+			Name: "multiple principals",
+			Content: `
+resource "aws_lambda_permission" "a" {
+	function_name = "my-function"
+	principal = "events.amazonaws.com"
+}
+
+resource "aws_lambda_permission" "b" {
+	function_name = "my-function"
+	principal = "sns.amazonaws.com"
+}
+
+resource "aws_lambda_permission" "c" {
 	function_name = "my-function-c"
 	principal = "sns.amazonaws.com"
 }
