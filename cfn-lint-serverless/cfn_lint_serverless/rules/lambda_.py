@@ -224,15 +224,37 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
 
         return None
 
-    def _get_function_from_sub(self, log_group_sub: dict) -> Optional[Tuple[str, str]]:
+    def _get_function_from_sub(self, log_group_sub: Union[str, list]) -> Optional[Tuple[str, str]]:
         """
         Return the function reference from a LogGroupName Sub intrinsic function
         """
 
-        match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_sub)
+        # LogGroupName: !Sub "/aws/lambda/${Function}"
+        if isinstance(log_group_sub, str):
+            match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_sub)
+            if match is not None:
+                return ("ref", match["func"])
 
-        if match is not None:
-            return ("ref", match["func"])
+        elif isinstance(log_group_sub, list):
+            match = re.search(r"/aws/lambda/\${(?P<func>[^}]+)}", log_group_sub[0])
+
+            if match is not None:
+                func_name = match["func"]
+                # LogGroupName: !Sub ["/${Aws}/lambda/${Function}", {Aws: "aws"}]
+                if func_name not in log_group_sub[1]:
+                    return ("ref", func_name)
+
+                func_name = log_group_sub[1][func_name]
+
+                # LogGroupName: !Sub ["/aws/lambda/${Function}", {Function: "my-function-name"}]
+                if isinstance(func_name, str):
+                    return ("name", func_name)
+                # LogGroupName: !Sub ["/aws/lambda/${Function}", {Function: !Ref MyFunction}]
+                elif isinstance(func_name, dict):
+                    if "Fn::Ref" in func_name:
+                        return ("ref", func_name["Fn::Ref"])
+                    if "Ref" in func_name:
+                        return ("ref", func_name["Ref"])
 
         return None
 
