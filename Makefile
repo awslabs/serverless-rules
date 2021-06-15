@@ -2,9 +2,12 @@ CFN_LINT = cfn-lint-serverless
 TFLINT = tflint-ruleset-aws-serverless
 EXAMPLES = examples
 
-dev:
+dev: requirements-dev
 	$(MAKE) -C $(CFN_LINT) dev
 	$(MAKE) -C $(TFLINT) dev
+
+dev-requirements:
+	pip install -r requirements-dev.txt
 
 pr:
 	$(MAKE) -C $(CFN_LINT) pr
@@ -13,6 +16,9 @@ pr:
 test:
 	$(MAKE) -C $(CFN_LINT) test
 	$(MAKE) -C $(TFLINT) test
+
+docs-serve:
+	mkdocs serve
 
 release-check:
 	grep "version = \"$$RELEASE_TAG_VERSION\"" cfn-lint-serverless/pyproject.toml
