@@ -265,8 +265,6 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Check(runner tflint.Runne
 		return err
 	}
 
-	fmt.Printf("%+v\n", asyncPerms)
-
 	// Scan for missing Event Invoke Config.
 	for _, asyncPerm := range asyncPerms {
 		if !asyncPerm.found {
