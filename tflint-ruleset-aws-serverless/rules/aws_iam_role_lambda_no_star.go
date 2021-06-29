@@ -63,7 +63,7 @@ func (r *AwsIamRoleLambdaNoStarRule) Severity() string {
 
 // Link returns the rule reference link
 func (r *AwsIamRoleLambdaNoStarRule) Link() string {
-	return ""
+	return "https://awslabs.github.io/serverless-rules/rules/lambda/star_permissions.html"
 }
 
 // matchPrincipal returns true if the policy has a matching Principal

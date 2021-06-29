@@ -15,6 +15,7 @@ __tflint__: aws_lambda_function_eol_runtime
 Managed Lambda runtimes for .zip file archives are built around a combination of operating system, programming language, and software libraries that are subject to maintenance and security updates. When security updates are no longer available for a component of a runtime, Lambda deprecates the runtime.
 
 !!! info
+
     This rule is implemented natively in `cfn-lint` as rule number __E2531__.
 
 ## Implementations
