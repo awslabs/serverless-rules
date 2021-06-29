@@ -9,7 +9,7 @@ __Initial version__: 0.1.3
 __cfn-lint__: WS1004
 {: class="badge" }
 
-__tflint__: _Not implemented_
+__tflint__: aws_cloudwatch_log_group_lambda_retention
 {: class="badge" }
 
 By default, CloudWatch log groups created by Lambda functions have an unlimited retention time. For cost optimization purposes, you should set a retention duration on all log groups. For log archival, export and set cost-effective storage classes that best suit your needs.
@@ -190,7 +190,7 @@ Since `serverless-rules` evaluate infrastructure-as-code template, it cannot che
 
     # Explicit log group
     resource "aws_cloudwatch_log_group" "this" {
-      name              = "/aws/lambda/{aws_lambda_function.this.function_name}
+      name              = "/aws/lambda/${aws_lambda_function.this.function_name}
       # Explicit retention time
       retention_in_days = 7
     }
