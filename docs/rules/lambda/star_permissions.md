@@ -9,15 +9,107 @@ __Initial version__: 0.1.3
 __cfn-lint__: WS1003
 {: class="badge" }
 
-__tflint__: _Not implemented_
+__tflint__: aws_iam_role_lambda_no_star
 {: class="badge" }
 
  With Lambda functions, you should follow least-privileged access and only allow the access needed to perform a given operation. Attaching a role with more permissions than necessary can open up your systems for abuse.
 
+??? warning "Limitations on policies"
+
+    This rule only works with inline policies defined as part of the IAM role resource. It will not check managed policies or policies defined as separate resources.
+
+    === "CloudFormation"
+
+        ```yaml
+        Resources:
+          MyRole:
+            Type: AWS::IAM::Role
+            Properties:
+              AssumeRolePolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Principal:
+                      Service:
+                        - lambda.amazonaws.com
+                    Action:
+                      - sts:AssumeRole
+              # The rule will check this policy
+              Policies:
+                - PolicyName: root
+                  PolicyDocument:
+                    Version: "2012-10-17"
+                    Statement:
+                      - Effect: Allow
+                        Action: dynamodb:Query
+                        Resource: "*"
+
+          # It will not check this policy
+          MyPolicy:
+            Type: AWS::IAM::Policy
+            Properties:
+              PolicyDocument:
+                Version: "2012-10-17"
+                    Statement:
+                      - Effect: Allow
+                        Action: dynamodb:*
+                        Resource: "*"
+              Roles:
+                - !GetAtt MyRole.Arn
+        ```
+
+    === "Terraform"
+    
+        ```tf
+        resource "aws_iam_role" "this" {
+          name = "my-function-role"
+          assume_role_policy = data.aws_iam_policy_document.assume.json
+
+          # The rule will check this policy
+          inline_policy {
+            name = "FunctionPolicy"
+            policy = data.aws_iam_policy_document.valid.json
+          }
+        }
+
+        # It will not check this policy
+        resource "aws_iam_policy" "this" {
+          policy = data.aws_iam_policy_document.invalid.json
+        }
+
+        resource "aws_iam_policy_attachment" "this" {
+          roles = [aws_iam_role.this.name]
+          policy_arn = aws_iam_policy.this.arn
+        }
+
+        data "aws_iam_policy_document" "assume" {
+          statement {
+            actions = ["sts:AssumeRole"]
+            principals {
+              type       = "Service"
+              identifiers = ["lambda.amazonaws.com"]
+            }
+          }
+        }
+
+        data "aws_iam_policy_document" "valid" {
+          statement {
+            actions = ["dynamodb:Query"]
+            resources = ["arn:aws:dynamodb:eu-west-1:111122223333:table/my-table"]
+          }
+        }
+
+        data "aws_iam_policy_document" "invalid" {
+          statement {
+            actions = ["dynamodb:*"]
+            resources = ["*"]
+          }
+        }
+        ```
+
 ## Why is this a warning?
 
 If your Lambda function needs a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.
-
 
 ## Implementations
 
@@ -119,7 +211,7 @@ If your Lambda function needs a broad range of permissions, you do not know ahea
               # instead of 's3:*' or '*'
               Action: s3:GetObject
               Resource: "arn:aws:s3:::my-bucket/*"
-        
+
     functions:
       hello:
         handler: handler.hello
