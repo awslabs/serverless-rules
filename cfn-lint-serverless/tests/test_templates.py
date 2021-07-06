@@ -1,4 +1,6 @@
-#!/usr/bin/env python3
+"""
+Testing templates
+"""
 
 
 import collections

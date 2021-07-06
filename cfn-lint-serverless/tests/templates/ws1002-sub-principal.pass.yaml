@@ -1,0 +1,24 @@
+# Test for https://github.com/awslabs/serverless-rules/issues/78
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Parameters:
+  ProjectId:
+    Type: String
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Runtime: python3.8
+      Handler: main.handler
+      Tracing: Active
+
+  Permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt Function.Arn
+      Principal: !Sub pinpoint.${AWS::Region}.amazonaws.com
+      Action: lambda:Invoke
+      SourceArn: !Sub 'arn:aws:mobiletargeting:${AWS::Region}:${AWS::AccountId}:/apps/${ProjectId}*'

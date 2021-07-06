@@ -9,6 +9,8 @@ from typing import Dict, List, Optional, Tuple, Union
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
+from ..utils import Value
+
 
 class LambdaTracingRule(CloudFormationLintRule):
     """
@@ -90,21 +92,13 @@ class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
         permissions = defaultdict(list)
 
         for _, value in cfn.get_resources(["AWS::Lambda::Permission"]).items():
-            function_name = value.get("Properties", {}).get("FunctionName", "")
-            principal = value.get("Properties", {}).get("Principal", "")
+            principal = Value(value.get("Properties", {}).get("Principal", ""))
+            function_name = Value(value.get("Properties", {}).get("FunctionName", ""))
 
-            if isinstance(function_name, dict):
-                if "Ref" in function_name:
-                    function_name = function_name["Ref"]
-                elif "Fn::Ref" in function_name:
-                    function_name = function_name["Fn::Ref"]
-                elif "GetAtt" in function_name:
-                    function_name = function_name["GetAtt"][0]
-                elif "Fn::GetAtt" in function_name:
-                    function_name = function_name["Fn::GetAtt"][0]
+            for reference in function_name.references:
+                permissions[reference].append(principal.id)
 
-            permissions[str(function_name)].append(principal)
-
+        print(permissions)
         return permissions
 
     def match(self, cfn):
