@@ -1,0 +1,15 @@
+# Test for https://github.com/awslabs/serverless-rules/issues/79
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  Queue:
+    Type: AWS::SQS::Queue
+    Properties:
+      RedrivePolicy: !Sub |
+        {
+          "deadLetterTargetArn": "${DLQ}",
+          "maxReceiveCount": 4
+        }
+
+  DLQ:
+    Type: AWS::SQS::Queue
