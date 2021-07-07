@@ -5,6 +5,8 @@ Rules for SQS resources
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
+from ..utils import Value
+
 
 class SqsNoRedrivePolicyRule(CloudFormationLintRule):
     """
@@ -24,12 +26,19 @@ class SqsNoRedrivePolicyRule(CloudFormationLintRule):
         Match against SQS queues without RedrivePolicy
         """
 
-        matches = []
+        matches = {}
+        dlqs = []
 
         for key, value in cfn.get_resources(["AWS::SQS::Queue"]).items():
             redrive_policy = value.get("Properties", {}).get("RedrivePolicy", None)
 
             if redrive_policy is None:
-                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+                matches[key] = RuleMatch(["Resources", key], self._message.format(key))
 
-        return matches
+            else:
+                redrive_policy = Value(redrive_policy)
+                # If a queue is used as a DLQ, it doesn't need a redrive policy
+                # See https://github.com/awslabs/serverless-rules/issues/79
+                dlqs.extend(redrive_policy.references)
+
+        return [v for k, v in matches.items() if k not in dlqs]
