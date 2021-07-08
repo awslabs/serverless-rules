@@ -4,15 +4,30 @@ Utilities
 
 
 import re
-from typing import List, Tuple, Union
+from typing import List, Tuple, TypeVar, Union
 
 SUB_PATTERN = re.compile(r"\${(?P<ref>[^}]+)}")
+
+
+TValue = TypeVar("TValue", bound="Value")
 
 
 class Value:
 
     id = ""  # noqa: VNE003
     references = None
+
+    def __new__(cls, value: Union[None, dict, str]) -> Union[None, TValue]:
+        """
+        Create a new Value object
+
+        If the 'value' passed is None, this will return None instead of a class object
+        """
+
+        if value is None:
+            return None
+
+        return super(Value, cls).__new__(cls)
 
     def __init__(self, value: Union[dict, str]):
         """
@@ -99,7 +114,14 @@ class Value:
 
         for match in SUB_PATTERN.findall(pattern):
             if match in variables:
-                references.extend(variables[match].references)
+                # Variable with reference(s)
+                if len(variables[match].references) > 0:
+                    references.extend(variables[match].references)
+                # Hard-coded variable
+                else:
+                    # Replace with hard-coded value in value ID
+                    pattern = pattern.replace(f"${{{match}}}", variables[match].id)
+            # No matching variable
             else:
                 references.append(match)
 

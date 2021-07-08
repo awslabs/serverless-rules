@@ -24,8 +24,8 @@ value_test_cases = [
     },
     # Fn::Sub
     {"input": {"Fn::Sub": "abc-${MyResource}"}, "id": "abc-${MyResource}", "references": ["MyResource"]},
-    # Fn::Sub with variables
-    {"input": {"Fn::Sub": ["abc-${MyVar}", {"MyVar": "MyResource"}]}, "id": "abc-${MyVar}", "references": []},
+    # Fn::Sub with hard-coded variables
+    {"input": {"Fn::Sub": ["abc-${MyVar}", {"MyVar": "MyResource"}]}, "id": "abc-MyResource", "references": []},
     # Fn::Sub with variables and references
     {
         "input": {"Fn::Sub": ["abc-${MyVar}", {"MyVar": {"Ref": "MyResource"}}]},
@@ -41,9 +41,21 @@ def test_value(case):
     Test Value()
     """
 
-    print(case)
+    print(f"case: {case}")
 
     output = utils.Value(case["input"])
 
+    print(f"output id: {output.id}")
+    print(f"output ref: {output.references}")
+
     assert case["id"] == output.id
     assert case["references"] == output.references
+
+
+def test_none_value():
+    """
+    Test Value(None)
+    """
+
+    output = utils.Value(None)
+    assert output is None
