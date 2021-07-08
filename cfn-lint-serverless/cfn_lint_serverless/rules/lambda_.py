@@ -97,7 +97,6 @@ class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
             for reference in function_name.references:
                 permissions[reference].append(principal.id)
 
-        print(permissions)
         return permissions
 
     def match(self, cfn):
