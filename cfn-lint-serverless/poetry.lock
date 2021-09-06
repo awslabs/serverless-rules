@@ -720,7 +720,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "xenon"
-version = "0.7.3"
+version = "0.8.0"
 description = "Monitor code metrics for Python on your CI server"
 category = "dev"
 optional = false
@@ -728,7 +728,7 @@ python-versions = "*"
 
 [package.dependencies]
 PyYAML = ">=4.2b1,<6.0"
-radon = ">=4,<5"
+radon = ">=4,<6"
 requests = ">=2.0,<3.0"
 
 [[package]]
@@ -746,7 +746,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "c6e9b0e979c008b118b9aae76c9e7d5aa2bb214ba73feddec970da074d2c5a1c"
+content-hash = "d6746a6dd6d0c10eff85e662cba1d8ad2c4f0a3bd3dc5fe3a562b75c4108f34f"
 
 [metadata.files]
 appdirs = [
@@ -1142,8 +1142,8 @@ urllib3 = [
     {file = "urllib3-1.26.5.tar.gz", hash = "sha256:a7acd0977125325f516bda9735fa7142b909a8d01e8b2e4c8108d0984e6e0098"},
 ]
 xenon = [
-    {file = "xenon-0.7.3-py2.py3-none-any.whl", hash = "sha256:a167b4c329fbea7cd84b148007ba92142f46b88ca095488c175dc7a8a8007ee9"},
-    {file = "xenon-0.7.3.tar.gz", hash = "sha256:eda949fbf3cfb4851d49d97e961e2b18a6b66fbecaf285dc89230775d2b2a99f"},
+    {file = "xenon-0.8.0-py2.py3-none-any.whl", hash = "sha256:4c3d7157d9ae058364e130c831702e4a65a1f729d4b4def912418ed09772c851"},
+    {file = "xenon-0.8.0.tar.gz", hash = "sha256:cd5cad0930673d0e52609712c63fe4721a8f4c4342dc338bd7ea5fa0666b8515"},
 ]
 zipp = [
     {file = "zipp-3.4.1-py3-none-any.whl", hash = "sha256:51cb66cc54621609dd593d1787f286ee42a5c0adbb4b29abea5a63edc3e03098"},
