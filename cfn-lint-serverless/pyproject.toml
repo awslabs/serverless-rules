@@ -21,7 +21,7 @@ pytest-cov = "^2.12.1"
 flake8-eradicate = "^1.1.0"
 flake8-bugbear = "^21.4.3"
 bandit = "^1.7.0"
-radon = "^4.3.2"
+radon = "^5.1.0"
 xenon = "^0.8.0"
 
 [tool.black]
