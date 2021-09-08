@@ -121,7 +121,7 @@ python-versions = "*"
 
 [[package]]
 name = "cfn-lint"
-version = "0.53.1"
+version = "0.54.0"
 description = "Checks CloudFormation templates for practices and behaviour that could potentially be improved"
 category = "main"
 optional = false
@@ -746,7 +746,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "d6746a6dd6d0c10eff85e662cba1d8ad2c4f0a3bd3dc5fe3a562b75c4108f34f"
+content-hash = "a201ea2f94e3fb66fe9da670e8d4e14779952729168e790ed23e506b882e6218"
 
 [metadata.files]
 appdirs = [
@@ -786,8 +786,8 @@ certifi = [
     {file = "certifi-2020.12.5.tar.gz", hash = "sha256:1a4995114262bffbc2413b159f2a1a480c969de6e6eb13ee966d470af86af59c"},
 ]
 cfn-lint = [
-    {file = "cfn-lint-0.53.1.tar.gz", hash = "sha256:45fe0ab893e0ef6dce6f6e41840f6314a5d22ce4c8fa1b46e5970f05889d1621"},
-    {file = "cfn_lint-0.53.1-py3-none-any.whl", hash = "sha256:172c192e4b9a6d2c7cc07850008d3d092525b9ce34a6ad39349e374af92ec423"},
+    {file = "cfn-lint-0.54.0.tar.gz", hash = "sha256:8a685b539e87fedac1f179d158bf07da63799c03ebb24e381795381869df03d0"},
+    {file = "cfn_lint-0.54.0-py3-none-any.whl", hash = "sha256:295871dd328912b2fb6e46548a4e690b9e141488963ce2634eb45992abdf383c"},
 ]
 chardet = [
     {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},
