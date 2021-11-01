@@ -57,7 +57,7 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Name() string {
 // Enabled returns whether the rule is enabled by default
 func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Enabled() bool {
 	// TODO: Determine whether the rule is enabled by default
-	return true
+	return false
 }
 
 // Severity returns the rule severity

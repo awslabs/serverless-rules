@@ -94,6 +94,10 @@ When an asynchronous calls fail, they should be captured and retried whenever po
               FunctionName: my-lambda-function
         ```
 
+??? bug "Disabled for Terraform"
+
+    This rule is disabled for Terraform, as the current linter only support static values in expressions. See [this issue](https://github.com/awslabs/serverless-rules/issues/107) for more information.
+
 ## Implementations
 
 === "CDK"
