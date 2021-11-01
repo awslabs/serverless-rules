@@ -29,7 +29,7 @@ func (r *AwsSqsQueueRedrivePolicyRule) Name() string {
 
 // Enabled returns whether the rule is enabled by default
 func (r *AwsSqsQueueRedrivePolicyRule) Enabled() bool {
-	return true
+	return false
 }
 
 // Severity returns the rule severity
