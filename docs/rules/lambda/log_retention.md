@@ -73,6 +73,10 @@ By default, CloudWatch log groups created by Lambda functions have an unlimited 
               RetentionInDays: 7
         ```
 
+??? bug "Disabled for Terraform"
+
+    This rule is disabled for Terraform, as the current linter only support static values in expressions. See [this issue](https://github.com/awslabs/serverless-rules/issues/107) for more information.
+
 ## Why is this a warning?
 
 Since `serverless-rules` evaluate infrastructure-as-code template, it cannot check if you use a solution that will automatically change the configuration of log groups after the fact.
