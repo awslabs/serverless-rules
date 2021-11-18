@@ -20,7 +20,7 @@ jobs:
       - name: Check version tags
         run: make release-check
       - name: Set up Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v2.3.0
         with:
           python-version: 3.8
       - name: Set up Go
@@ -46,7 +46,7 @@ jobs:
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
       - name: Set up Python
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v2.3.0
         with:
           python-version: 3.8
       - name: Install dependencies
