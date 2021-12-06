@@ -22,7 +22,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "aws-sam-translator"
-version = "1.40.0"
+version = "1.42.0"
 description = "AWS SAM Translator is a library that transform SAM templates into AWS CloudFormation templates"
 category = "main"
 optional = false
@@ -120,14 +120,14 @@ python-versions = "*"
 
 [[package]]
 name = "cfn-lint"
-version = "0.56.2"
+version = "0.56.3"
 description = "Checks CloudFormation templates for practices and behaviour that could potentially be improved"
 category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [package.dependencies]
-aws-sam-translator = ">=1.40.0"
+aws-sam-translator = ">=1.42.0"
 importlib-resources = {version = ">=1.4,<4", markers = "python_version < \"3.7\""}
 jschema-to-python = ">=1.2.3,<1.3.0"
 jsonpatch = "*"
@@ -807,9 +807,9 @@ attrs = [
     {file = "attrs-21.2.0.tar.gz", hash = "sha256:ef6aaac3ca6cd92904cdd0d83f629a15f18053ec84e6432106f7a4d04ae4f5fb"},
 ]
 aws-sam-translator = [
-    {file = "aws-sam-translator-1.40.0.tar.gz", hash = "sha256:ae52c5941048ea7e4a2fd268dbd5d34a133e128913a641f41c9360f6d77b05c3"},
-    {file = "aws_sam_translator-1.40.0-py2-none-any.whl", hash = "sha256:bc7dbda72526763049a156a9bfdda9a2529d0a0a4ac670c1158980f6aee33dfd"},
-    {file = "aws_sam_translator-1.40.0-py3-none-any.whl", hash = "sha256:99e3b80c2ca4f6f67c9bcfa757ba9f30eee9716a4a93d698a581476dc9945307"},
+    {file = "aws-sam-translator-1.42.0.tar.gz", hash = "sha256:8a7976c0ee2fca004a590e17d3551a49c8d8ba14ed0cb3674ea270d41d0dcd5b"},
+    {file = "aws_sam_translator-1.42.0-py2-none-any.whl", hash = "sha256:4f5d3d5d0567fe728e75c5c8dff599f7c88313b3b8e85b9b17a2c00cb046b2e4"},
+    {file = "aws_sam_translator-1.42.0-py3-none-any.whl", hash = "sha256:31875e4f639511f506d0c757a2a50756bd846440724079e867aafb12c534ac23"},
 ]
 bandit = [
     {file = "bandit-1.7.1-py3-none-any.whl", hash = "sha256:f5acd838e59c038a159b5c621cf0f8270b279e884eadd7b782d7491c02add0d4"},
@@ -832,8 +832,8 @@ certifi = [
     {file = "certifi-2021.10.8.tar.gz", hash = "sha256:78884e7c1d4b00ce3cea67b44566851c4343c120abd683433ce934a68ea58872"},
 ]
 cfn-lint = [
-    {file = "cfn-lint-0.56.2.tar.gz", hash = "sha256:b7258f90ad3d727a8a3523eec55b90ba375d99594e6449b37a3e6ccadfab6be8"},
-    {file = "cfn_lint-0.56.2-py3-none-any.whl", hash = "sha256:3b16eaceff002b0d555249f12f18481b2e73acb976cabba1906184206046aa4d"},
+    {file = "cfn-lint-0.56.3.tar.gz", hash = "sha256:ce056cc54c3141b6da5f20066d14ac576a75ace1349a5994f772e12f2bcbfa57"},
+    {file = "cfn_lint-0.56.3-py3-none-any.whl", hash = "sha256:0fbd46cb98dd371e54d709468092643ba85d97ce09da2d849cc69b3e7dc82a2a"},
 ]
 charset-normalizer = [
     {file = "charset-normalizer-2.0.7.tar.gz", hash = "sha256:e019de665e2bcf9c2b64e2e5aa025fa991da8720daa3c1138cadd2fd1856aed0"},
