@@ -13,7 +13,7 @@ cfn-lint = ">=0.49.2,<1"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 isort = "^5.7.0"
-black = "^21.12b0"
+black = "^22.1"
 flake8 = "^4.0.1"
 coverage = "^6.2"
 flake8-variables-names = "^0.0.4"
