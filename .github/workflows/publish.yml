@@ -28,7 +28,7 @@ jobs:
         with:
           go-version: 1.16
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v2
+        uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.29.0
       - name: Install dependencies
