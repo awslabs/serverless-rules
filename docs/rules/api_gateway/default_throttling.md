@@ -36,7 +36,7 @@ Amazon API Gateway supports defining default limits for an API to prevent it fro
               methodOptions: {
                 '*/*': {
                   throttlingBurstLimit: 1000,
-                  throttlingRateLimite: 10,
+                  throttlingRateLimit: 10,
                 }
               }
             },
