@@ -2,7 +2,6 @@
 Testing utility functions
 """
 
-
 import pytest
 
 from cfn_lint_serverless import utils
