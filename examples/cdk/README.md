@@ -2,7 +2,7 @@
 CDK Example
 ===========
 
-xample on how to use cfn-lint-serverless with [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html).
+Example on how to use cfn-lint-serverless with [AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/home.html).
 
 Usage
 -----
