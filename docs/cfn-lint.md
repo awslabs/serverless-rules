@@ -41,7 +41,7 @@ If the template fulfills the requirements for all rules, `cfn-lint` will return 
     ES4000 EventBridge rule ConsumerFunctionTrigger should have a DeadLetterConfig.Arn property for all its Targets.
     template.yaml:5:1
 
-    WS1000 Lambda function ConsumerFunction should have TracingConfig.Mode set to 'Active'.
+    WS1000 Lambda function ConsumerFunction should have Tracing property set to 'Active'.
     template.yaml:7:3
 
     WS1004 Lambda function ConsumerFunction does not have a corresponding log group with a Retention property
