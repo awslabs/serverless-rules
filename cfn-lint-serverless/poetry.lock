@@ -502,6 +502,7 @@ pyflakes = ">=3.2.0,<3.3.0"
 
 [[package]]
 name = "flake8-bugbear"
+<<<<<<< HEAD
 version = "24.8.19"
 description = "A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle."
 optional = false
@@ -509,6 +510,15 @@ python-versions = ">=3.8.1"
 files = [
     {file = "flake8_bugbear-24.8.19-py3-none-any.whl", hash = "sha256:25bc3867f7338ee3b3e0916bf8b8a0b743f53a9a5175782ddc4325ed4f386b89"},
     {file = "flake8_bugbear-24.8.19.tar.gz", hash = "sha256:9b77627eceda28c51c27af94560a72b5b2c97c016651bdce45d8f56c180d2d32"},
+=======
+version = "23.3.12"
+description = "A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "flake8-bugbear-23.3.12.tar.gz", hash = "sha256:e3e7f74c8a49ad3794a7183353026dabd68c74030d5f46571f84c1fb0eb79363"},
+    {file = "flake8_bugbear-23.3.12-py3-none-any.whl", hash = "sha256:beb5c7efcd7ccc2039ef66a77bb8db925e7be3531ff1cb4d0b7030d0e2113d72"},
+>>>>>>> 8468ea1 (chore(deps-dev): bump flake8-bugbear in /cfn-lint-serverless)
 ]
 
 [package.dependencies]
@@ -1744,8 +1754,12 @@ content-hash = "3caccca615572a04bd7127b802a6a44029fa148764b89735367f17742dace669
 =======
 python-versions = ">=3.6.2,<4"
 <<<<<<< HEAD
+<<<<<<< HEAD
 content-hash = "08a78949689388b78bacc262653be2563ad7672824731633beebc2dc21103193"
 >>>>>>> 82d9144 (chore(deps-dev): bump black in /cfn-lint-serverless)
 =======
 content-hash = "16882d9d34f84d201134ce1d26ea919f4be79f97a90179244dcc9f9daaead53f"
 >>>>>>> 32bac4b (chore(deps-dev): bump bandit in /cfn-lint-serverless)
+=======
+content-hash = "89d2ca64db6fdce5f6d1716b7c06587a41b621adfe16e47df2375baad91355b0"
+>>>>>>> 8468ea1 (chore(deps-dev): bump flake8-bugbear in /cfn-lint-serverless)
