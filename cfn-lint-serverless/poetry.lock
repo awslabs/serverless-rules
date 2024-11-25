@@ -367,16 +367,14 @@ setuptools = "*"
 
 [[package]]
 name = "flake8-variables-names"
-version = "0.0.4"
+version = "0.0.6"
 description = "A flake8 extension that helps to make more readable variables names"
 optional = false
-python-versions = "*"
+python-versions = ">=3.7"
 files = [
-    {file = "flake8_variables_names-0.0.4.tar.gz", hash = "sha256:d6fa0571a807c72940b5773827c5760421ea6f8206595ff0a8ecfa01e42bf2cf"},
+    {file = "flake8_variables_names-0.0.6-py3-none-any.whl", hash = "sha256:4aff935d54b3f7afcd026b4dae55029877bd05a7c507b294b45bc7bf577d7b47"},
+    {file = "flake8_variables_names-0.0.6.tar.gz", hash = "sha256:292c50e4813d632aa3adcd02c185e7bb583f5fc8ebe02e70f13c958bfe46ad91"},
 ]
-
-[package.dependencies]
-setuptools = "*"
 
 [[package]]
 name = "idna"
@@ -1026,4 +1024,4 @@ requests = ">=2.0,<3.0"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.6.2,<4"
-content-hash = "3ca827003b9d01977d7cd83adc92fff8dbbce160c19654a18795ed843dd357d9"
+content-hash = "d6ec207e892b7ebbe1fa5234d01ff6b71b2e1dd780b38a3b5ee60edac061b1c5"
