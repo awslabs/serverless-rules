@@ -153,7 +153,7 @@ Since `serverless-rules` evaluate infrastructure-as-code template, it cannot che
         Type: AWS::Serverless::Function
         Properties:
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
           Tracing: Active
 

@@ -69,7 +69,7 @@ Managed Lambda runtimes for .zip file archives are built around a combination of
         Properties:
           CodeUri: .
           # Select a runtime that is not deprecated
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
     ```
 
