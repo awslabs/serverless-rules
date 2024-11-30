@@ -68,7 +68,7 @@ Resources:
         SNS:
           Type: SNS
           Properties:
-            Topic: my-sns-topic
+            Topic: !Sub arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:my-sns-topic
 
   MyBucket:
     Type: AWS::S3::Bucket
