@@ -262,5 +262,5 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
       artifacts:
         when: always
         reports:
-          junit: cfn_lint_report.xml
+          junit: tflint_report.xml
     ```
