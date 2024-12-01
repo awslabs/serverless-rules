@@ -60,7 +60,7 @@ jobs:
         run: make -C cfn-lint-serverless release
         env:
           PYPI_USERNAME: __token__
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PIPY_TOKEN24 }}
 
   publish_go:
     needs: run_tests
