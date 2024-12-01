@@ -7,7 +7,7 @@ Resources:
     Properties:
       FunctionName: my_function_name
       CodeUri: .
-      Runtime: python3.8
+      Runtime: python3.12
       Handler: main.handler
       Tracing: Active
 

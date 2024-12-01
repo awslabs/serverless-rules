@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
-      Runtime: python3.8
+      Runtime: python3.12
       Handler: main.handler
       Tracing: Active
       CodeSigningConfigArn: arn:aws:lambda:eu-east-1:111122223333:code-signing-config:csc-d0a6cc682193458f9

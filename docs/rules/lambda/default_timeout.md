@@ -71,7 +71,7 @@ If your timeout value is too short, Lambda might terminate invocations premature
         Properties:
           # Required properties
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
 
           # Change the function timeout

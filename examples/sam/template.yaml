@@ -29,7 +29,7 @@ Globals:
         ThrottlingRateLimit: 10
     TracingEnabled: true
   Function:
-    Runtime: python3.8
+    Runtime: python3.12
     Tracing: Active
 
 Resources:

@@ -184,7 +184,7 @@ If your Lambda function needs a broad range of permissions, you do not know ahea
         Type: AWS::Serverless::Function
         Properties:
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
 
           Policies:

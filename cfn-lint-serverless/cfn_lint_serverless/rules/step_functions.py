@@ -2,7 +2,6 @@
 Rules for Step Functions resources
 """
 
-
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 

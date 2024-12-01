@@ -73,7 +73,7 @@ You might use [third party solutions](https://aws.amazon.com/lambda/partners/) f
         Properties:
           # Required properties
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
 
           # Enable active tracing

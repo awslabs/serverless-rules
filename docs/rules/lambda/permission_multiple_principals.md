@@ -89,7 +89,7 @@ In general, it's better to create multiple Lambda functions with different funct
         Type: AWS::Serverless::Function
         Properties:
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
           Tracing: Active
           # This will implicitely grant those SNS topics the permission to invoke

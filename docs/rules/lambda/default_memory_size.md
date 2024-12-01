@@ -71,7 +71,7 @@ You can use tools such as [AWS Lambda Power Tuning](https://github.com/alexcasal
         Properties:
           # Required properties
           CodeUri: .
-          Runtime: python3.8
+          Runtime: python3.12
           Handler: main.handler
 
           # Change the function memory size
