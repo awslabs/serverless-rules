@@ -8,7 +8,7 @@ license = "MIT-0"
 
 [tool.poetry.dependencies]
 python = ">=3.8.0,<4"
-cfn-lint = ">=0.49.2,<1"
+cfn-lint = ">=0.49.2,<2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^8.3.3"
