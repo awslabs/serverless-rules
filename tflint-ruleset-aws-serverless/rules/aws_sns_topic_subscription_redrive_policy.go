@@ -3,22 +3,20 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
-// TODO: Write the rule's description here
-// AwsSnsTopicSubscriptionRedrivePolicy checks that an SNS subscription has a redrive policy configured
+// AwsSnsTopicSubscriptionRedrivePolicyRule checks that an SNS subscription has a redrive policy configured
 type AwsSnsTopicSubscriptionRedrivePolicyRule struct {
 	resourceType  string
 	attributeName string
+	tflint.DefaultRule
 }
 
 // NewAwsSnsTopicSubscriptionRedrivePolicyRule returns new rule with default attributes
 func NewAwsSnsTopicSubscriptionRedrivePolicyRule() *AwsSnsTopicSubscriptionRedrivePolicyRule {
 	return &AwsSnsTopicSubscriptionRedrivePolicyRule{
-		// TODO: Write resource type and attribute name here
 		resourceType:  "aws_sns_topic_subscription",
 		attributeName: "redrive_policy",
 	}
@@ -35,7 +33,7 @@ func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Severity() string {
+func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
@@ -46,35 +44,30 @@ func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Link() string {
 
 // Check checks that an SNS subscription has a redrive policy configured
 func (r *AwsSnsTopicSubscriptionRedrivePolicyRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Attribute
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.attributeName},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
-		if !ok {
+	for _, resource := range resources.Blocks {
+		attr, exists := resource.Body.Attributes[r.attributeName]
+		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
+			continue
 		}
 
-		return nil
-	})
+		var attrValue string
+		if err := runner.EvaluateExpr(attr.Expr, &attrValue, nil); err != nil {
+			return err
+		}
+	}
+	return nil
 }

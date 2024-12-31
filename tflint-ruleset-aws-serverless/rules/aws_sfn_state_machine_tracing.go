@@ -3,8 +3,7 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -13,6 +12,7 @@ type AwsSfnStateMachineTracingRule struct {
 	resourceType  string
 	blockName     string
 	attributeName string
+	tflint.DefaultRule
 }
 
 // NewAwsSfnStateMachineTracingRule returns new rule with default attributes
@@ -35,7 +35,7 @@ func (r *AwsSfnStateMachineTracingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsSfnStateMachineTracingRule) Severity() string {
+func (r *AwsSfnStateMachineTracingRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 
@@ -47,68 +47,57 @@ func (r *AwsSfnStateMachineTracingRule) Link() string {
 // TODO: Write the details of the inspection
 // Check checks if tracing is enabled for Step functions
 func (r *AwsSfnStateMachineTracingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Block
-
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: r.attributeName},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		blocks := resource.Body.Blocks
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
-		// Attribute
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
+		for _, block := range blocks {
+			var attrValue string
+			attr, exists := block.Body.Attributes[r.attributeName]
+			if !exists {
+				runner.EmitIssue(
+					r,
+					fmt.Sprintf("\"%s\" is not present.", r.attributeName),
+					block.DefRange,
+				)
+				continue
+			}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
-		if !ok {
-			runner.EmitIssue(
-				r,
-				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
-			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
+			if err := runner.EvaluateExpr(attr.Expr, &attrValue, nil); err != nil {
 				return err
 			}
 
 			if attrValue != "true" {
-				runner.EmitIssueOnExpr(
+				runner.EmitIssue(
 					r,
 					fmt.Sprintf("\"%s\" should be set to true.", r.attributeName),
-					attribute.Expr,
+					attr.Expr.Range(),
 				)
 			}
 		}
-
-		return nil
-	})
+	}
+	return nil
 }
