@@ -2,18 +2,19 @@ package rules
 
 import (
 	"fmt"
+	"github.com/hashicorp/hcl/v2"
 	"regexp"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
+	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 type awsLambdaLogGroup struct {
-	functionName  string
-	resourceName  string
-	found         bool
-	resourceRange hcl.Range
+	functionName string
+	resourceName string
+	found        bool
+	//resourceRange tflint.AttributeRange
 }
 
 // AwsCloudwatchLogGroupLambdaRetention checks if Lambda functions have a corresponding log group with retention configured
@@ -47,7 +48,7 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Severity() string {
+func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 

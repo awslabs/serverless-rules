@@ -2,8 +2,10 @@ package rules
 
 import (
 	"fmt"
+	"github.com/hashicorp/hcl/v2"
 
-	hcl "github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
+	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -48,7 +50,7 @@ func (r *AwsLambdaFunctionEolRuntimeRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaFunctionEolRuntimeRule) Severity() string {
+func (r *AwsLambdaFunctionEolRuntimeRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 

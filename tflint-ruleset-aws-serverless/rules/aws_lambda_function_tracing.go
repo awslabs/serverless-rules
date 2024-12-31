@@ -2,9 +2,10 @@ package rules
 
 import (
 	"fmt"
-
 	"github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
+	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -35,7 +36,7 @@ func (r *AwsLambdaFunctionTracingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaFunctionTracingRule) Severity() string {
+func (r *AwsLambdaFunctionTracingRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 

@@ -36,7 +36,7 @@ func (r *AwsApigatewayStageStructuredLoggingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsApigatewayStageStructuredLoggingRule) Severity() string {
+func (r *AwsApigatewayStageStructuredLoggingRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 

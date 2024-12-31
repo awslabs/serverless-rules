@@ -2,9 +2,10 @@ package rules
 
 import (
 	"fmt"
+	"github.com/hashicorp/hcl/v2"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
+	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -33,7 +34,7 @@ func (r *AwsAPIGatewayStageV2LoggingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsAPIGatewayStageV2LoggingRule) Severity() string {
+func (r *AwsAPIGatewayStageV2LoggingRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
