@@ -31,9 +31,9 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.23'
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v2
+        uses: terraform-linters/setup-tflint@v4
         with:
           tflint_version: v0.50.0
       - name: Install dependencies
@@ -60,7 +60,7 @@ jobs:
         run: make -C cfn-lint-serverless release
         env:
           PYPI_USERNAME: __token__
-          PYPI_TOKEN: ${{ secrets.PIPY_TOKEN24 }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN25 }}
 
   publish_go:
     needs: run_tests
@@ -70,7 +70,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version: '1.23'
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3
         with:
