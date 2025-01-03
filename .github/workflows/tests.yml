@@ -30,6 +30,8 @@ jobs:
           cache: 'pip'
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+      - name: Install ruff
+        run: uv pip install ruff
       - name: Install dependencies
         run: make -C $FOLDER dev
       - name: Formatting and Linting
