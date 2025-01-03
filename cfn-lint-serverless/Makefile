@@ -15,7 +15,7 @@ test-template:
 	PYTHONPATH=".:$$PYTHONPATH" cfn-lint $(TEMPLATE) -a cfn_lint_serverless.rules
 
 security-baseline:
-	uv run bandit --baseline bandit.baseline -r cfn_lint_serverless
+	uv run bandit -f json -r cfn_lint_serverless -o bandit.baseline || true
 
 complexity-baseline:
 	$(info Maintenability index)
