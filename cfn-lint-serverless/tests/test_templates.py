@@ -2,7 +2,6 @@
 Testing templates
 """
 
-
 import collections
 import os
 from typing import List
