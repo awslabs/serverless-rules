@@ -1,7 +1,6 @@
 """
-Utilities 
+Utilities
 """
-
 
 import re
 from typing import List, Tuple, TypeVar, Union
@@ -13,7 +12,6 @@ TValue = TypeVar("TValue", bound="Value")
 
 
 class Value:
-
     id = ""  # noqa: VNE003
     references = None
 

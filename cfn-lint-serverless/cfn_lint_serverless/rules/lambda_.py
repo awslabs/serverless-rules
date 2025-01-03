@@ -2,7 +2,6 @@
 Rules for Lambda resources
 """
 
-
 from collections import defaultdict
 from typing import Dict, List, Union
 
@@ -156,7 +155,6 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
 
         for policy in properties.get("Policies", []):
             for statement in policy.get("PolicyDocument", {}).get("Statement", []):
-
                 action = statement.get("Action")
 
                 if isinstance(action, str):

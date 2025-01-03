@@ -3,7 +3,7 @@ Transform: "AWS::Serverless-2016-10-31"
 
 Globals:
   Function:
-    Runtime: python3.8
+    Runtime: python3.12
     Handler: main.handler
 
 Resources:
@@ -68,7 +68,7 @@ Resources:
         SNS:
           Type: SNS
           Properties:
-            Topic: my-sns-topic
+            Topic: !Sub arn:${AWS::Partition}:sns:${AWS::Region}:${AWS::AccountId}:my-sns-topic
 
   MyBucket:
     Type: AWS::S3::Bucket

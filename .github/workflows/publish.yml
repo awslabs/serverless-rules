@@ -5,6 +5,11 @@ on:
     types:
       - published
 
+# Add concurrency to prevent multiple simultaneous runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
@@ -12,25 +17,27 @@ jobs:
   run_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set release notes tag
         run: |
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Check version tags
         run: make release-check
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.13"
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.16
+          go-version: "1.23"
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v2
+        uses: terraform-linters/setup-tflint@v4
         with:
-          tflint_version: v0.29.0
+          tflint_version: v0.50.0
       - name: Install dependencies
         run: make dev
       - name: Run all checks
@@ -40,32 +47,32 @@ jobs:
     needs: run_tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set release notes tag
         run: |
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.13"
       - name: Install dependencies
         run: make -C cfn-lint-serverless dev
       - name: Upload to PyPi
         run: make -C cfn-lint-serverless release
         env:
           PYPI_USERNAME: __token__
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN25 }}
 
   publish_go:
     needs: run_tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.16
+          go-version: "1.23"
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3
         with:

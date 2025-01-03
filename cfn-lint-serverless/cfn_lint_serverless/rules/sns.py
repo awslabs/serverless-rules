@@ -2,7 +2,6 @@
 Rules for SNS resources
 """
 
-
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
 
