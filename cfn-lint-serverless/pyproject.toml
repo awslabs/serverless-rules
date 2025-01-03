@@ -1,50 +1,26 @@
-[tool.poetry]
+[project]
 name = "cfn_lint_serverless"
 version = "0.3.3"
 description = "Serverless rules for cfn-lint"
-authors = ["Amazon Web Services"]
+authors = [{name = "Amazon Web Service"}]
 readme = "README.md"
 license = "MIT-0"
+requires-python = ">=3.9.1,<4"
+dependencies = [
+    "cfn-lint>=1.22.3"
+]
 
-[tool.poetry.dependencies]
-python = ">=3.9.1,<4"
-cfn-lint = "^1.22.1"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.3"
-isort = "^5.13.2"
-black = "^24.8"
-flake8 = "^4.0.1"
-coverage = "^6.2"
-flake8-variables-names = "^0.0.4"
-pytest-cov = "^5.0.0"
-flake8-eradicate = "^1.2.1"
-flake8-bugbear = "^23.3.12"
-bandit = "^1.7.10"
-radon = "^6.0.1"
-xenon = "^0.9.3"
-
-
-[tool.black]
-line-length = 120
-exclude = '''
-(
-  /(
-      \.eggs         # exclude a few common directories in the
-    | \.git          # root of the project
-    | \.hg
-    | \.mypy_cache
-    | \.tox
-    | \.venv
-    | _build
-    | buck-out
-    | build
-    | dist
-  )/
-  | example
-)
-'''
+[dependency-groups]
+dev = [
+    "bandit>=1.8.0",
+    "coverage>=7.6.10",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "radon>=6.0.1",
+    "ruff>=0.8.4",
+    "xenon>=0.9.3",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

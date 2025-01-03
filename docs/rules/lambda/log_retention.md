@@ -171,7 +171,7 @@ Since `serverless-rules` evaluate infrastructure-as-code template, it cannot che
     ```yaml
     provider:
       name: aws
-      runtime: python3.8
+      Runtime: python3.12
       lambdaHashingVersion: '20201221'
       # This will automatically create the log group with retention
       logRetentionInDays: 14

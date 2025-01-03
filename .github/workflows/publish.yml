@@ -22,16 +22,18 @@ jobs:
         run: |
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Check version tags
         run: make release-check
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: "3.13"
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: "1.23"
       - name: Setup TFLint
         uses: terraform-linters/setup-tflint@v4
         with:
@@ -53,7 +55,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: "3.13"
       - name: Install dependencies
         run: make -C cfn-lint-serverless dev
       - name: Upload to PyPi
@@ -70,7 +72,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'
+          go-version: "1.23"
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v3
         with:

@@ -1,5 +1,5 @@
 """
-Utilities 
+Utilities
 """
 
 import re
@@ -12,7 +12,6 @@ TValue = TypeVar("TValue", bound="Value")
 
 
 class Value:
-
     id = ""  # noqa: VNE003
     references = None
 
