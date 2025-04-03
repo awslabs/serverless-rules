@@ -3,12 +3,10 @@ package rules
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
 	"reflect"
 	"strings"
 
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -25,6 +23,7 @@ type awsIamAssumeRole struct {
 
 // AwsIamRoleLambdaNoStar checks if an IAM role with a Lambda principal has broad permissions
 type AwsIamRoleLambdaNoStarRule struct {
+	tflint.DefaultRule
 	resourceType    string
 	principalNames  []string
 	assumeAttrName  string
@@ -68,7 +67,7 @@ func (r *AwsIamRoleLambdaNoStarRule) Link() string {
 }
 
 // matchPrincipal returns true if the policy has a matching Principal
-func (r *AwsIamRoleLambdaNoStarRule) matchPrincipal(runner tflint.Runner, policy *hcl.Attribute) (bool, error) {
+func (r *AwsIamRoleLambdaNoStarRule) matchPrincipal(runner tflint.Runner, policy *hclext.Attribute) (bool, error) {
 	var assumeAttrValue string
 	err := runner.EvaluateExpr(policy.Expr, &assumeAttrValue, nil)
 	if err != nil {
@@ -105,7 +104,7 @@ func (r *AwsIamRoleLambdaNoStarRule) matchPrincipal(runner tflint.Runner, policy
 }
 
 // matchStarAction returns true if the policy has a broad action in one of its statement
-func (r *AwsIamRoleLambdaNoStarRule) matchStarAction(runner tflint.Runner, policy *hcl.Attribute) (bool, error) {
+func (r *AwsIamRoleLambdaNoStarRule) matchStarAction(runner tflint.Runner, policy *hclext.Attribute) (bool, error) {
 	var policyAttrValue string
 	err := runner.EvaluateExpr(policy.Expr, &policyAttrValue, nil)
 	if err != nil {
@@ -139,36 +138,36 @@ func (r *AwsIamRoleLambdaNoStarRule) matchStarAction(runner tflint.Runner, polic
 
 // Check checks if an IAM role with a Lambda principal has broad permissions
 func (r *AwsIamRoleLambdaNoStarRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Get principal
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.inlineBlockName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.assumeAttrName},
+		},
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.inlineBlockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: r.policyName},
+					},
 				},
 			},
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.assumeAttrName,
-				},
-			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, resource := range resources.Blocks {
 		// Load assume role policy
-		assumeAttr, ok := body.Attributes[r.assumeAttrName]
+		assumeAttr, ok := resource.Body.Attributes[r.assumeAttrName]
 		if !ok {
 			// This is a mandatory attribute
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.assumeAttrName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
 		// Check if it contains the right principal
@@ -177,52 +176,38 @@ func (r *AwsIamRoleLambdaNoStarRule) Check(runner tflint.Runner) error {
 			return err
 		}
 		if !hasLambda {
-			return nil
+			continue
 		}
 
 		// Load inline policy
-		inlineBlocks := body.Blocks.OfType(r.inlineBlockName)
+		inlineBlocks := resource.Body.Blocks.OfType(r.inlineBlockName)
 		for _, inlineBlock := range inlineBlocks {
-			body, _, diags = inlineBlock.Body.PartialContent(&hcl.BodySchema{
-				Attributes: []hcl.AttributeSchema{
-					{
-						Name: r.policyName,
-					},
-				},
-			})
-
-			if diags.HasErrors() {
-				return diags
-			}
-
-			policyAttr, ok := body.Attributes[r.policyName]
+			policyAttr, ok := inlineBlock.Body.Attributes[r.policyName]
 			if !ok {
 				// This is a mandatory attribute
 				runner.EmitIssue(
 					r,
 					fmt.Sprintf("\"%s\" is not present.", r.policyName),
-					body.MissingItemRange,
+					inlineBlock.DefRange,
 				)
-
-				return nil
+				continue
 			}
 
 			// Check if policy contains stars
 			hasStar, err := r.matchStarAction(runner, policyAttr)
-
 			if err != nil {
 				return err
 			}
 
 			if hasStar {
-				runner.EmitIssueOnExpr(
+				runner.EmitIssue(
 					r,
 					"Inline policy for role with Lambda as principal has policy actions with stars.",
-					policyAttr.Expr,
+					policyAttr.Expr.Range(),
 				)
 			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

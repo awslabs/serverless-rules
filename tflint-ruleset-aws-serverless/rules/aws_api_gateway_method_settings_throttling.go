@@ -2,14 +2,15 @@ package rules
 
 import (
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
+
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsAPIGatewayMethodSettingsThrottlingRule checks whether there is a default "aws_api_gateway_method_settings" resource with throttling values
-type AwsAPIGatewayMethodSettingsThrottlingRule struct{}
+type AwsAPIGatewayMethodSettingsThrottlingRule struct {
+	tflint.DefaultRule
+}
 
 func NewAwsAPIGatewayMethodSettingsThrottlingRule() *AwsAPIGatewayMethodSettingsThrottlingRule {
 	return &AwsAPIGatewayMethodSettingsThrottlingRule{}
@@ -17,7 +18,7 @@ func NewAwsAPIGatewayMethodSettingsThrottlingRule() *AwsAPIGatewayMethodSettings
 
 // Name returns the rule name
 func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Name() string {
-	return "aws_apigateway_stage_throttling_rule"
+	return "aws_api_gateway_method_settings_throttling_rule"
 }
 
 // Enabled returns whether the rule is enabled by default
@@ -37,97 +38,71 @@ func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Link() string {
 
 // Check checks whether default "aws_api_gateway_method_settings" have throttling values
 func (r *AwsAPIGatewayMethodSettingsThrottlingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources("aws_api_gateway_method_settings", func(resource *configs.Resource) error {
-		// Load resource body
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name:     "method_path",
-					Required: true,
+	resources, err := runner.GetResourceContent("aws_api_gateway_method_settings", &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: "method_path"},
+		},
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: "settings",
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: "throttling_burst_limit"},
+						{Name: "throttling_rate_limit"},
+					},
 				},
 			},
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: "settings",
-				},
-			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return fmt.Errorf("failed to get resource content: %w", err)
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, resource := range resources.Blocks {
 		// Only looking at the default method settings
-		attribute := body.Attributes["method_path"]
-		var methodPath string
-		err := runner.EvaluateExpr(attribute.Expr, &methodPath, nil)
-
-		if err != nil {
-			return err
+		methodPath, exists := resource.Body.Attributes["method_path"]
+		if !exists {
+			continue
 		}
 
-		if methodPath != "*/*" {
-			return nil
+		var path string
+		if err := runner.EvaluateExpr(methodPath.Expr, &path, nil); err != nil {
+			return fmt.Errorf("failed to evaluate method_path: %w", err)
+		}
+
+		if path != "*/*" {
+			continue
 		}
 
 		// Load 'settings' block
-		blocks := body.Blocks.OfType("settings")
-		if len(blocks) != 1 {
+		settingsBlocks := resource.Body.Blocks
+		if len(settingsBlocks) == 0 {
 			runner.EmitIssue(
 				r,
-				"\"settings\" is not present.",
-				body.MissingItemRange,
+				"\"settings\" block is required for default method settings",
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
-		blockBody, _, diags := blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: "throttling_burst_limit",
-				},
-				{
-					Name: "throttling_rate_limit",
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
+		settings := settingsBlocks[0].Body
 		// Check throttling limits
-		var throttlingBurstLimit int
-		throttlingBurstLimitAttribute, burstOk := blockBody.Attributes["throttling_burst_limit"]
-		if !burstOk {
+		if _, exists := settings.Attributes["throttling_burst_limit"]; !exists {
 			runner.EmitIssue(
 				r,
-				"\"throttling_burst_limit\" is not present.",
-				blockBody.MissingItemRange,
+				"\"throttling_burst_limit\" is required for default method settings",
+				settingsBlocks[0].DefRange,
 			)
-		} else {
-			err = runner.EvaluateExpr(throttlingBurstLimitAttribute.Expr, &throttlingBurstLimit, nil)
-			if err != nil {
-				return err
-			}
 		}
 
-		var throttlingRateLimit int
-		throttlingRateLimitAttribute, rateOk := blockBody.Attributes["throttling_rate_limit"]
-		if !rateOk {
+		if _, exists := settings.Attributes["throttling_rate_limit"]; !exists {
 			runner.EmitIssue(
 				r,
-				"\"throttling_rate_limit\" is not present.",
-				blockBody.MissingItemRange,
+				"\"throttling_rate_limit\" is required for default method settings",
+				settingsBlocks[0].DefRange,
 			)
-		} else {
-			err = runner.EvaluateExpr(throttlingRateLimitAttribute.Expr, &throttlingRateLimit, nil)
-			if err != nil {
-				return err
-			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

@@ -57,20 +57,29 @@ func (r *AwsSqsQueueRedrivePolicyRule) Check(runner tflint.Runner) error {
 	logger.Debug(fmt.Sprintf("Found %d aws_sqs_queue resources", len(resources.Blocks)))
 
 	for _, resource := range resources.Blocks {
-		var attrValue string
 		attr, exists := resource.Body.Attributes[r.attributeName]
 		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				resource.DefRange, // resource.DefRange is the range of the resource block in the HCL file
+				resource.DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attr.Expr, &attrValue, nil) // TODO: need to fix this implementation
-			if err != nil {
-				return err
-			}
+			continue
+		}
 
+		var redrivePolicy string
+		err := runner.EvaluateExpr(attr.Expr, &redrivePolicy, nil)
+		if err != nil {
+			return fmt.Errorf("failed to evaluate redrive policy: %w", err)
+		}
+
+		// Validate that the redrive policy contains required fields
+		if redrivePolicy == "" {
+			runner.EmitIssue(
+				r,
+				"redrive_policy is empty",
+				attr.Expr.Range(),
+			)
 		}
 	}
 	return nil

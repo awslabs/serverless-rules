@@ -2,15 +2,14 @@ package rules
 
 import (
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
 
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsLambdaEventSourceMappingFailureDestination checks if there is an on failure destination configured on event source mappings
 type AwsLambdaEventSourceMappingFailureDestinationRule struct {
+	tflint.DefaultRule
 	resourceType  string
 	block1Name    string
 	block2Name    string
@@ -51,87 +50,62 @@ func (r *AwsLambdaEventSourceMappingFailureDestinationRule) Link() string {
 
 // Check checks if aws_lambda_event_source_mapping as a destination on_failure configured
 func (r *AwsLambdaEventSourceMappingFailureDestinationRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-
-		// Block 1 - destination_config
-
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.block1Name,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.block1Name,
+				Body: &hclext.BodySchema{
+					Blocks: []hclext.BlockSchema{
+						{
+							Type: r.block2Name,
+							Body: &hclext.BodySchema{
+								Attributes: []hclext.AttributeSchema{
+									{Name: r.attributeName},
+								},
+							},
+						},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.block1Name)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		// Check destination_config block
+		destConfigBlocks := resource.Body.Blocks.OfType(r.block1Name)
+		if len(destConfigBlocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.block1Name),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
-		// Block 2 - on_failure
-
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.block2Name,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks = body.Blocks.OfType(r.block2Name)
-		if len(blocks) != 1 {
+		// Check on_failure block
+		onFailureBlocks := destConfigBlocks[0].Body.Blocks.OfType(r.block2Name)
+		if len(onFailureBlocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.block2Name),
-				body.MissingItemRange,
+				destConfigBlocks[0].DefRange,
 			)
-
-			return nil
+			continue
 		}
 
-		// Attribute - destination_arn
-
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
-		if !ok {
+		// Check destination_arn attribute
+		_, exists := onFailureBlocks[0].Body.Attributes[r.attributeName]
+		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				onFailureBlocks[0].DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

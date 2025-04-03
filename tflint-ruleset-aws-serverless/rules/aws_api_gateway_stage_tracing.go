@@ -2,14 +2,14 @@ package rules
 
 import (
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
+
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsAPIGatewayStageTracingRule checks whether "aws_api_gateway_stage" has tracing enabled.
 type AwsAPIGatewayStageTracingRule struct {
+	tflint.DefaultRule
 	resourceType  string
 	attributeName string
 }
@@ -44,38 +44,40 @@ func (r *AwsAPIGatewayStageTracingRule) Link() string {
 
 // Check checks whether "aws_api_gateway_stage" has tracing enabled
 func (r *AwsAPIGatewayStageTracingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name:     r.attributeName,
-					Required: true,
-				},
-			},
-		})
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.attributeName},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
+	for _, resource := range resources.Blocks {
+		attribute, exists := resource.Body.Attributes[r.attributeName]
+		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-			return nil
+			continue
 		}
 
-		attribute := body.Attributes[r.attributeName]
 		var xrayTracingEnabled string
 		err := runner.EvaluateExpr(attribute.Expr, &xrayTracingEnabled, nil)
+		if err != nil {
+			return err
+		}
 
-		return runner.EnsureNoError(err, func() error {
-			if xrayTracingEnabled != "true" {
-				runner.EmitIssueOnExpr(
-					r,
-					fmt.Sprintf("\"%s\" should be set to true.", r.attributeName),
-					attribute.Expr,
-				)
-			}
-			return nil
-		})
-	})
+		if xrayTracingEnabled != "true" {
+			runner.EmitIssue(
+				r,
+				fmt.Sprintf("\"%s\" should be set to true.", r.attributeName),
+				attribute.Expr.Range(),
+			)
+		}
+	}
+
+	return nil
 }

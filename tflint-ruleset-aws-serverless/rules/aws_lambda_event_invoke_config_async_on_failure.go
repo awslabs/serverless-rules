@@ -2,10 +2,10 @@ package rules
 
 import (
 	"fmt"
+
 	"github.com/hashicorp/hcl/v2"
 
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -17,6 +17,7 @@ type AsyncPermission struct {
 
 // AwsLambdaEventInvokeConfigAsyncOnFailure checks if an event invoke config has a destination on failure if the function has permission for an async principal
 type AwsLambdaEventInvokeConfigAsyncOnFailureRule struct {
+	tflint.DefaultRule
 	permissionType        string
 	eventInvokeConfigType string
 	functionName          string
@@ -76,32 +77,27 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Check(runner tflint.Runne
 	var asyncPerms []AsyncPermission
 
 	// Scan permissions
-	err := runner.WalkResources(r.permissionType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.functionName,
-				},
-				{
-					Name: r.principal,
-				},
-			},
-		})
+	resources, err := runner.GetResourceContent(r.permissionType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.functionName},
+			{Name: r.principal},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, resource := range resources.Blocks {
 		// Get the permission principal
 		var principalVal string
-		principal, ok := body.Attributes[r.principal]
+		principal, ok := resource.Body.Attributes[r.principal]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-			return nil
+			continue
 		}
 		err := runner.EvaluateExpr(principal.Expr, &principalVal, nil)
 		if err != nil {
@@ -118,19 +114,19 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Check(runner tflint.Runne
 		}
 		// Permission is not async, break early
 		if !isAsync {
-			return nil
+			continue
 		}
 
 		// Get the function name
 		var functionNameVal string
-		functionName, ok := body.Attributes[r.functionName]
+		functionName, ok := resource.Body.Attributes[r.functionName]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-			return nil
+			continue
 		}
 		err = runner.EvaluateExpr(functionName.Expr, &functionNameVal, nil)
 		if err != nil {
@@ -143,43 +139,46 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Check(runner tflint.Runne
 			found:        false,
 			expression:   functionName.Expr,
 		})
+	}
 
-		return nil
-	})
-
+	// Scan Event Invoke Config
+	configs, err := runner.GetResourceContent(r.eventInvokeConfigType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.functionName},
+		},
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.block1Name,
+				Body: &hclext.BodySchema{
+					Blocks: []hclext.BlockSchema{
+						{
+							Type: r.block2Name,
+							Body: &hclext.BodySchema{
+								Attributes: []hclext.AttributeSchema{
+									{Name: r.attributeName},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}, nil)
 	if err != nil {
 		return err
 	}
 
-	// Scan Event Invoke Config
-	err = runner.WalkResources(r.eventInvokeConfigType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.functionName,
-				},
-			},
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.block1Name,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, config := range configs.Blocks {
 		// Get the function name
 		var functionNameVal string
-		functionName, ok := body.Attributes[r.functionName]
+		functionName, ok := config.Body.Attributes[r.functionName]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				config.DefRange,
 			)
-			return nil
+			continue
 		}
 		err = runner.EvaluateExpr(functionName.Expr, &functionNameVal, nil)
 		if err != nil {
@@ -198,80 +197,49 @@ func (r *AwsLambdaEventInvokeConfigAsyncOnFailureRule) Check(runner tflint.Runne
 
 		// Function is not async, break early
 		if !isAsync {
-			return nil
+			continue
 		}
 
 		// Check for block level 1
-		blocks := body.Blocks.OfType(r.block1Name)
-		if len(blocks) != 1 {
+		blocks := config.Body.Blocks.OfType(r.block1Name)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.block1Name),
-				body.MissingItemRange,
+				config.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
 		// Check for block level 2
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.block2Name,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks = body.Blocks.OfType(r.block2Name)
-		if len(blocks) != 1 {
+		onFailureBlocks := blocks[0].Body.Blocks.OfType(r.block2Name)
+		if len(onFailureBlocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.block2Name),
-				body.MissingItemRange,
+				blocks[0].DefRange,
 			)
-
-			return nil
+			continue
 		}
 
 		// Check for attribute in block
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		if _, ok = body.Attributes[r.attributeName]; !ok {
+		_, exists := onFailureBlocks[0].Body.Attributes[r.attributeName]
+		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				onFailureBlocks[0].DefRange,
 			)
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	// Scan for missing Event Invoke Config.
 	for _, asyncPerm := range asyncPerms {
 		if !asyncPerm.found {
-			runner.EmitIssueOnExpr(
+			runner.EmitIssue(
 				r,
 				fmt.Sprintf("missing \"%s\" resource for %s.", r.eventInvokeConfigType, r.functionName),
-				asyncPerm.expression,
+				asyncPerm.expression.Range(),
 			)
 		}
 	}

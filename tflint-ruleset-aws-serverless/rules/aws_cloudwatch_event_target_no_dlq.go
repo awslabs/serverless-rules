@@ -2,15 +2,14 @@ package rules
 
 import (
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
 
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsCloudwatchEventTargetNoDlq checks if there is a DLQ configured on EventBridge targets
 type AwsCloudwatchEventTargetNoDlqRule struct {
+	tflint.DefaultRule
 	resourceType  string
 	blockName     string
 	attributeName string
@@ -47,60 +46,44 @@ func (r *AwsCloudwatchEventTargetNoDlqRule) Link() string {
 
 // Check checks if there is a DLQ configured on EventBridge targets
 func (r *AwsCloudwatchEventTargetNoDlqRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Block
-
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: r.attributeName},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		// Check for block
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 
-		// Attribute
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
-		if !ok {
+		// Check for attribute
+		_, exists := blocks[0].Body.Attributes[r.attributeName]
+		if !exists {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				blocks[0].DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

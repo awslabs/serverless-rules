@@ -2,15 +2,14 @@ package rules
 
 import (
 	"fmt"
-	"github.com/hashicorp/hcl/v2"
 
 	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
-	"github.com/terraform-linters/tflint-plugin-sdk/logger"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsApigatewayV2StageThrottlingRule checks whether "aws_apigatewayv2_stage" has default throttling values.
 type AwsApigatewayV2StageThrottlingRule struct {
+	tflint.DefaultRule
 	resourceType       string
 	blockName          string
 	burstAttributeName string
@@ -49,76 +48,54 @@ func (r *AwsApigatewayV2StageThrottlingRule) Link() string {
 
 // Check checks whether "aws_apigatewayv2_stage" has has default throttling values
 func (r *AwsApigatewayV2StageThrottlingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: r.burstAttributeName},
+						{Name: r.rateAttributeName},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		// Check for block
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
-		}
-
-		blockBody, _, diags := blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.burstAttributeName,
-				},
-				{
-					Name: r.rateAttributeName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
+			continue
 		}
 
 		// Check throttling limits
-		var burstLimit int
-		burstLimitAttribute, burstOk := blockBody.Attributes[r.burstAttributeName]
+		_, burstOk := blocks[0].Body.Attributes[r.burstAttributeName]
 		if !burstOk {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.burstAttributeName),
-				blockBody.MissingItemRange,
+				blocks[0].DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(burstLimitAttribute.Expr, &burstLimit, nil)
-			if err != nil {
-				return err
-			}
 		}
 
-		var rateLimit int
-		rateLimitAttribute, rateOk := blockBody.Attributes[r.rateAttributeName]
+		_, rateOk := blocks[0].Body.Attributes[r.rateAttributeName]
 		if !rateOk {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.rateAttributeName),
-				blockBody.MissingItemRange,
+				blocks[0].DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(rateLimitAttribute.Expr, &rateLimit, nil)
-			if err != nil {
-				return err
-			}
 		}
+	}
 
-		return nil
-	})
+	return nil
 }
