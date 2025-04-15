@@ -53,8 +53,8 @@ resource "aws_lambda_function_event_invoke_config" "example" {
 					Message: "\"destination_config\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 8, Column: 62},
-						End:      hcl.Pos{Line: 8, Column: 62},
+						Start:    hcl.Pos{Line: 8, Column: 1},
+						End:      hcl.Pos{Line: 8, Column: 61},
 					},
 				},
 			},
@@ -80,8 +80,8 @@ resource "aws_lambda_function_event_invoke_config" "example" {
 					Message: "\"on_failure\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 11, Column: 21},
-						End:      hcl.Pos{Line: 11, Column: 21},
+						Start:    hcl.Pos{Line: 11, Column: 2},
+						End:      hcl.Pos{Line: 11, Column: 20},
 					},
 				},
 			},
@@ -109,8 +109,8 @@ resource "aws_lambda_function_event_invoke_config" "example" {
 					Message: "\"destination\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 12, Column: 14},
-						End:      hcl.Pos{Line: 12, Column: 14},
+						Start:    hcl.Pos{Line: 12, Column: 3},
+						End:      hcl.Pos{Line: 12, Column: 13},
 					},
 				},
 			},

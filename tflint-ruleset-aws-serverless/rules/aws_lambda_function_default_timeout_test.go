@@ -25,8 +25,8 @@ resource "aws_lambda_function" "this" {
 					Message: "\"timeout\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 39},
-						End:      hcl.Pos{Line: 2, Column: 39},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 38},
 					},
 				},
 			},

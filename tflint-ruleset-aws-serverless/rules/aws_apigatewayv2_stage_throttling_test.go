@@ -24,8 +24,8 @@ resource "aws_apigatewayv2_stage" "missing" {
 					Message: "\"default_route_settings\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 45},
-						End:      hcl.Pos{Line: 2, Column: 45},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 44},
 					},
 				},
 			},
@@ -42,8 +42,8 @@ resource "aws_apigatewayv2_stage" "empty" {
 					Message: "\"throttling_burst_limit\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 25},
-						End:      hcl.Pos{Line: 3, Column: 25},
+						Start:    hcl.Pos{Line: 3, Column: 2},
+						End:      hcl.Pos{Line: 3, Column: 24},
 					},
 				},
 				{
@@ -51,8 +51,8 @@ resource "aws_apigatewayv2_stage" "empty" {
 					Message: "\"throttling_rate_limit\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 25},
-						End:      hcl.Pos{Line: 3, Column: 25},
+						Start:    hcl.Pos{Line: 3, Column: 2},
+						End:      hcl.Pos{Line: 3, Column: 24},
 					},
 				},
 			},
@@ -71,8 +71,8 @@ resource "aws_apigatewayv2_stage" "missingrate" {
 					Message: "\"throttling_rate_limit\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 25},
-						End:      hcl.Pos{Line: 3, Column: 25},
+						Start:    hcl.Pos{Line: 3, Column: 2},
+						End:      hcl.Pos{Line: 3, Column: 24},
 					},
 				},
 			},

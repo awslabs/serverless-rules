@@ -28,8 +28,8 @@ resource "aws_sns_topic_subscription" "this" {
 					Message: "\"redrive_policy\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 46},
-						End:      hcl.Pos{Line: 2, Column: 46},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 45},
 					},
 				},
 			},

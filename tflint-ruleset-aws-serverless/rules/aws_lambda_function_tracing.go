@@ -67,7 +67,7 @@ func (r *AwsLambdaFunctionTracingRule) Check(runner tflint.Runner) error {
 					Attributes: []hclext.AttributeSchema{
 						{
 							Name:     r.attributeName,
-							Required: true,
+							Required: false,
 						},
 					},
 				},
