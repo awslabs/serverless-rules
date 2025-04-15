@@ -66,7 +66,7 @@ func (r *AwsAPIGatewayStageLoggingRule) Check(runner tflint.Runner) error {
 		},
 	}, nil)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to get resource content: %w", err)
 	}
 
 	for _, resource := range resources.Blocks {
@@ -75,7 +75,7 @@ func (r *AwsAPIGatewayStageLoggingRule) Check(runner tflint.Runner) error {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				resource.DefRange,
+				(*resource).DefRange,
 			)
 		}
 	}
