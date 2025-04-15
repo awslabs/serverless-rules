@@ -23,8 +23,8 @@ resource "aws_api_gateway_stage" "false" {}`,
 					Message: "\"xray_tracing_enabled\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 42},
-						End:      hcl.Pos{Line: 2, Column: 42},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 41},
 					},
 				},
 			},
@@ -32,17 +32,17 @@ resource "aws_api_gateway_stage" "false" {}`,
 		{
 			Name: "false is invalid",
 			Content: `
-		resource "aws_api_gateway_stage" "false" {
-			xray_tracing_enabled = false
-		}`,
+resource "aws_api_gateway_stage" "false" {
+	xray_tracing_enabled = false
+}`,
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsAPIGatewayStageTracingRule(),
 					Message: "\"xray_tracing_enabled\" should be set to true.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 27},
-						End:      hcl.Pos{Line: 3, Column: 32},
+						Start:    hcl.Pos{Line: 3, Column: 25},
+						End:      hcl.Pos{Line: 3, Column: 30},
 					},
 				},
 			},
@@ -50,9 +50,9 @@ resource "aws_api_gateway_stage" "false" {}`,
 		{
 			Name: "true is valid",
 			Content: `
-			resource "aws_api_gateway_stage" "true" {
-				xray_tracing_enabled = true
-			}`,
+resource "aws_api_gateway_stage" "true" {
+	xray_tracing_enabled = true
+}`,
 			Expected: helper.Issues{},
 		},
 	}

@@ -59,7 +59,7 @@ func (r *AwsAPIGatewayStageTracingRule) Check(runner tflint.Runner) error {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				resource.DefRange,
+				(*resource).DefRange,
 			)
 			continue
 		}
