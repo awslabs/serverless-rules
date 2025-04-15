@@ -27,8 +27,8 @@ resource "aws_apigatewayv2_stage" "valid" {
 					Message: "\"format\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 22},
-						End:      hcl.Pos{Line: 3, Column: 22},
+						Start:    hcl.Pos{Line: 3, Column: 2},
+						End:      hcl.Pos{Line: 3, Column: 21},
 					},
 				},
 			},

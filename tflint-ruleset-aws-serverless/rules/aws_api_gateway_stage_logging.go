@@ -75,7 +75,7 @@ func (r *AwsAPIGatewayStageLoggingRule) Check(runner tflint.Runner) error {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				(*resource).DefRange,
+				resource.DefRange,
 			)
 		}
 	}
