@@ -14,7 +14,7 @@ func Test_AwsAPIGatewayMethodSettingsThrottlingRule(t *testing.T) {
 		Expected helper.Issues
 	}{
 		{
-			Name: "missing access_log_settings is invalid",
+			Name: "missing settings block is invalid",
 			Content: `
 resource "aws_api_gateway_method_settings" "missing" {
 	method_path = "*/*"
@@ -22,17 +22,17 @@ resource "aws_api_gateway_method_settings" "missing" {
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsAPIGatewayMethodSettingsThrottlingRule(),
-					Message: "\"settings\" is not present.",
+					Message: "\"settings\" block is required for default method settings",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 54},
-						End:      hcl.Pos{Line: 2, Column: 54},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 53},
 					},
 				},
 			},
 		},
 		{
-			Name: "missing access_log_settings is invalid",
+			Name: "empty settings block is invalid",
 			Content: `
 resource "aws_api_gateway_method_settings" "empty" {
 	method_path = "*/*"
@@ -41,26 +41,26 @@ resource "aws_api_gateway_method_settings" "empty" {
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsAPIGatewayMethodSettingsThrottlingRule(),
-					Message: "\"throttling_burst_limit\" is not present.",
+					Message: "\"throttling_burst_limit\" is required for default method settings",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 4, Column: 11},
-						End:      hcl.Pos{Line: 4, Column: 11},
+						Start:    hcl.Pos{Line: 4, Column: 2},
+						End:      hcl.Pos{Line: 4, Column: 10},
 					},
 				},
 				{
 					Rule:    NewAwsAPIGatewayMethodSettingsThrottlingRule(),
-					Message: "\"throttling_rate_limit\" is not present.",
+					Message: "\"throttling_rate_limit\" is required for default method settings",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 4, Column: 11},
-						End:      hcl.Pos{Line: 4, Column: 11},
+						Start:    hcl.Pos{Line: 4, Column: 2},
+						End:      hcl.Pos{Line: 4, Column: 10},
 					},
 				},
 			},
 		},
 		{
-			Name: "missing access_log_settings is invalid",
+			Name: "missing throttling rate limit is invalid",
 			Content: `
 resource "aws_api_gateway_method_settings" "missingrate" {
 	method_path = "*/*"
@@ -71,11 +71,11 @@ resource "aws_api_gateway_method_settings" "missingrate" {
 			Expected: helper.Issues{
 				{
 					Rule:    NewAwsAPIGatewayMethodSettingsThrottlingRule(),
-					Message: "\"throttling_rate_limit\" is not present.",
+					Message: "\"throttling_rate_limit\" is required for default method settings",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 4, Column: 11},
-						End:      hcl.Pos{Line: 4, Column: 11},
+						Start:    hcl.Pos{Line: 4, Column: 2},
+						End:      hcl.Pos{Line: 4, Column: 10},
 					},
 				},
 			},
