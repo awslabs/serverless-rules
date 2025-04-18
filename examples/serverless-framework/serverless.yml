@@ -1,6 +1,6 @@
 service: aws-python-rest-api-project
 
-frameworkVersion: '2'
+frameworkVersion: '4'
 
 provider:
   name: aws
