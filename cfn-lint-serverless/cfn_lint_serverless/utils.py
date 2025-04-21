@@ -12,20 +12,16 @@ TValue = TypeVar("TValue", bound="Value")
 
 
 class Value:
-    id = ""  # noqa: VNE003
+    id = ""  # noqa: N815
     references = None
 
     def __new__(cls, value: Union[None, dict, str]) -> Union[None, TValue]:
         """
         Create a new Value object
-
         If the 'value' passed is None, this will return None instead of a class object
         """
 
-        if value is None:
-            return None
-
-        return super(Value, cls).__new__(cls)
+        return None if value is None else super(Value, cls).__new__(cls)
 
     def __init__(self, value: Union[dict, str]):
         """
@@ -44,7 +40,7 @@ class Value:
 
         # Not a dict - return an error here
         elif not isinstance(value, dict):
-            raise ValueError("'value' should be of type str or dict, got '%s'" % type(value))
+            raise ValueError(f"'value' should be of type str or dict, got '{type(value)}'")
 
         # 'Ref' intrinsic function
         elif "Ref" in value:
@@ -54,11 +50,11 @@ class Value:
         elif "Fn::GetAtt" in value:
             self.id, self.references = self._get_from_getatt(value["Fn::GetAtt"])
 
-        # 'Fn::Join' intrisic function
+        # 'Fn::Join' intrinsic function
         elif "Fn::Join" in value:
             self.id, self.references = self._get_from_join(value["Fn::Join"])
 
-        # 'Fn::Sub' intrisic function
+        # 'Fn::Sub' intrinsic function
         elif "Fn::Sub" in value:
             self.id, self.references = self._get_from_sub(value["Fn::Sub"])
 
@@ -100,27 +96,20 @@ class Value:
         Return the name and references from a 'Fn::Sub' intrinsic function
         """
 
-        pattern = value
-        variables = {}
-
         if isinstance(value, list):
-            pattern = value[0]
-            # Using Value() here to get nested references
-            variables = {k: Value(v) for k, v in value[1].items()}
+            pattern, variables = value[0], {k: Value(v) for k, v in value[1].items()}
+        else:
+            pattern, variables = value, {}
 
         references = []
 
         for match in SUB_PATTERN.findall(pattern):
             if match in variables:
-                # Variable with reference(s)
-                if len(variables[match].references) > 0:
+                if variables[match].references:
                     references.extend(variables[match].references)
-                # Hard-coded variable
                 else:
-                    # Replace with hard-coded value in value ID
                     pattern = pattern.replace(f"${{{match}}}", variables[match].id)
-            # No matching variable
             else:
                 references.append(match)
 
-        return (pattern, references)
+        return pattern, references

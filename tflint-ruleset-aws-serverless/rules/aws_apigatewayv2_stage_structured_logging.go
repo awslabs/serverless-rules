@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"regexp"
 
-	hcl "github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsApigatewayV2StageStructuredLogging checks if API Gateway logging format is in JSON
 type AwsApigatewayV2StageStructuredLoggingRule struct {
+	tflint.DefaultRule
 	resourceType  string
 	blockName     string
 	attributeName string
@@ -36,7 +37,7 @@ func (r *AwsApigatewayV2StageStructuredLoggingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsApigatewayV2StageStructuredLoggingRule) Severity() string {
+func (r *AwsApigatewayV2StageStructuredLoggingRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 
@@ -50,46 +51,55 @@ func (r *AwsApigatewayV2StageStructuredLoggingRule) Check(runner tflint.Runner) 
 	// Regexp to substitute all $context. variables
 	re := regexp.MustCompile(`\$context\.[a-zA-Z\.]+`)
 
-	return runner.WalkResourceBlocks(r.resourceType, r.blockName, func(block *hcl.Block) error {
-		body, _, diags := block.Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{Name: r.attributeName},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
+	for _, resource := range resources.Blocks {
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
+			continue
 		}
 
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
+		attribute, ok := blocks[0].Body.Attributes[r.attributeName]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				blocks[0].DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
-
-			attrValue = re.ReplaceAllLiteralString(attrValue, "4")
-
-			// TODO: test if JSON
-			var js map[string]interface{}
-			if json.Unmarshal([]byte(attrValue), &js) != nil {
-				runner.EmitIssueOnExpr(
-					r,
-					fmt.Sprintf("\"%s\" is not valid JSON.", r.attributeName),
-					attribute.Expr,
-				)
-			}
+			continue
 		}
 
-		return nil
-	})
+		var attrValue string
+		err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
+		if err != nil {
+			return err
+		}
+
+		attrValue = re.ReplaceAllLiteralString(attrValue, "4")
+
+		var js map[string]interface{}
+		if json.Unmarshal([]byte(attrValue), &js) != nil {
+			runner.EmitIssue(
+				r,
+				fmt.Sprintf("\"%s\" is not valid JSON.", r.attributeName),
+				attribute.Expr.Range(),
+			)
+		}
+	}
+
+	return nil
 }

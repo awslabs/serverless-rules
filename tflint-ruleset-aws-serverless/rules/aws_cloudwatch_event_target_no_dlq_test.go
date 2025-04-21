@@ -25,8 +25,8 @@ resource "aws_cloudwatch_event_target" "this" {
 					Message: "\"dead_letter_config\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 47},
-						End:      hcl.Pos{Line: 2, Column: 47},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 46},
 					},
 				},
 			},
@@ -44,8 +44,8 @@ resource "aws_cloudwatch_event_target" "this" {
 					Message: "\"arn\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 22},
-						End:      hcl.Pos{Line: 3, Column: 22},
+						Start:    hcl.Pos{Line: 3, Column: 3},
+						End:      hcl.Pos{Line: 3, Column: 21},
 					},
 				},
 			},

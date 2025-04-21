@@ -4,20 +4,21 @@ import (
 	"fmt"
 	"regexp"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 type awsLambdaLogGroup struct {
-	functionName  string
-	resourceName  string
-	found         bool
-	resourceRange hcl.Range
+	functionName string
+	resourceName string
+	found        bool
+	blockRange   hcl.Range
 }
 
 // AwsCloudwatchLogGroupLambdaRetention checks if Lambda functions have a corresponding log group with retention configured
 type AwsCloudwatchLogGroupLambdaRetentionRule struct {
+	tflint.DefaultRule
 	functionResourceType string
 	logGroupResourceType string
 	functionNameAttrName string
@@ -47,7 +48,7 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Severity() string {
+func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 
@@ -61,29 +62,25 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 
 	// Gather all Lambda functions
 	var functions []awsLambdaLogGroup
-	err := runner.WalkResources(r.functionResourceType, func(resource *configs.Resource) error {
+	resources, err := runner.GetResourceContent(r.functionResourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.functionNameAttrName},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
+
+	for _, resource := range resources.Blocks {
 		function := awsLambdaLogGroup{
-			resourceName:  resource.Name,
-			functionName:  "",
-			found:         false,
-			resourceRange: resource.Config.MissingItemRange(),
+			resourceName: resource.Labels[0],
+			functionName: "",
+			found:        false,
+			blockRange:   resource.DefRange,
 		}
 
 		// Function name attribute
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.functionNameAttrName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		attribute, ok := body.Attributes[r.functionNameAttrName]
-
+		attribute, ok := resource.Body.Attributes[r.functionNameAttrName]
 		if ok {
 			var value string
 			err := runner.EvaluateExpr(attribute.Expr, &value, nil)
@@ -94,37 +91,25 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 		}
 
 		functions = append(functions, function)
+	}
 
-		return nil
-	})
-
+	// Lookup log groups
+	logGroups, err := runner.GetResourceContent(r.logGroupResourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{Name: r.nameAttrName},
+			{Name: r.retentionAttrName},
+		},
+	}, nil)
 	if err != nil {
 		return err
 	}
 
-	// Lookup log groups
-	err = runner.WalkResources(r.logGroupResourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.nameAttrName,
-				},
-				{
-					Name: r.retentionAttrName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, resource := range logGroups.Blocks {
 		// Get log group attributes
-
-		nameAttr, ok := body.Attributes[r.nameAttrName]
+		nameAttr, ok := resource.Body.Attributes[r.nameAttrName]
 		// No need to check further if there are no name, early return
 		if !ok {
-			return nil
+			continue
 		}
 
 		var nameValue string
@@ -133,10 +118,10 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 			return err
 		}
 
-		retentionAttr, ok := body.Attributes[r.retentionAttrName]
+		retentionAttr, ok := resource.Body.Attributes[r.retentionAttrName]
 		// No need to check further if there are no retention, early return
 		if !ok {
-			return nil
+			continue
 		}
 
 		var retentionValue string
@@ -150,7 +135,7 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 		m := re.FindAllStringSubmatch(nameValue, -1)
 		// Log group name doesn't match pattern, early return
 		if len(m) > 1 {
-			return nil
+			continue
 		}
 		functionName := m[0][1]
 
@@ -162,12 +147,6 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 				functions[i].found = true
 			}
 		}
-
-		return nil
-	})
-
-	if err != nil {
-		return err
 	}
 
 	for _, function := range functions {
@@ -175,7 +154,7 @@ func (r *AwsCloudwatchLogGroupLambdaRetentionRule) Check(runner tflint.Runner) e
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is missing a log group with retention_in_days.", r.functionResourceType),
-				function.resourceRange,
+				function.blockRange,
 			)
 		}
 	}

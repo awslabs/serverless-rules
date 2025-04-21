@@ -3,8 +3,7 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -12,6 +11,7 @@ import (
 type AwsLambdaFunctionDefaultTimeoutRule struct {
 	resourceType  string
 	attributeName string
+	tflint.DefaultRule
 }
 
 // NewAwsLambdaFunctionDefaultTimeoutRule returns new rule with default attributes
@@ -33,7 +33,7 @@ func (r *AwsLambdaFunctionDefaultTimeoutRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaFunctionDefaultTimeoutRule) Severity() string {
+func (r *AwsLambdaFunctionDefaultTimeoutRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
@@ -42,37 +42,49 @@ func (r *AwsLambdaFunctionDefaultTimeoutRule) Link() string {
 	return "https://awslabs.github.io/serverless-rules/rules/lambda/default_timeout/"
 }
 
+// Metadata returns the rule metadata
+func (r *AwsLambdaFunctionDefaultTimeoutRule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
+}
+
 // Check checks if there is an explicit timeout
 func (r *AwsLambdaFunctionDefaultTimeoutRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Attribute
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{
+				Name: r.attributeName,
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
+	for _, resource := range resources.Blocks {
+		attribute, ok := resource.Body.Attributes[r.attributeName]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
+			continue
 		}
 
-		return nil
-	})
+		var attrValue string
+		err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

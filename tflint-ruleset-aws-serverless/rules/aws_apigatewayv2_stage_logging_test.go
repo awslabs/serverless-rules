@@ -24,8 +24,8 @@ resource "aws_api_gatewayv2_stage" "missing" {
 					Message: "\"access_log_settings\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 46},
-						End:      hcl.Pos{Line: 2, Column: 46},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 45},
 					},
 				},
 			},

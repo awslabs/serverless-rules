@@ -26,8 +26,8 @@ resource "aws_lambda_function" "this" {
 					Message: `"aws_lambda_function" is missing a log group with retention_in_days.`,
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 39},
-						End:      hcl.Pos{Line: 2, Column: 39},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 38},
 					},
 				},
 			},
@@ -49,8 +49,8 @@ resource "aws_cloudwatch_log_group" "this" {
 					Message: `"aws_lambda_function" is missing a log group with retention_in_days.`,
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 39},
-						End:      hcl.Pos{Line: 2, Column: 39},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 38},
 					},
 				},
 			},

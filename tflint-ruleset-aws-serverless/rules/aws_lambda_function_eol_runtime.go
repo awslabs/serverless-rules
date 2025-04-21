@@ -3,7 +3,7 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -13,6 +13,7 @@ type AwsLambdaFunctionEolRuntimeRule struct {
 	resourceType  string
 	attributeName string
 	enum          []string
+	tflint.DefaultRule
 }
 
 // NewAwsLambdaFunctionEolRuntimeRule returns new rule with default attributes
@@ -48,7 +49,7 @@ func (r *AwsLambdaFunctionEolRuntimeRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaFunctionEolRuntimeRule) Severity() string {
+func (r *AwsLambdaFunctionEolRuntimeRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
@@ -57,27 +58,55 @@ func (r *AwsLambdaFunctionEolRuntimeRule) Link() string {
 	return "https://awslabs.github.io/serverless-rules/rules/lambda/end_of_life_runtime/"
 }
 
+// Metadata returns the rule metadata
+func (r *AwsLambdaFunctionEolRuntimeRule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
+}
+
 // Check checks if the runtime is marked as end-of-life
 func (r *AwsLambdaFunctionEolRuntimeRule) Check(runner tflint.Runner) error {
-	return runner.WalkResourceAttributes(r.resourceType, r.attributeName, func(attribute *hcl.Attribute) error {
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{
+				Name: r.attributeName,
+			},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
+
+	for _, resource := range resources.Blocks {
+		attribute, ok := resource.Body.Attributes[r.attributeName]
+		if !ok {
+			continue
+		}
+
 		var val string
 		err := runner.EvaluateExpr(attribute.Expr, &val, nil)
+		if err != nil {
+			return err
+		}
 
-		return runner.EnsureNoError(err, func() error {
-			found := false
-			for _, item := range r.enum {
-				if item == val {
-					found = true
-				}
-			}
-			if found {
-				runner.EmitIssueOnExpr(
+		for _, item := range r.enum {
+			if item == val {
+				runner.EmitIssue(
 					r,
 					fmt.Sprintf(`"%s" is an end-of-life runtime.`, val),
-					attribute.Expr,
+					attribute.Expr.Range(),
 				)
+				break
 			}
-			return nil
-		})
-	})
+		}
+	}
+
+	return nil
 }

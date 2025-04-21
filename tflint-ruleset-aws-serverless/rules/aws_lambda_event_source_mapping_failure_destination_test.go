@@ -27,8 +27,8 @@ resource "aws_lambda_event_source_mapping" "this" {
 					Message: "\"destination_config\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 51},
-						End:      hcl.Pos{Line: 2, Column: 51},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 50},
 					},
 				},
 			},
@@ -49,8 +49,8 @@ resource "aws_lambda_event_source_mapping" "this" {
 					Message: "\"on_failure\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 6, Column: 22},
-						End:      hcl.Pos{Line: 6, Column: 22},
+						Start:    hcl.Pos{Line: 6, Column: 3},
+						End:      hcl.Pos{Line: 6, Column: 21},
 					},
 				},
 			},
@@ -73,8 +73,8 @@ resource "aws_lambda_event_source_mapping" "this" {
 					Message: "\"destination_arn\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 7, Column: 13},
-						End:      hcl.Pos{Line: 7, Column: 13},
+						Start:    hcl.Pos{Line: 7, Column: 2},
+						End:      hcl.Pos{Line: 7, Column: 12},
 					},
 				},
 			},

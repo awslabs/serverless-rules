@@ -1,17 +1,19 @@
 package rules
 
 import (
-    hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"fmt"
+
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // TODO: Write the rule's description here
 // {{ .Env.RULE_NAME_CC }} checks ...
 type {{ .Env.RULE_NAME_CC }}Rule struct {
-    resourceType  string
+	resourceType  string
 	blockName     string
-    attributeName string
+	attributeName string
+	tflint.DefaultRule
 }
 
 // New{{ .Env.RULE_NAME_CC }}Rule returns new rule with default attributes
@@ -36,84 +38,119 @@ func (r *{{ .Env.RULE_NAME_CC }}Rule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *{{ .Env.RULE_NAME_CC }}Rule) Severity() string {
-	// TODO: Determine the rule's severiry
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Severity() tflint.Severity {
+	// TODO: Determine the rule's severity (ERROR, WARNING, or NOTICE)
 	return tflint.ERROR
 }
 
 // Link returns the rule reference link
 func (r *{{ .Env.RULE_NAME_CC }}Rule) Link() string {
-	return ""
+	// TODO: Add the documentation link for this rule
+	return "https://awslabs.github.io/serverless-rules/rules/..."
+}
+
+// Metadata returns the rule metadata
+func (r *{{ .Env.RULE_NAME_CC }}Rule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
 }
 
 // TODO: Write the details of the inspection
 // Check checks ...
 func (r *{{ .Env.RULE_NAME_CC }}Rule) Check(runner tflint.Runner) error {
-	// TODO: Write the implementation here. See this documentation for what tflint.Runner can do.
-	//       https://pkg.go.dev/github.com/terraform-linters/tflint-plugin-sdk/tflint#Runner
-
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Block
-
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
+	// Get resource content using GetResourceContent
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		// Choose one of the following based on your rule's needs:
+		// For attribute validation:
+		Attributes: []hclext.AttributeSchema{
+			{
+				Name: r.attributeName,
+			},
+		},
+		// For block validation:
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{
+							Name: r.attributeName,
+						},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
-			runner.EmitIssue(
-				r,
-				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
-			)
-
-			return nil
-		}
-
-		// Attribute
-		body, _, diags = blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.attributeName,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
-			return diags
-		}
-
-		var attrValue string
-		attribute, ok := body.Attributes[r.attributeName]
+	for _, resource := range resources.Blocks {
+		// For attribute validation
+		attribute, ok := resource.Body.Attributes[r.attributeName]
 		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.attributeName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-		} else {
-			err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
-			if err != nil {
-				return err
-			}
-
-			if attrValue != "true" {
-				runner.EmitIssueOnExpr(
-					r,
-					fmt.Sprintf("\"%s\" should be set to true.", r.attributeName),
-					attribute.Expr,
-				)
-			}
+			continue
 		}
 
-		return nil
-	})
+		var attrValue string
+		err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
+		if err != nil {
+			return err
+		}
+
+		// Implement your validation logic here
+		// Example: if attrValue != "expectedValue" {
+		//     runner.EmitIssueOnExpr(
+		//         r,
+		//         fmt.Sprintf("\"%s\" should be set to expectedValue.", r.attributeName),
+		//         attribute.Expr,
+		//     )
+		// }
+
+		// Alternative: For block validation
+		/*
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
+			runner.EmitIssue(
+				r,
+				fmt.Sprintf("\"%s\" is not present.", r.blockName),
+				resource.DefRange,
+			)
+			continue
+		}
+
+		block := blocks[0]
+		attribute, ok := block.Body.Attributes[r.attributeName]
+		if !ok {
+			runner.EmitIssue(
+				r,
+				fmt.Sprintf("\"%s.%s\" is not present.", r.blockName, r.attributeName),
+				block.DefRange,
+			)
+			continue
+		}
+
+		var attrValue string
+		err := runner.EvaluateExpr(attribute.Expr, &attrValue, nil)
+		if err != nil {
+			return err
+		}
+
+		// Implement your block validation logic here
+		*/
+	}
+
+	return nil
 }

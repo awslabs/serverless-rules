@@ -18,7 +18,7 @@ class __Rule(CloudFormationLintRule):
     """
 
     # TODO: update these values
-    id = "..." # noqa: VNE003
+    id = "..." # noqa: N815
     shortdesc = "..."
     description = "Ensure that ..."
     source_url = "..."

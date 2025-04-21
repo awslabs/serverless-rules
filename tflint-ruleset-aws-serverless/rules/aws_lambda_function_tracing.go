@@ -3,8 +3,7 @@ package rules
 import (
 	"fmt"
 
-	"github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -13,6 +12,7 @@ type AwsLambdaFunctionTracingRule struct {
 	resourceType  string
 	blockName     string
 	attributeName string
+	tflint.DefaultRule
 }
 
 // NewAwsLambdaFunctionTracingRule returns new rule
@@ -35,7 +35,7 @@ func (r *AwsLambdaFunctionTracingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaFunctionTracingRule) Severity() string {
+func (r *AwsLambdaFunctionTracingRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 
@@ -44,65 +44,76 @@ func (r *AwsLambdaFunctionTracingRule) Link() string {
 	return "https://awslabs.github.io/serverless-rules/rules/lambda/tracing/"
 }
 
+// Metadata returns the rule metadata
+func (r *AwsLambdaFunctionTracingRule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
+}
+
 // Check checks whether "aws_lambda_function" has tracing enabled
 func (r *AwsLambdaFunctionTracingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{
+					Attributes: []hclext.AttributeSchema{
+						{
+							Name:     r.attributeName,
+							Required: false,
+						},
+					},
 				},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		// Check if the block exists
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-			return nil
+			continue
 		}
 
-		// Retrieve the block body
-		blockBody, _, diags := blocks[0].Body.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name:     r.attributeName,
-					Required: true,
-				},
-			},
-		})
-
-		if diags.HasErrors() {
+		block := blocks[0]
+		attribute, ok := block.Body.Attributes[r.attributeName]
+		if !ok {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s.%s\" is not present.", r.blockName, r.attributeName),
-				blockBody.MissingItemRange,
+				block.DefRange,
 			)
-			return nil
+			continue
 		}
-
-		attribute := blockBody.Attributes[r.attributeName]
 
 		var xrayTracingEnabled string
 		err := runner.EvaluateExpr(attribute.Expr, &xrayTracingEnabled, nil)
+		if err != nil {
+			return err
+		}
 
-		return runner.EnsureNoError(err, func() error {
-			if xrayTracingEnabled != "Active" {
-				runner.EmitIssueOnExpr(
-					r,
-					fmt.Sprintf("\"%s.%s\" should be set to Active.", r.blockName, r.attributeName),
-					attribute.Expr,
-				)
-			}
-			return nil
-		})
-	})
+		if xrayTracingEnabled != "Active" {
+			runner.EmitIssue(
+				r,
+				fmt.Sprintf("\"%s.%s\" should be set to Active.", r.blockName, r.attributeName),
+				attribute.Expr.Range(),
+			)
+		}
+	}
+
+	return nil
 }

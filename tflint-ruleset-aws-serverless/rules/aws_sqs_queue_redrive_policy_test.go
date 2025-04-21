@@ -25,8 +25,8 @@ resource "aws_sqs_queue" "this" {
 					Message: "\"redrive_policy\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 33},
-						End:      hcl.Pos{Line: 2, Column: 33},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 32},
 					},
 				},
 			},

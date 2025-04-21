@@ -3,8 +3,7 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -12,6 +11,7 @@ import (
 type AwsAPIGatewayStageLoggingRule struct {
 	resourceType string
 	blockName    string
+	tflint.DefaultRule
 }
 
 // NewAwsAPIGatewayStageLoggingRule returns new rule
@@ -33,7 +33,7 @@ func (r *AwsAPIGatewayStageLoggingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsAPIGatewayStageLoggingRule) Severity() string {
+func (r *AwsAPIGatewayStageLoggingRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
@@ -42,30 +42,43 @@ func (r *AwsAPIGatewayStageLoggingRule) Link() string {
 	return "https://awslabs.github.io/serverless-rules/rules/api_gateway/logging/"
 }
 
+// Metadata returns the rule metadata
+func (r *AwsAPIGatewayStageLoggingRule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
+}
+
 // Check checks whether "aws_api_gateway_stage" has logging enabled
 func (r *AwsAPIGatewayStageLoggingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
-				},
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
+				Body: &hclext.BodySchema{},
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return fmt.Errorf("failed to get resource content: %w", err)
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
 		}
+	}
 
-		return nil
-	})
+	return nil
 }

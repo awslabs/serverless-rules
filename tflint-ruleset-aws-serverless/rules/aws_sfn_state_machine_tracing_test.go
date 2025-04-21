@@ -25,8 +25,8 @@ resource "aws_sfn_state_machine" "this" {
 					Message: "\"tracing_configuration\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 2, Column: 41},
-						End:      hcl.Pos{Line: 2, Column: 41},
+						Start:    hcl.Pos{Line: 2, Column: 1},
+						End:      hcl.Pos{Line: 2, Column: 40},
 					},
 				},
 			},
@@ -44,8 +44,8 @@ resource "aws_sfn_state_machine" "this" {
 					Message: "\"enabled\" is not present.",
 					Range: hcl.Range{
 						Filename: "resource.tf",
-						Start:    hcl.Pos{Line: 3, Column: 25},
-						End:      hcl.Pos{Line: 3, Column: 25},
+						Start:    hcl.Pos{Line: 3, Column: 3},
+						End:      hcl.Pos{Line: 3, Column: 24},
 					},
 				},
 			},

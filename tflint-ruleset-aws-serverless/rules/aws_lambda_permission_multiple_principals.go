@@ -3,8 +3,8 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/hashicorp/hcl/v2"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
@@ -13,6 +13,7 @@ type AwsLambdaPermissionMultiplePrincipalsRule struct {
 	resourceType string
 	functionName string
 	principal    string
+	tflint.DefaultRule
 }
 
 // NewAwsLambdaPermissionMultiplePrincipalsRule returns new rule with default attributes
@@ -35,7 +36,7 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsLambdaPermissionMultiplePrincipalsRule) Severity() string {
+func (r *AwsLambdaPermissionMultiplePrincipalsRule) Severity() tflint.Severity {
 	return tflint.WARNING
 }
 
@@ -44,27 +45,39 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Link() string {
 	return "https://awslabs.github.io/serverless-rules/rules/lambda/permission_multiple_principals/"
 }
 
+// Metadata returns the rule metadata
+func (r *AwsLambdaPermissionMultiplePrincipalsRule) Metadata() interface{} {
+	return struct {
+		Name     string
+		Severity tflint.Severity
+		Link     string
+	}{
+		Name:     r.Name(),
+		Severity: r.Severity(),
+		Link:     r.Link(),
+	}
+}
+
 // Check checks if there are multiple Lambda permission with different principals for a single function
 func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) error {
 	permissions := make(map[string]map[string][]hcl.Expression)
 
-	err := runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		// Attribute
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Attributes: []hcl.AttributeSchema{
-				{
-					Name: r.principal,
-				},
-				{
-					Name: r.functionName,
-				},
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Attributes: []hclext.AttributeSchema{
+			{
+				Name: r.principal,
 			},
-		})
+			{
+				Name: r.functionName,
+			},
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
+	for _, resource := range resources.Blocks {
+		body := resource.Body
 		// Get attribute value
 		var principalVal string
 		principal, ok := body.Attributes[r.principal]
@@ -72,10 +85,9 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) 
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.principal),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 		err := runner.EvaluateExpr(principal.Expr, &principalVal, nil)
 		if err != nil {
@@ -89,10 +101,9 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) 
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.functionName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
-
-			return nil
+			continue
 		}
 		err = runner.EvaluateExpr(functionName.Expr, &functionNameVal, nil)
 		if err != nil {
@@ -104,9 +115,7 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) 
 		}
 
 		permissions[functionNameVal][principalVal] = append(permissions[functionNameVal][principalVal], principal.Expr)
-
-		return nil
-	})
+	}
 
 	// Parse permissions
 	for _, fnPermissions := range permissions {
@@ -114,15 +123,15 @@ func (r *AwsLambdaPermissionMultiplePrincipalsRule) Check(runner tflint.Runner) 
 		if len(fnPermissions) > 1 {
 			for _, exprs := range fnPermissions {
 				for _, expr := range exprs {
-					runner.EmitIssueOnExpr(
+					runner.EmitIssue(
 						r,
 						fmt.Sprintf("different \"%s\" values for the same %s.", r.principal, r.functionName),
-						expr,
+						expr.Range(),
 					)
 				}
 			}
 		}
 	}
 
-	return err
+	return nil
 }

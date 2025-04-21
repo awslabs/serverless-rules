@@ -14,7 +14,7 @@ class ApiGatewayLoggingRule(CloudFormationLintRule):
     Ensure API Gateway REST and HTTP APIs have logging enabled
     """
 
-    id = "ES2000"  # noqa: VNE003
+    id = "ES2000"  # noqa: N815
     shortdesc = "API Gateway Logging"
     description = "Ensure that API Gateway REST and HTTP APIs have logging enabled"
     source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/logging/"
@@ -56,7 +56,7 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
     Ensure API Gateway REST and HTTP APIs use structured logging
     """
 
-    id = "WS2001"  # noqa: VNE003
+    id = "WS2001"  # noqa: N815
     shortdesc = "API Gateway Structured Logging"
     description = "Ensure that API Gateway REST and HTTP APIs are using structured logs"
     source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/structured_logging/"
@@ -112,7 +112,7 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
     Ensure API Gateway REST APIs have throttling enabled
     """
 
-    id = "ES2003"  # noqa: VNE003
+    id = "ES2003"  # noqa: N815
     shortdesc = "API Gateway Throttling"
     description = "Ensure that API Gateway REST APIs have default throttling limits set."
     source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/default_throttling/"
@@ -173,7 +173,7 @@ class ApiGatewayTracingRule(CloudFormationLintRule):
     Ensure API Gateway REST APIs have tracing enabled
     """
 
-    id = "WS2002"  # noqa: VNE003
+    id = "WS2002"  # noqa: N815
     shortdesc = "API Gateway Tracing"
     description = "Ensure that API Gateway REST APIs have tracing enabled"
     source_url = "https://awslabs.github.io/serverless-rules/rules/api_gateway/tracing/"

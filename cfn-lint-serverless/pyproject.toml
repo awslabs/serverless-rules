@@ -7,17 +7,17 @@ readme = "README.md"
 license = "MIT-0"
 requires-python = ">=3.9.1,<4"
 dependencies = [
-    "cfn-lint>=1.22.3"
+    "cfn-lint>=1.33.0"
 ]
 
 [dependency-groups]
 dev = [
     "bandit>=1.8.0",
     "coverage>=7.6.10",
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
     "radon>=6.0.1",
-    "ruff>=0.8.4",
+    "ruff>=0.11.5",
     "xenon>=0.9.3",
 ]
 

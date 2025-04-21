@@ -168,3 +168,4 @@ dmypy.json
 
 **/.idea/**
 .vscode/settings.json
+tflint-ruleset-aws-serverless/tflint-ruleset-aws-serverless

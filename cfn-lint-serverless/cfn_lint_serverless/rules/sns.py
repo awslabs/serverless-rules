@@ -10,7 +10,7 @@ class SnsNoRedrivePolicyRule(CloudFormationLintRule):
     Ensure SNS subscriptions have a redrive policy configured
     """
 
-    id = "ES7000"  # noqa: VNE003
+    id = "ES7000"  # noqa: N815
     shortdesc = "SNS No Redrive Policy"
     description = "Ensure SNS subscriptions have a redrive policy configured"
     source_url = "https://awslabs.github.io/serverless-rules/rules/sns/redrive_policy/"

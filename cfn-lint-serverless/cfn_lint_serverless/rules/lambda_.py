@@ -15,13 +15,13 @@ class LambdaTracingRule(CloudFormationLintRule):
     Ensure Lambda functions have tracing enabled
     """
 
-    id = "WS1000"  # noqa: VNE003
+    id = "WS1000"  # noqa: N815
     shortdesc = "Lambda Tracing"
     description = "Ensure that Lambda functions have tracing enabled"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/tracing/"
     tags = ["lambda"]
 
-    _message = "Lambda function {} should have TracingConfig.Mode set to 'Active'."
+    _message = "Lambda function {} should have Tracing property set to 'Active'."
 
     def match(self, cfn):
         """
@@ -44,7 +44,7 @@ class LambdaESMDestinationRule(CloudFormationLintRule):
     Ensure Lambda event source mappings have a destination configured
     """
 
-    id = "ES1001"  # noqa: VNE003
+    id = "ES1001"  # noqa: N815
     shortdesc = "Lambda Event Source Mapping Destination"
     description = "Ensure Lambda event source mappings have a destination configured"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/eventsourcemapping_failure_destination/"
@@ -75,7 +75,7 @@ class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
     Ensure that Lambda functions do not have Lambda permissions with different principals
     """
 
-    id = "WS1002"  # noqa: VNE003
+    id = "WS1002"  # noqa: N815
     shortdesc = "Lambda Permission Principals"
     description = "Ensure that Lambda functions do not have Lambda permissions with different principals"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/permission_multiple_principals/"
@@ -117,7 +117,7 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
     Ensure that Lambda functions don't have stars in IAM policy actions
     """
 
-    id = "WS1003"  # noqa: VNE003
+    id = "WS1003"  # noqa: N815
     shortdesc = "Lambda Star Permission"
     description = "Ensure that Lambda functions don't have stars in IAM policy actions"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/star_permissions/"
@@ -187,7 +187,7 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
     Ensure that Lambda functions have a corresponding Log Group with retention
     """
 
-    id = "WS1004"  # noqa: VNE003
+    id = "WS1004"  # noqa: N815
     shortdesc = "Lambda Log Retention"
     description = "Ensure that Lambda functions have a corresponding Log Group with retention"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/log_retention/"
@@ -255,7 +255,7 @@ class LambdaDefaultMemorySizeRule(CloudFormationLintRule):
     Ensure that Lambda functions have an explicit memory value
     """
 
-    id = "ES1005"  # noqa: VNE003
+    id = "ES1005"  # noqa: N815
     shortdesc = "Lambda Default Memory Size"
     description = "Ensure that Lambda functions have an explicit memory value"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/default_memory_size/"
@@ -284,7 +284,7 @@ class LambdaDefaultTimeoutRule(CloudFormationLintRule):
     Ensure that Lambda functions have an explicit timeout value
     """
 
-    id = "ES1006"  # noqa: VNE003
+    id = "ES1006"  # noqa: N815
     shortdesc = "Lambda Default Timeout"
     description = "Ensure that Lambda functions have an explicit timeout value"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/default_timeout/"
@@ -313,7 +313,7 @@ class LambdaAsyncNoDestinationRule(CloudFormationLintRule):
     Ensure that Lambda functions invoked asynchronously have a destination configured
     """
 
-    id = "ES1007"  # noqa: VNE003
+    id = "ES1007"  # noqa: N815
     shortdesc = "Lambda Async Destination"
     description = "Ensure that Lambda functions invoked asynchronously have a destination configured"
     source_url = "https://awslabs.github.io/serverless-rules/rules/lambda/async_failure_destination/"

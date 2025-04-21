@@ -3,13 +3,13 @@ package rules
 import (
 	"fmt"
 
-	hcl "github.com/hashicorp/hcl/v2"
-	"github.com/terraform-linters/tflint-plugin-sdk/terraform/configs"
+	"github.com/terraform-linters/tflint-plugin-sdk/hclext"
 	"github.com/terraform-linters/tflint-plugin-sdk/tflint"
 )
 
 // AwsAPIGatewayStageV2LoggingRule checks whether "aws_api_gateway_stage" has Logging enabled.
 type AwsAPIGatewayStageV2LoggingRule struct {
+	tflint.DefaultRule
 	resourceType string
 	blockName    string
 }
@@ -33,7 +33,7 @@ func (r *AwsAPIGatewayStageV2LoggingRule) Enabled() bool {
 }
 
 // Severity returns the rule severity
-func (r *AwsAPIGatewayStageV2LoggingRule) Severity() string {
+func (r *AwsAPIGatewayStageV2LoggingRule) Severity() tflint.Severity {
 	return tflint.ERROR
 }
 
@@ -44,28 +44,27 @@ func (r *AwsAPIGatewayStageV2LoggingRule) Link() string {
 
 // Check checks whether "aws_api_gateway_stage" has logging enabled
 func (r *AwsAPIGatewayStageV2LoggingRule) Check(runner tflint.Runner) error {
-	return runner.WalkResources(r.resourceType, func(resource *configs.Resource) error {
-		body, _, diags := resource.Config.PartialContent(&hcl.BodySchema{
-			Blocks: []hcl.BlockHeaderSchema{
-				{
-					Type: r.blockName,
-				},
+	resources, err := runner.GetResourceContent(r.resourceType, &hclext.BodySchema{
+		Blocks: []hclext.BlockSchema{
+			{
+				Type: r.blockName,
 			},
-		})
+		},
+	}, nil)
+	if err != nil {
+		return err
+	}
 
-		if diags.HasErrors() {
-			return diags
-		}
-
-		blocks := body.Blocks.OfType(r.blockName)
-		if len(blocks) != 1 {
+	for _, resource := range resources.Blocks {
+		blocks := resource.Body.Blocks.OfType(r.blockName)
+		if len(blocks) == 0 {
 			runner.EmitIssue(
 				r,
 				fmt.Sprintf("\"%s\" is not present.", r.blockName),
-				body.MissingItemRange,
+				resource.DefRange,
 			)
 		}
+	}
 
-		return nil
-	})
+	return nil
 }
