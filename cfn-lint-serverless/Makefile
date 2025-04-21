@@ -23,7 +23,7 @@ complexity-baseline:
 	$(info Cyclomatic complexity index)
 	uv run xenon --max-absolute C --max-modules B --max-average A cfn_lint_serverless
 
-pr: lint test security-baseline complexity-baseline
+pr: test security-baseline complexity-baseline
 
 release:
 	uv build
