@@ -52,6 +52,8 @@ jobs:
         run: |
           export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
           echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -78,7 +80,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --rm-dist
+          args: release --clean
           workdir: tflint-ruleset-aws-serverless/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
