@@ -12,7 +12,7 @@ TValue = TypeVar("TValue", bound="Value")
 
 
 class Value:
-    id = ""  # noqa: VNE003
+    id = ""  # noqa: N815
     references = None
 
     def __new__(cls, value: Union[None, dict, str]) -> Union[None, TValue]:

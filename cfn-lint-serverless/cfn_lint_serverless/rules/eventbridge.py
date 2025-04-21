@@ -10,7 +10,7 @@ class EventBridgeDLQRule(CloudFormationLintRule):
     Ensure Event Bridge rules have a DLQ configured
     """
 
-    id = "ES4000"  # noqa: VNE003
+    id = "ES4000"  # noqa: N815
     shortdesc = "EventBridge DLQ"
     description = "Ensure Event Bridge rules have a DLQ configured"
     source_url = "https://awslabs.github.io/serverless-rules/rules/eventbridge/rule_without_dlq/"

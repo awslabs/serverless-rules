@@ -10,7 +10,7 @@ class AppSyncTracingRule(CloudFormationLintRule):
     Ensure AppSync GraphQL APIs have tracing enabled
     """
 
-    id = "WS3000"  # noqa: VNE003
+    id = "WS3000"  # noqa: N815
     shortdesc = "AppSync Tracing"
     description = "Ensure AppSync GraphQL APIs have tracing enabled"
     source_url = "https://awslabs.github.io/serverless-rules/rules/appsync/tracing/"
