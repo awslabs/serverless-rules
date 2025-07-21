@@ -143,7 +143,7 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
             if "Service" not in principal:
                 continue
 
-            services = principal["Service"] if "Service" in principal else None
+            services = principal["Service"]
 
             if isinstance(services, str):
                 principals.append(services)
