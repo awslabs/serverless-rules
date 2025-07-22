@@ -74,6 +74,12 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
         JSON first.
         """
 
+        # Strip any leading/trailing quotes and whitespace that might be in the string
+        log_format = log_format.strip()
+        if (log_format.startswith("'") and log_format.endswith("'")) or (log_format.startswith('"') and log_format.endswith('"')):
+            log_format = log_format[1:-1]
+
+        # Replace context variables with a simple value
         log_format = self._log_format_pattern.sub("0", log_format)
 
         try:
