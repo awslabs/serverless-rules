@@ -23,7 +23,7 @@ jobs:
     env:
       FOLDER: cfn-lint-serverless
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -54,7 +54,7 @@ jobs:
     env:
       FOLDER: tflint-ruleset-aws-serverless
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ matrix.go-version }}
