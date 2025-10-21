@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  pages: write
+
 jobs:
   update_docs:
     runs-on: ubuntu-latest
