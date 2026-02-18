@@ -135,11 +135,11 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
         for statement in properties.get("AssumeRolePolicyDocument", {}).get("Statement", []):
             if not isinstance(statement, dict):
                 continue
-                
+
             principal = statement.get("Principal", {})
             if not isinstance(principal, dict):
                 continue
-                
+
             if "Service" not in principal:
                 continue
 
@@ -163,11 +163,11 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
         for policy in properties.get("Policies", []):
             if not isinstance(policy, dict):
                 continue
-                
+
             for statement in policy.get("PolicyDocument", {}).get("Statement", []):
                 if not isinstance(statement, dict):
                     continue
-                    
+
                 action = statement.get("Action")
 
                 if isinstance(action, str):

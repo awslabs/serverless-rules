@@ -5,19 +5,19 @@ description = "Serverless rules for cfn-lint"
 authors = [{name = "Amazon Web Service"}]
 readme = "README.md"
 license = "MIT-0"
-requires-python = ">=3.9.1,<4"
+requires-python = ">=3.10,<4"
 dependencies = [
-    "cfn-lint>=1.36.0"
+    "cfn-lint>=1.44.0"
 ]
 
 [dependency-groups]
 dev = [
-    "bandit>=1.8.0",
-    "coverage>=7.6.10",
-    "pytest>=8.3.5",
-    "pytest-cov>=6.1.1",
+    "bandit>=1.9.0",
+    "coverage>=7.13.0",
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
     "radon>=6.0.1",
-    "ruff>=0.11.5",
+    "ruff>=0.15.0",
     "xenon>=0.9.3",
 ]
 
