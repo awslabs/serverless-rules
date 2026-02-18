@@ -124,7 +124,7 @@ Assuming that you are storing your template as `template.yaml` at the root of yo
     phases:
       install:
         runtime-versions:
-          python: "3.8"
+          python: "3.13"
         commands:
           # Install cfn-lint-serverless
           - pip install cfn-lint cfn-lint-serverless
@@ -143,7 +143,7 @@ Assuming that you are storing your template as `template.yaml` at the root of yo
     phases:
       install:
         runtime-versions:
-          python: "3.8"
+          python: "3.13"
         commands:
           # Install cfn-lint-serverless
           - pip install cfn-lint cfn-lint-serverless
@@ -181,11 +181,11 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
       cfn-lint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python 3.8
-            uses: actions/setup-python@v2
+          - uses: actions/checkout@v4
+          - name: Set up Python 3.13
+            uses: actions/setup-python@v5
             with:
-              python-version: "3.8"
+              python-version: "3.13"
           - name: Install cfn-lint-serverless
             # Install cfn-lint-serverless
             run: pip install cfn-lint cfn-lint-serverless
@@ -211,11 +211,11 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
       cfn-lint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
-          - name: Set up Python 3.8
-            uses: actions/setup-python@v2
+          - uses: actions/checkout@v4
+          - name: Set up Python 3.13
+            uses: actions/setup-python@v5
             with:
-              python-version: "3.8"
+              python-version: "3.13"
           - name: Install cfn-lint-serverless
             # Install cfn-lint-serverless
             run: pip install cfn-lint cfn-lint-serverless
@@ -225,7 +225,7 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
             run: cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml
             # Annotate PR based on cfn-lint's findings
           - name: Publish test report
-            uses: mikepenz/action-junit-report@v2
+            uses: mikepenz/action-junit-report@v4
             # Only run this step on failure
             if: ${{ failure() }}
             with:

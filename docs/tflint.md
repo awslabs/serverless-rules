@@ -105,8 +105,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     env:
       variables:
-        # TODO: replace "v0.29.0" with the latest version of tflint
-        TFLINT_VERSION: "0.29.0"
+        # TODO: replace "v0.61.0" with the latest version of tflint
+        TFLINT_VERSION: "0.61.0"
         TFLINT_OS: "amd64"
 
     phases:
@@ -127,8 +127,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     env:
       variables:
-        # TODO: replace "v0.29.0" with the latest version of tflint
-        TFLINT_VERSION: "0.29.0"
+        # TODO: replace "v0.61.0" with the latest version of tflint
+        TFLINT_VERSION: "0.61.0"
         TFLINT_OS: "amd64"
 
     phases:
@@ -173,11 +173,11 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
       tflint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
+          - uses: actions/checkout@v4
           - name: Setup TFLint
-            uses: terraform-linters/setup-tflint@v1
+            uses: terraform-linters/setup-tflint@v4
             with:
-              tflint_version: v0.29.0
+              tflint_version: v0.61.0
           - name: Install Terraform plugins
             run: tflint --init
           - name: Lint Terraform files
@@ -200,17 +200,17 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
       tflint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v2
+          - uses: actions/checkout@v4
           - name: Setup TFLint
-            uses: terraform-linters/setup-tflint@v1
+            uses: terraform-linters/setup-tflint@v4
             with:
-              tflint_version: v0.29.0
+              tflint_version: v0.61.0
           - name: Install Terraform plugins
             run: tflint --init
           - name: Lint Terraform files
             run: tflint -f junit > tflint_report.xml
           - name: Publish test report
-            uses: mikepenz/action-junit-report@v2
+            uses: mikepenz/action-junit-report@v4
             # Only run this step on failure
             if: ${{ failure() }}
             with:
@@ -226,8 +226,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     tflint-serverless:
       variables:
-        # TODO: replace "v0.29.0" with the latest version of tflint
-        TFLINT_VERSION: "0.29.0"
+        # TODO: replace "v0.61.0" with the latest version of tflint
+        TFLINT_VERSION: "0.61.0"
         TFLINT_OS: "amd64"
       only:
         - merge_requests
@@ -246,8 +246,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     tflint-serverless:
       variables:
-        # TODO: replace "v0.29.0" with the latest version of tflint
-        TFLINT_VERSION: "0.29.0"
+        # TODO: replace "v0.61.0" with the latest version of tflint
+        TFLINT_VERSION: "0.61.0"
         TFLINT_OS: "amd64"
       only:
         - merge_requests
