@@ -1,2 +1,2 @@
-mkdocs
+mkdocs<2.0
 mkdocs-material
