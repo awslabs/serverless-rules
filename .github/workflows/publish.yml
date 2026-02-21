@@ -10,20 +10,18 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 jobs:
   run_tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set release notes tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
-          echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+          echo "RELEASE_TAG_VERSION=${TAG:1}" >> $GITHUB_ENV
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
       - name: Check version tags
         run: make release-check
       - name: Set up Python
@@ -35,7 +33,7 @@ jobs:
         with:
           go-version: "1.24"
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@6e87008f9dd1fe3e34e66aca6c97b4a69f72a7f4 # v4
         with:
           tflint_version: v0.61.0
       - name: Install dependencies
@@ -49,11 +47,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set release notes tag
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          export RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}
-          echo "RELEASE_TAG_VERSION=${RELEASE_TAG_VERSION:1}" >> $GITHUB_ENV
+          echo "RELEASE_TAG_VERSION=${TAG:1}" >> $GITHUB_ENV
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -65,9 +64,12 @@ jobs:
           cd cfn-lint-serverless/
           uv build
           uv publish --token ${{ secrets.PYPI_TOKEN25 }}
+
   publish_go:
     needs: run_tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
@@ -75,7 +77,7 @@ jobs:
         with:
           go-version: "1.24"
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
+        uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6
         with:
           distribution: goreleaser
           version: "~> v2"
