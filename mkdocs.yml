@@ -17,13 +17,34 @@ nav:
 theme:
   name: material
   palette:
-    scheme: default
-    primary: teal
-    accent: deep orange
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   logo: images/aws-logo-light.svg
   favicon: images/aws-logo-light.svg
   features:
     - navigation.sections
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - header.autohide
+    - search.suggest
+    - search.highlight
+    - content.code.copy
 
 plugins:
   - search
@@ -35,11 +56,12 @@ markdown_extensions:
   - pymdownx.highlight:
       linenums: true
   - pymdownx.superfences
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - toc:
       permalink: true
 
 extra_css:
   - stylesheets/extra.css
 
-copyright: Copyright &copy; 2021 Amazon Web Services
+copyright: Copyright &copy; 2026 Amazon Web Services
