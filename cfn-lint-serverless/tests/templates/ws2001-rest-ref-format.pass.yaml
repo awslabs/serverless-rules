@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Test WS2001 when Format is !Ref
+
+Parameters:
+  LogFormat:
+    Type: String
+    Default: '{"requestId":"$context.requestId"}'
+
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      AccessLogSetting:
+        DestinationArn: !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/apigateway'
+        Format: !Ref LogFormat
+      DefinitionBody:
+        openapi: "3.0.1"
+        info:
+          title: "test-api"
+          version: 1.0.0
+        paths:
+          /:
+            get:
+              responses:
+                "200":
+                  description: "OK"
+              x-amazon-apigateway-integration:
+                requestTemplates:
+                  application/json: '{"statusCode": 200}'
+                passthroughBehavior: when_no_match
+                responses:
+                  default:
+                    statusCode: "200"
+                type: mock
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          ThrottlingRateLimit: 10
+          ThrottlingBurstLimit: 1000
+      TracingEnabled: true
