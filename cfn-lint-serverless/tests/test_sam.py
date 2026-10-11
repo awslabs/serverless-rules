@@ -4,7 +4,6 @@ Focused tests for the read-only SAM helper views
 
 import copy
 
-import pytest
 from cfnlint.template import Template
 
 from cfn_lint_serverless import sam

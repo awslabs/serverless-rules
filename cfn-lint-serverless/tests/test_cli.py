@@ -124,7 +124,9 @@ def test_direct_sam_cli_regression():
 
 
 def test_command_line_ignore_applies_to_sam_findings():
-    result = run_cfn_lint(CLI_FIXTURE, "-a", "cfn_lint_serverless.rules", "-f", "json", "-i", "WS1000", "WS1004", "WS2002")
+    result = run_cfn_lint(
+        CLI_FIXTURE, "-a", "cfn_lint_serverless.rules", "-f", "json", "-i", "WS1000", "WS1004", "WS2002"
+    )
 
     findings = json.loads(result.stdout) if result.stdout.strip() else []
     serverless_findings = [f for f in findings if f["Rule"]["Id"][1] == "S"]

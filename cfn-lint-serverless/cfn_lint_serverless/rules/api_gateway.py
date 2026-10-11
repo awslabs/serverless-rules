@@ -57,16 +57,10 @@ class ApiGatewayLoggingRule(CloudFormationLintRule):
 
         # Explicit SAM APIs
         for key, value in sam.get_apis(cfn).items():
-            matches.extend(
-                self._match_properties(key, ["Resources", key], value.get("Properties", {}), "rest")
-            )
+            matches.extend(self._match_properties(key, ["Resources", key], value.get("Properties", {}), "rest"))
 
         for key, value in sam.get_http_apis(cfn).items():
-            matches.extend(
-                self._match_properties(
-                    key, ["Resources", key], value.get("Properties", {}), "http"
-                )
-            )
+            matches.extend(self._match_properties(key, ["Resources", key], value.get("Properties", {}), "http"))
 
         # Implicit APIs created by function events, reported per owning function
         for view in sam.get_implicit_apis(cfn):
@@ -161,16 +155,10 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
 
         # Explicit SAM APIs
         for key, value in sam.get_apis(cfn).items():
-            matches.extend(
-                self._match_properties(key, ["Resources", key], value.get("Properties", {}), "rest")
-            )
+            matches.extend(self._match_properties(key, ["Resources", key], value.get("Properties", {}), "rest"))
 
         for key, value in sam.get_http_apis(cfn).items():
-            matches.extend(
-                self._match_properties(
-                    key, ["Resources", key], value.get("Properties", {}), "http"
-                )
-            )
+            matches.extend(self._match_properties(key, ["Resources", key], value.get("Properties", {}), "http"))
 
         # Implicit APIs created by function events, reported per owning function
         for view in sam.get_implicit_apis(cfn):
@@ -242,14 +230,10 @@ class ApiGatewayDefaultThrottlingRule(CloudFormationLintRule):
 
         # Explicit SAM APIs
         for key, value in sam.get_apis(cfn).items():
-            matches.extend(
-                self._match_rest_api(key, ["Resources", key], value.get("Properties", {}))
-            )
+            matches.extend(self._match_rest_api(key, ["Resources", key], value.get("Properties", {})))
 
         for key, value in sam.get_http_apis(cfn).items():
-            matches.extend(
-                self._match_http_api(key, ["Resources", key], value.get("Properties", {}))
-            )
+            matches.extend(self._match_http_api(key, ["Resources", key], value.get("Properties", {})))
 
         # Implicit APIs created by function events, reported per owning function
         for view in sam.get_implicit_apis(cfn):

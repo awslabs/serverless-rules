@@ -29,9 +29,7 @@ EVENT_PRINCIPALS = {
 }
 
 # Event types that invoke a function asynchronously.
-ASYNC_EVENT_TYPES = frozenset(
-    ["CloudWatchEvent", "EventBridgeRule", "IoTRule", "S3", "Schedule", "SNS"]
-)
+ASYNC_EVENT_TYPES = frozenset(["CloudWatchEvent", "EventBridgeRule", "IoTRule", "S3", "Schedule", "SNS"])
 
 # Event types backed by stream-based event source mappings, which support an
 # on-failure destination. SQS polling events do not support that property.

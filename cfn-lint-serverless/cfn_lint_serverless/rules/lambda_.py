@@ -81,9 +81,7 @@ class LambdaESMDestinationRule(CloudFormationLintRule):
                 if event_type not in sam.STREAM_EVENT_TYPES:
                     continue
 
-                destination = (
-                    properties.get("DestinationConfig", {}).get("OnFailure", {}).get("Destination", False)
-                )
+                destination = properties.get("DestinationConfig", {}).get("OnFailure", {}).get("Destination", False)
 
                 if not destination:
                     matches.append(RuleMatch(path, self._message.format(f"{key}/{name}")))
@@ -424,7 +422,9 @@ class LambdaAsyncNoDestinationRule(CloudFormationLintRule):
     tags = ["lambda"]
 
     _message = "Lambda permission {} has an asynchronous permission but doesn't have an EventInvokeConfig resource related to it"  # noqa: E501
-    _message_sam = "Lambda function event {} is invoked asynchronously but doesn't have an on-failure destination configured"  # noqa: E501
+    _message_sam = (
+        "Lambda function event {} is invoked asynchronously but doesn't have an on-failure destination configured"  # noqa: E501
+    )
 
     _async_principals = [
         "events.amazonaws.com",
