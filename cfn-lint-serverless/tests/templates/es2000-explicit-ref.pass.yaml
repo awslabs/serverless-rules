@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Tracing: Active
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+      MemorySize: 128
+      Timeout: 15
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            Method: GET
+            Path: /
+            RestApiId: !Ref Api
+
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      AccessLogSetting:
+        DestinationArn: arn:aws:logs:eu-west-1:123456789012:log-group:my-log-group
+        Format: '{"request_id": "$context.requestId"}'
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          ThrottlingBurstLimit: 1000
+          ThrottlingRateLimit: 10
+      TracingEnabled: true
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${Function}"
+      RetentionInDays: 7

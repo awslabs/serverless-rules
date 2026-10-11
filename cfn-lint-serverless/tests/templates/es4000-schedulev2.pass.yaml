@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Resources:
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Runtime: python3.12
+      Handler: main.handler
+      Tracing: Active
+      Events:
+        Timer:
+          Type: ScheduleV2
+          Properties:
+            ScheduleExpression: rate(5 minutes)

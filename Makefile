@@ -7,7 +7,8 @@ dev: dev-requirements
 	$(MAKE) -C $(TFLINT) dev
 
 dev-requirements:
-	pip install -r requirements-dev.txt
+	uv venv .venv
+	VIRTUAL_ENV=.venv uv pip install -r requirements-dev.txt
 
 pr:
 	$(MAKE) -C $(CFN_LINT) pr
@@ -17,8 +18,11 @@ test:
 	$(MAKE) -C $(CFN_LINT) test
 	$(MAKE) -C $(TFLINT) test
 
-docs-serve:
-	mkdocs serve
+docs-serve: dev-requirements
+	.venv/bin/mkdocs serve
+
+docs-build: dev-requirements
+	.venv/bin/mkdocs build --strict
 
 release-check:
 	grep "version = \"$$RELEASE_TAG_VERSION\"" cfn-lint-serverless/pyproject.toml

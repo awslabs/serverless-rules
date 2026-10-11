@@ -17,6 +17,10 @@ __tflint (HTTP)__: aws_apigatewayv2_stage_logging_rule
 
 Amazon API Gateway can send logs to Amazon CloudWatch Logs and Amazon Kinesis Data Firehose for centralization.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Api` and `AWS::Serverless::HttpApi` resources, this rule checks the effective stage settings directly, including values inherited from `Globals.Api` or `Globals.HttpApi`. Function `Api` events without `RestApiId` and `HttpApi` events without `ApiId` create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding. REST APIs use `AccessLogSetting` and HTTP APIs use `AccessLogSettings`; a missing `DestinationArn` fails the check.
+
 ## Implementations for REST APIs
 
 === "CDK" 

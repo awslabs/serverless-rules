@@ -1,3 +1,5 @@
 test-example:
-	cdk synth > template.yaml
+	uv venv .venv
+	VIRTUAL_ENV=.venv uv pip install -r requirements.txt
+	PATH="$$(pwd)/.venv/bin:$$PATH" cdk synth > template.yaml
 	PYTHONPATH="../../cfn-lint-serverless/:$$PYTHONPATH" cfn-lint template.yaml -a cfn_lint_serverless.rules -i W3005,W2001

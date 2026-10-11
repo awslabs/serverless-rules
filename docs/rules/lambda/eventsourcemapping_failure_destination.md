@@ -14,6 +14,10 @@ __tflint__: aws_lambda_event_source_mapping_failure_destination
 
 An AWS Lambda event source mapping reads from streams and poll-based event sources to invoke your functions. You can configure the event source mapping to send invocation records to another service such as Amazon SNS or Amazon SQS when it discards an event batch.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Function` resources, this rule checks `Kinesis` and `DynamoDB` event declarations for a `DestinationConfig.OnFailure.Destination` property. `SQS` events are polling-based and do not support an on-failure destination, so they are not checked.
+
 ## Implementations
 
 === "CDK"

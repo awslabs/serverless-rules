@@ -3,7 +3,7 @@
 
 ## Installation
 
-This plugin depends on [tflint](https://github.com/terraform-linters/tflint#installation). If you use `tflint` version 0.29 or newer, you can leverage the `tflint --init` command to automatically install the plugin. Otherwise, you will need to download the `tflint-ruleset-aws-serverless` binary corresponding to your system from the [releases page](https://github.com/awslabs/serverless-rules/releases).
+This plugin depends on [tflint](https://github.com/terraform-linters/tflint#installation). The validated host version is `tflint` v0.64.0 or later; building the plugin from source requires Go 1.27 or later. You can leverage the `tflint --init` command to automatically install the plugin, or download the `tflint-ruleset-aws-serverless` binary corresponding to your system from the [releases page](https://github.com/awslabs/serverless-rules/releases).
 
 You can enable the Serverless Rules plugin by adding a plugin section in the `.tflint.hcl` file in your project:
 
@@ -105,8 +105,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     env:
       variables:
-        # TODO: replace "v0.61.0" with the latest version of tflint
-        TFLINT_VERSION: "0.61.0"
+        # TODO: replace "0.64.0" with the latest version of tflint
+        TFLINT_VERSION: "0.64.0"
         TFLINT_OS: "amd64"
 
     phases:
@@ -127,8 +127,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     env:
       variables:
-        # TODO: replace "v0.61.0" with the latest version of tflint
-        TFLINT_VERSION: "0.61.0"
+        # TODO: replace "0.64.0" with the latest version of tflint
+        TFLINT_VERSION: "0.64.0"
         TFLINT_OS: "amd64"
 
     phases:
@@ -173,11 +173,11 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
       tflint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
           - name: Setup TFLint
-            uses: terraform-linters/setup-tflint@v4
+            uses: terraform-linters/setup-tflint@v6
             with:
-              tflint_version: v0.61.0
+              tflint_version: v0.64.0
           - name: Install Terraform plugins
             run: tflint --init
           - name: Lint Terraform files
@@ -200,21 +200,21 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
       tflint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
           - name: Setup TFLint
-            uses: terraform-linters/setup-tflint@v4
+            uses: terraform-linters/setup-tflint@v6
             with:
-              tflint_version: v0.61.0
+              tflint_version: v0.64.0
           - name: Install Terraform plugins
             run: tflint --init
           - name: Lint Terraform files
             run: tflint -f junit > tflint_report.xml
           - name: Publish test report
-            uses: mikepenz/action-junit-report@v4
+            uses: mikepenz/action-junit-report@v6
             # Only run this step on failure
             if: ${{ failure() }}
             with:
-              report_paths: cfn_lint_report.xml
+              report_paths: tflint_report.xml
     ```
 
 ### GitLab
@@ -226,8 +226,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     tflint-serverless:
       variables:
-        # TODO: replace "v0.61.0" with the latest version of tflint
-        TFLINT_VERSION: "0.61.0"
+        # TODO: replace "0.64.0" with the latest version of tflint
+        TFLINT_VERSION: "0.64.0"
         TFLINT_OS: "amd64"
       only:
         - merge_requests
@@ -246,8 +246,8 @@ Assuming that you are storing your terraform configuration files and a `.tflint.
     ```yaml
     tflint-serverless:
       variables:
-        # TODO: replace "v0.61.0" with the latest version of tflint
-        TFLINT_VERSION: "0.61.0"
+        # TODO: replace "0.64.0" with the latest version of tflint
+        TFLINT_VERSION: "0.64.0"
         TFLINT_OS: "amd64"
       only:
         - merge_requests

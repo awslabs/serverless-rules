@@ -11,3 +11,5 @@ __pycache__
 cdk.out
 
 template.yaml
+# Synthesized template
+template.yaml

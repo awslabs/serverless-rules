@@ -47,6 +47,34 @@ GitHub provides additional document on [forking a repository](https://help.githu
 [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
 
 
+## Development setup
+
+The `cfn-lint` plugin requires Python 3.10 or later (up to 3.14) and uses [uv](https://docs.astral.sh/uv/) for reproducible, locked environments:
+
+```bash
+cd cfn-lint-serverless/
+make dev        # uv sync --all-groups, installs the locked dependency baseline
+make pr         # format, lint, test, security and complexity checks
+```
+
+The supported `cfn-lint` range is declared in `cfn-lint-serverless/pyproject.toml` (currently 1.57.0 or later) and pinned for development in `cfn-lint-serverless/uv.lock`. Regenerate the lockfile with `uv lock --upgrade` whenever dependency constraints change, and commit both files together.
+
+The `tflint` plugin requires Go 1.27 or later, and its validated host is `tflint` v0.64.0 or later:
+
+```bash
+cd tflint-ruleset-aws-serverless/
+make pr        # go fmt, go test ./..., and rule-registration check
+make install   # build and install the plugin into ~/.tflint.d/plugins
+```
+
+From the repository root, `make dev` sets up both plugins plus a documentation environment. Documentation uses pinned packages from `requirements-dev.txt` installed into a root `.venv` with uv:
+
+```bash
+make dev-requirements  # create .venv and install the pinned docs toolchain
+make docs-build        # build the site with mkdocs build --strict
+make docs-serve        # serve the docs locally
+```
+
 ## Finding contributions to work on
 Looking at the existing issues is a great way to find something to contribute on. As our projects, by default, use the default GitHub issue labels (enhancement/bug/duplicate/help wanted/invalid/question/wontfix), looking at any 'help wanted' issues is a great place to start.
 

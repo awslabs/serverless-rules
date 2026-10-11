@@ -1,10 +1,11 @@
 plugin "aws" {
   enabled = true
+  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+  version = "0.49.0"
 }
 
 plugin "aws-serverless" {
   enabled = true
-  # Uncomment those lines if you are using tflint 0.29 or later
-  # source = "github.com/awslabs/serverless-rules"
-  # version = "0.3.5"
+  source  = "github.com/awslabs/serverless-rules"
+  version = "0.3.5"
 }

@@ -6,4 +6,4 @@ Resources:
     Properties:
       Protocol: https
       Endpoint: https://example.com/
-      TopicArn: "my-topic-arn"
+      TopicArn: arn:aws:sns:eu-west-1:123456789012:my-topic

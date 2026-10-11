@@ -81,6 +81,10 @@ By default, CloudWatch log groups created by Lambda functions have an unlimited 
 
 Since `serverless-rules` evaluate infrastructure-as-code template, it cannot check if you use a solution that will automatically change the configuration of log groups after the fact.
 
+!!! note "AWS SAM templates"
+
+    This rule also checks `AWS::Serverless::Function` resources directly, matching log groups by reference to the function's logical ID or by an explicitly declared `FunctionName`. No SAM translation step is required.
+
 ## Implementations
 
 === "CDK"

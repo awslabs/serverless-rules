@@ -17,6 +17,10 @@ __tflint (HTTP)__: _Not supported_
 
 Amazon API Gateway can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Api` resources, this rule checks the effective `TracingEnabled` property, including values inherited from `Globals.Api`. HTTP APIs (`AWS::Serverless::HttpApi` and implicit `HttpApi` events) do not support X-Ray tracing and are not checked. For `AWS::Serverless::Api` and `AWS::Serverless::HttpApi` resources, this rule checks the effective stage settings directly, including values inherited from `Globals.Api` or `Globals.HttpApi`. Function `Api` events without `RestApiId` and `HttpApi` events without `ApiId` create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.
+
 ## Implementations for REST APIs
 
 === "CDK"

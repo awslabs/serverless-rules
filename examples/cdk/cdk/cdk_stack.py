@@ -1,12 +1,13 @@
-from aws_cdk import core as cdk
+from aws_cdk import Stack
 from aws_cdk import aws_apigateway as apigw
 from aws_cdk import aws_lambda as lambda_
 from aws_cdk import aws_logs as logs
+from constructs import Construct
 
 
-class CdkStack(cdk.Stack):
+class CdkStack(Stack):
 
-    def __init__(self, scope: cdk.Construct, construct_id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
         # Lambda function
@@ -15,7 +16,7 @@ class CdkStack(cdk.Stack):
             self, "hello-function",
             code=lambda_.Code.from_asset("src/hello/"),
             handler="main.handler",
-            runtime=lambda_.Runtime.PYTHON_3_8,
+            runtime=lambda_.Runtime.PYTHON_3_12,
             tracing=lambda_.Tracing.ACTIVE
         )
 

@@ -6,8 +6,6 @@ Resources:
     Properties:
       Protocol: https
       Endpoint: https://example.com/
-      TopicArn: "my-topic-arn"
-      RedrivePolicy: |
-        {
-          "deadLetterTargetArn": "my-sqs-arn"
-        }
+      TopicArn: arn:aws:sns:eu-west-1:123456789012:my-topic
+      RedrivePolicy:
+        deadLetterTargetArn: arn:aws:sqs:eu-west-1:123456789012:my-dlq

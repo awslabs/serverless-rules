@@ -9,11 +9,31 @@ updates:
       include: scope
     labels:
       - chore
-  
-  - package-ecosystem: pip
+
+  - package-ecosystem: uv
     directory: /cfn-lint-serverless
     schedule:
       interval: daily
+    commit-message:
+      prefix: chore
+      include: scope
+    labels:
+      - chore
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: chore
+      include: scope
+    labels:
+      - chore
+
+  - package-ecosystem: pip
+    directory: /examples/cdk
+    schedule:
+      interval: weekly
     commit-message:
       prefix: chore
       include: scope
@@ -24,6 +44,16 @@ updates:
     directory: /tflint-ruleset-aws-serverless
     schedule:
       interval: daily
+    commit-message:
+      prefix: chore
+      include: scope
+    labels:
+      - chore
+
+  - package-ecosystem: terraform
+    directory: /examples/tflint
+    schedule:
+      interval: weekly
     commit-message:
       prefix: chore
       include: scope

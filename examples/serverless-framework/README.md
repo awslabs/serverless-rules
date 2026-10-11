@@ -3,6 +3,13 @@ Serverless Framework Example
 
 Example on how to use cfn-lint-serverless with the [Serverless Framework](https://www.serverless.com/).
 
+Requirements
+------------
+
+- Node.js 20 or later
+- Serverless Framework v4 (`npm install -g serverless`), validated with 4.43.0
+- Serverless Framework v4 requires authentication for `sls package`: run `serverless login`, or set `SERVERLESS_ACCESS_KEY` or `SERVERLESS_LICENSE_KEY` for unattended runs
+
 Usage
 -----
 

@@ -17,6 +17,10 @@ __tflint (HTTP)__: aws_apigatewayv2_stage_throttling_rule
 
 Amazon API Gateway supports defining default limits for an API to prevent it from being overwhelmed by too many requests. This uses a [token bucket algorithm](https://en.wikipedia.org/wiki/Token_bucket), where a token counts for a single request.
 
+!!! note "AWS SAM templates"
+
+    For SAM REST APIs, this rule requires a wildcard `MethodSettings` entry (`HttpMethod: "*"`, `ResourcePath: "/*"`) with both `ThrottlingBurstLimit` and `ThrottlingRateLimit`; throttling declared only for a specific route does not count as a default. SAM HTTP APIs use `DefaultRouteSettings` with both limits. For `AWS::Serverless::Api` and `AWS::Serverless::HttpApi` resources, this rule checks the effective stage settings directly, including values inherited from `Globals.Api` or `Globals.HttpApi`. Function `Api` events without `RestApiId` and `HttpApi` events without `ApiId` create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.
+
 ## Implementations for REST APIs
 
 === "CDK"

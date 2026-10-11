@@ -16,6 +16,10 @@ You can use resource-based policies to grant permission to other AWS services to
 
 In general, it's better to create multiple Lambda functions with different function handlers for each invocation source.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Function` resources, this rule also counts the invocation sources implied by supported function events: `Api`, `HttpApi`, `CloudWatchEvent`, `EventBridgeRule`, `Schedule`, `IoTRule`, `S3`, and `SNS`. Events map to their service principal (for example `sns.amazonaws.com`), repeated events from the same service count once, and polling event sources such as `SQS`, `Kinesis`, and `DynamoDB` do not create resource-based invocation permissions.
+
 ## Implementations
 
 === "CDK"

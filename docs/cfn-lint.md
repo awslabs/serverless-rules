@@ -3,6 +3,8 @@
 
 ## Installation
 
+Serverless Rules requires Python 3.10 or later and `cfn-lint` 1.57.0 or later.
+
 Serverless Rules for `cfn-lint` is available through the `cfn-lint-serverless` Python module in PyPi. You can use pip to install the module:
 
 ```bash
@@ -22,6 +24,27 @@ You can also try with a [Serverless Application Model (SAM)](https://github.com/
 ```bash
 cfn-lint examples/sam/template.yaml -a cfn_lint_serverless.rules
 ```
+
+### AWS SAM support
+
+Serverless Rules checks `AWS::Serverless::Function`, `AWS::Serverless::Api`, and `AWS::Serverless::HttpApi` resources directly — no SAM translation step or extra command-line flag is required. Effective settings honor `Globals` inheritance, resource-level overrides, and supported `IgnoreGlobals` declarations, as processed by `cfn-lint`.
+
+Supported SAM declarations:
+
+| Resource | Checked settings |
+|---|---|
+| `AWS::Serverless::Function` | `Tracing`, `MemorySize`, `Timeout`, log group retention (via `AWS::Logs::LogGroup`), inline `Policies` (when no explicit `Role` is set), `EventInvokeConfig` failure destinations |
+| Function events | Invocation principals (`Api`, `HttpApi`, `CloudWatchEvent`, `EventBridgeRule`, `Schedule`, `IoTRule`, `S3`, `SNS`), stream failure destinations (`Kinesis`, `DynamoDB`), EventBridge target DLQs (`CloudWatchEvent`, `EventBridgeRule`, `Schedule`) |
+| `AWS::Serverless::Api` | `AccessLogSetting`, structured log `Format`, wildcard `MethodSettings` throttling, `TracingEnabled` |
+| `AWS::Serverless::HttpApi` | `AccessLogSettings`, structured log `Format`, `DefaultRouteSettings` throttling |
+| Implicit APIs | Function `Api` events without `RestApiId` and `HttpApi` events without `ApiId` are checked with the applicable `Globals.Api`/`Globals.HttpApi` settings. Each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding. |
+
+Coverage limits:
+
+- Named managed policies and SAM policy templates (for example `DynamoDBWritePolicy`) are not expanded into effective permissions.
+- Unresolved intrinsic expressions (for example `Fn::If` or `Fn::Sub` in an access log format) are not evaluated.
+- External API definitions, including `DefinitionBody` with `AWS::Include` or `DefinitionUri`, are not downloaded or expanded; separately declared logging, throttling, and tracing settings are still checked.
+- Other SAM resource types, such as `AWS::Serverless::StateMachine`, `AWS::Serverless::SimpleTable`, and `AWS::Serverless::WebSocketApi`, are not covered by direct checks.
 
 ### Sample outputs
 
@@ -124,7 +147,7 @@ Assuming that you are storing your template as `template.yaml` at the root of yo
     phases:
       install:
         runtime-versions:
-          python: "3.13"
+          python: "3.12"
         commands:
           # Install cfn-lint-serverless
           - pip install cfn-lint cfn-lint-serverless
@@ -143,7 +166,7 @@ Assuming that you are storing your template as `template.yaml` at the root of yo
     phases:
       install:
         runtime-versions:
-          python: "3.13"
+          python: "3.12"
         commands:
           # Install cfn-lint-serverless
           - pip install cfn-lint cfn-lint-serverless
@@ -181,11 +204,11 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
       cfn-lint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
-          - name: Set up Python 3.13
-            uses: actions/setup-python@v5
+          - uses: actions/checkout@v7
+          - name: Set up Python 3.12
+            uses: actions/setup-python@v7
             with:
-              python-version: "3.13"
+              python-version: "3.12"
           - name: Install cfn-lint-serverless
             # Install cfn-lint-serverless
             run: pip install cfn-lint cfn-lint-serverless
@@ -211,11 +234,11 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
       cfn-lint-serverless:
         runs-on: ubuntu-latest
         steps:
-          - uses: actions/checkout@v4
-          - name: Set up Python 3.13
-            uses: actions/setup-python@v5
+          - uses: actions/checkout@v7
+          - name: Set up Python 3.12
+            uses: actions/setup-python@v7
             with:
-              python-version: "3.13"
+              python-version: "3.12"
           - name: Install cfn-lint-serverless
             # Install cfn-lint-serverless
             run: pip install cfn-lint cfn-lint-serverless
@@ -225,7 +248,7 @@ Assuming that your template is stored as `template.yaml` at the root of your rep
             run: cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml
             # Annotate PR based on cfn-lint's findings
           - name: Publish test report
-            uses: mikepenz/action-junit-report@v4
+            uses: mikepenz/action-junit-report@v6
             # Only run this step on failure
             if: ${{ failure() }}
             with:

@@ -18,6 +18,10 @@ AWS Lambda can emit traces to AWS X-Ray, which enables visualizing service maps 
 
 You might use [third party solutions](https://aws.amazon.com/lambda/partners/) for monitoring serverless applications. If this is the case, enabling tracing for your AWS Lambda functions might be optional. Refer to the documentation of your monitoring solutions to see if you should enable AWS X-Ray tracing or not.
 
+!!! note "AWS SAM templates"
+
+    This rule also checks `AWS::Serverless::Function` resources directly using their effective `Tracing` property (`Active` or `PassThrough`), including values inherited from `Globals.Function`. No SAM translation step is required.
+
 ## Implementations
 
 === "CDK"

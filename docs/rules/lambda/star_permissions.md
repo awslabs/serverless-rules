@@ -16,7 +16,9 @@ __tflint__: aws_iam_role_lambda_no_star
 
 ??? warning "Limitations on policies"
 
-    This rule only works with inline policies defined as part of the IAM role resource. It will not check managed policies or policies defined as separate resources.
+    This rule only works with inline IAM policy documents: policies defined as part of an IAM role resource and, for `AWS::Serverless::Function` resources without an explicit `Role`, inline policy documents in the function's `Policies` property. It will not check managed policies, policies defined as separate resources, or SAM policy templates such as `DynamoDBWritePolicy`, which are not expanded into effective permissions.
+
+    IAM `Statement` elements written either as a single object or as a list are both supported. The rule checks wildcard __actions__ (for example `*` or `s3:*`); a wildcard in a `Resource` ARN, such as `arn:aws:s3:::my-bucket/*`, does not by itself trigger this rule.
 
     === "CloudFormation"
 
@@ -110,6 +112,10 @@ __tflint__: aws_iam_role_lambda_no_star
 ## Why is this a warning?
 
 If your Lambda function needs a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.
+
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Function` resources without an explicit `Role`, this rule checks inline IAM policy documents in the function's effective `Policies` property. Named managed policies and SAM policy templates such as `DynamoDBWritePolicy` are not expanded into effective permissions.
 
 ## Implementations
 

@@ -15,23 +15,20 @@ jobs:
   cfn-lint-tests:
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 5
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     env:
       FOLDER: cfn-lint-serverless
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
       - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
-      - name: Install ruff
-        run: pip install ruff
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - name: Install dependencies
         run: make -C $FOLDER dev
       - name: Formatting and Linting
@@ -43,19 +40,68 @@ jobs:
       - name: Complexity baseline
         run: make -C $FOLDER complexity-baseline
 
+  # Validate the declared cfn-lint support floor and the selected current
+  # release in isolated environments, without the lockfile forcing a version.
+  cfn-lint-compat:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.14']
+        cfn-lint-version: ['1.57.0', '1.57.2']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install selected cfn-lint and test runner
+        run: |
+          pip install "cfn-lint==${{ matrix.cfn-lint-version }}" pytest pytest-cov
+          pip install --no-deps ./cfn-lint-serverless
+      - name: Report selected versions
+        run: |
+          python --version
+          cfn-lint --version
+      - name: Run template tests against the selected cfn-lint
+        run: |
+          cd cfn-lint-serverless
+          PYTHONPATH=".:$PYTHONPATH" python -m pytest -q --no-cov
+
+  # Drift detection: resolve the latest stable cfn-lint and report what ran.
+  cfn-lint-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+      - name: Install latest stable cfn-lint and test runner
+        run: |
+          pip install --upgrade cfn-lint pytest pytest-cov
+          pip install --no-deps ./cfn-lint-serverless
+      - name: Report selected versions
+        run: |
+          python --version
+          pip show cfn-lint | grep -E '^(Name|Version)'
+          cfn-lint --version
+      - name: Run template tests against latest cfn-lint
+        run: |
+          cd cfn-lint-serverless
+          PYTHONPATH=".:$PYTHONPATH" python -m pytest -q --no-cov
+
   tflint-tests:
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
-        go-version: ['1.22', '1.23', '1.24']
+        go-version: ['1.27']
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     env:
       FOLDER: tflint-ruleset-aws-serverless
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
         with:
           go-version: ${{ matrix.go-version }}
           cache: true
