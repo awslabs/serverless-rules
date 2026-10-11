@@ -72,7 +72,14 @@ class ApiGatewayStructuredLoggingRule(CloudFormationLintRule):
         As users can use non-string keys like '$context.integration.latency', we
         need to transform the log format into something that can be decoded into
         JSON first.
+
+        If the log format is not a string (e.g., it's an intrinsic function like
+        !Ref or !Sub), we skip validation and return True.
         """
+
+        # Skip validation when Format is an intrinsic function (Ref/Sub/etc.)
+        if not isinstance(log_format, str):
+            return True
 
         # Strip any leading/trailing quotes and whitespace that might be in the string
         log_format = log_format.strip()
