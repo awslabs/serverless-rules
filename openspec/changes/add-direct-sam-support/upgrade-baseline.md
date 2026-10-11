@@ -28,7 +28,7 @@ Resolved from official release metadata (PyPI, Go module proxy via direct VCS, n
 | CI | actions/setup-python | v7 (v7.0.0) | Major upgrade from v5 |
 | CI | actions/setup-go | v7 (v7.0.0) | Major upgrade from v5 |
 | CI | actions/setup-node | v7 (v7.1.0) | For Node-dependent example jobs |
-| CI | astral-sh/setup-uv | v10 (v10.3.0) | Major upgrade from v5/v6 |
+| CI | astral-sh/setup-uv | v10.3.0 (pinned full tag) | Major upgrade from v5/v6; setup-uv publishes floating major tags only up to v7, so v10 must use the full semver tag |
 | CI | goreleaser/goreleaser-action | v7 (v7.2.3) | Major upgrade from v6 |
 | CI | release-drafter/release-drafter | v7 (v7.10.0) | Major upgrade from v6 |
 | CI | mhausenblas/mkdocs-deploy-gh-pages | 1.26 | Replaces floating `@master` |
