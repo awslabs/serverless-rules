@@ -600,6 +600,10 @@
 <p class="badge"><strong>tflint</strong>: aws_lambda_function_default_timeout</p>
 <p>You can define the timeout value, which restricts the maximum duration of a single invocation of your Lambda functions.</p>
 <p>If your timeout value is too short, Lambda might terminate invocations prematurely. On the other side, setting the timeout much higher than the average execution may cause functions to execute for longer upon code malfunction, resulting in higher costs and possibly reaching concurrency limits depending on how such functions are invoked.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>This rule also checks <code>AWS::Serverless::Function</code> resources directly for an effective <code>Timeout</code> property, including values inherited from <code>Globals.Function</code>. No SAM translation step is required.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

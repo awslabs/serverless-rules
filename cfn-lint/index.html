@@ -459,6 +459,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#aws-sam-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS SAM support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sample-outputs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -798,6 +809,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#aws-sam-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWS SAM support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sample-outputs" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1022,6 +1044,7 @@
 
 <h1 id="cfn-lint-module"><code>cfn-lint</code> module<a class="headerlink" href="#cfn-lint-module" title="Permanent link">&para;</a></h1>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Serverless Rules requires Python 3.10 or later and <code>cfn-lint</code> 1.57.0 or later.</p>
 <p>Serverless Rules for <code>cfn-lint</code> is available through the <code>cfn-lint-serverless</code> Python module in PyPi. You can use pip to install the module:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>cfn-lint<span class="w"> </span>cfn-lint-serverless
 </code></pre></div></td></tr></table></div>
@@ -1032,6 +1055,46 @@
 <p>You can also try with a <a href="https://github.com/awslabs/serverless-rules/tree/main/examples/sam">Serverless Application Model (SAM)</a> example provided in this repository. In the root folder of the repository, you can run:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>cfn-lint<span class="w"> </span>examples/sam/template.yaml<span class="w"> </span>-a<span class="w"> </span>cfn_lint_serverless.rules
 </code></pre></div></td></tr></table></div>
+<h3 id="aws-sam-support">AWS SAM support<a class="headerlink" href="#aws-sam-support" title="Permanent link">&para;</a></h3>
+<p>Serverless Rules checks <code>AWS::Serverless::Function</code>, <code>AWS::Serverless::Api</code>, and <code>AWS::Serverless::HttpApi</code> resources directly — no SAM translation step or extra command-line flag is required. Effective settings honor <code>Globals</code> inheritance, resource-level overrides, and supported <code>IgnoreGlobals</code> declarations, as processed by <code>cfn-lint</code>.</p>
+<p>Supported SAM declarations:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Checked settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AWS::Serverless::Function</code></td>
+<td><code>Tracing</code>, <code>MemorySize</code>, <code>Timeout</code>, log group retention (via <code>AWS::Logs::LogGroup</code>), inline <code>Policies</code> (when no explicit <code>Role</code> is set), <code>EventInvokeConfig</code> failure destinations</td>
+</tr>
+<tr>
+<td>Function events</td>
+<td>Invocation principals (<code>Api</code>, <code>HttpApi</code>, <code>CloudWatchEvent</code>, <code>EventBridgeRule</code>, <code>Schedule</code>, <code>IoTRule</code>, <code>S3</code>, <code>SNS</code>), stream failure destinations (<code>Kinesis</code>, <code>DynamoDB</code>), EventBridge target DLQs (<code>CloudWatchEvent</code>, <code>EventBridgeRule</code>, <code>Schedule</code>)</td>
+</tr>
+<tr>
+<td><code>AWS::Serverless::Api</code></td>
+<td><code>AccessLogSetting</code>, structured log <code>Format</code>, wildcard <code>MethodSettings</code> throttling, <code>TracingEnabled</code></td>
+</tr>
+<tr>
+<td><code>AWS::Serverless::HttpApi</code></td>
+<td><code>AccessLogSettings</code>, structured log <code>Format</code>, <code>DefaultRouteSettings</code> throttling</td>
+</tr>
+<tr>
+<td>Implicit APIs</td>
+<td>Function <code>Api</code> events without <code>RestApiId</code> and <code>HttpApi</code> events without <code>ApiId</code> are checked with the applicable <code>Globals.Api</code>/<code>Globals.HttpApi</code> settings. Each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.</td>
+</tr>
+</tbody>
+</table>
+<p>Coverage limits:</p>
+<ul>
+<li>Named managed policies and SAM policy templates (for example <code>DynamoDBWritePolicy</code>) are not expanded into effective permissions.</li>
+<li>Unresolved intrinsic expressions (for example <code>Fn::If</code> or <code>Fn::Sub</code> in an access log format) are not evaluated.</li>
+<li>External API definitions, including <code>DefinitionBody</code> with <code>AWS::Include</code> or <code>DefinitionUri</code>, are not downloaded or expanded; separately declared logging, throttling, and tracing settings are still checked.</li>
+<li>Other SAM resource types, such as <code>AWS::Serverless::StateMachine</code>, <code>AWS::Serverless::SimpleTable</code>, and <code>AWS::Serverless::WebSocketApi</code>, are not covered by direct checks.</li>
+</ul>
 <h3 id="sample-outputs">Sample outputs<a class="headerlink" href="#sample-outputs" title="Permanent link">&para;</a></h3>
 <p>If the template fulfills the requirements for all rules, <code>cfn-lint</code> will return an empty output. Otherwise, <code>cfn-lint</code> will output recommendations.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Matching template</label><label for="__tabbed_1_2">With recommendations</label></div>
@@ -1137,7 +1200,7 @@ cfn-lint<span class="w"> </span>output/cloudformation-template-*.json<span class
 <span class="nt">phases</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">install</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runtime-versions</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">python</span><span class="p">:</span><span class="w"> </span><span class="s">"3.13"</span>
+<span class="w">      </span><span class="nt">python</span><span class="p">:</span><span class="w"> </span><span class="s">"3.12"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Install cfn-lint-serverless</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install cfn-lint cfn-lint-serverless</span>
@@ -1172,7 +1235,7 @@ cfn-lint<span class="w"> </span>output/cloudformation-template-*.json<span class
 <span class="nt">phases</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">install</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runtime-versions</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">python</span><span class="p">:</span><span class="w"> </span><span class="s">"3.13"</span>
+<span class="w">      </span><span class="nt">python</span><span class="p">:</span><span class="w"> </span><span class="s">"3.12"</span>
 <span class="w">    </span><span class="nt">commands</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Install cfn-lint-serverless</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install cfn-lint cfn-lint-serverless</span>
@@ -1233,11 +1296,11 @@ cfn-lint<span class="w"> </span>output/cloudformation-template-*.json<span class
 <span class="w">  </span><span class="nt">cfn-lint-serverless</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python 3.13</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v7</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python 3.12</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v7</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.13"</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.12"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install cfn-lint-serverless</span>
 <span class="w">        </span><span class="c1"># Install cfn-lint-serverless</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install cfn-lint cfn-lint-serverless</span>
@@ -1292,11 +1355,11 @@ cfn-lint<span class="w"> </span>output/cloudformation-template-*.json<span class
 <span class="w">  </span><span class="nt">cfn-lint-serverless</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python 3.13</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v7</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python 3.12</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v7</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.13"</span>
+<span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">"3.12"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install cfn-lint-serverless</span>
 <span class="w">        </span><span class="c1"># Install cfn-lint-serverless</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install cfn-lint cfn-lint-serverless</span>
@@ -1306,7 +1369,7 @@ cfn-lint<span class="w"> </span>output/cloudformation-template-*.json<span class
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cfn-lint template.yaml -a cfn_lint_serverless.rules -f junit --output-file cfn_lint_report.xml</span>
 <span class="w">        </span><span class="c1"># Annotate PR based on cfn-lint's findings</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Publish test report</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mikepenz/action-junit-report@v4</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mikepenz/action-junit-report@v6</span>
 <span class="w">        </span><span class="c1"># Only run this step on failure</span>
 <span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ failure() }}</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>

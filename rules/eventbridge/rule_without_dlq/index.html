@@ -600,6 +600,10 @@
 <p class="badge"><strong>tflint</strong>: aws_cloudwatch_event_target_no_dlq</p>
 <p>Sometimes, an event isn't successfully delivered to the target(s) specified in a rule. By default, EventBridge will retry for 24 hours and up to 185 times, but you can customize the retry policy.</p>
 <p>If EventBridge cannot deliver an event after all its retries, it can send it to a dead-letter queue. You can then inspect the event and remediate the underlying issue.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For <code>AWS::Serverless::Function</code> resources, this rule checks <code>CloudWatchEvent</code>, <code>EventBridgeRule</code>, and <code>Schedule</code> event declarations for a <code>DeadLetterConfig</code>. An explicit <code>Arn</code> or a SAM-managed declaration with <code>Type: SQS</code> satisfies the rule. <code>ScheduleV2</code> events use a different mechanism and are not checked.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

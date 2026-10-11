@@ -600,6 +600,10 @@
 <p class="badge"><strong>tflint</strong>: aws_lambda_function_default_memory</p>
 <p>Lambda allocates CPU power in proportion to the amount of memory configured. By default, your functions have 128 MB of memory allocated. You can increase that value up to 10 GB. With more CPU resources, your Lambda function's duration might decrease.</p>
 <p>You can use tools such as <a href="https://github.com/alexcasalboni/aws-lambda-power-tuning">AWS Lambda Power Tuning</a> to test your function at different memory settings to find the one that matches your cost and performance requirements the best.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>This rule also checks <code>AWS::Serverless::Function</code> resources directly for an effective <code>MemorySize</code> property, including values inherited from <code>Globals.Function</code>. No SAM translation step is required.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

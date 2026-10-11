@@ -599,6 +599,10 @@
 <p class="badge"><strong>cfn-lint</strong>: ES1001</p>
 <p class="badge"><strong>tflint</strong>: aws_lambda_event_source_mapping_failure_destination</p>
 <p>An AWS Lambda event source mapping reads from streams and poll-based event sources to invoke your functions. You can configure the event source mapping to send invocation records to another service such as Amazon SNS or Amazon SQS when it discards an event batch.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For <code>AWS::Serverless::Function</code> resources, this rule checks <code>Kinesis</code> and <code>DynamoDB</code> event declarations for a <code>DestinationConfig.OnFailure.Destination</code> property. <code>SQS</code> events are polling-based and do not support an on-failure destination, so they are not checked.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

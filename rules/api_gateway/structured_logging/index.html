@@ -614,6 +614,10 @@
 <h2 id="why-is-this-a-warning">Why is this a warning?<a class="headerlink" href="#why-is-this-a-warning" title="Permanent link">&para;</a></h2>
 <p>The rule in <code>serverless-rules</code> only checks if the structured log is JSON-formatted.</p>
 <p>While CloudWatch Logs Insights will automatically discover fields in JSON log entries, you can use the <code>parse</code> command to parse custom log entries to extract fields from custom format.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For SAM APIs, this rule checks literal <code>AccessLogSetting.Format</code> (REST) and <code>AccessLogSettings.Format</code> (HTTP) values as JSON after <code>$context</code> substitutions. An unresolved intrinsic format expression is skipped: it is not parsed, does not raise an error, and is not treated as proof of a passing JSON format. For <code>AWS::Serverless::Api</code> and <code>AWS::Serverless::HttpApi</code> resources, this rule checks the effective stage settings directly, including values inherited from <code>Globals.Api</code> or <code>Globals.HttpApi</code>. Function <code>Api</code> events without <code>RestApiId</code> and <code>HttpApi</code> events without <code>ApiId</code> create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <p>See the implementations for <a href="../logging/">Logging on API Gateway</a>.</p>
 <h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>

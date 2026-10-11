@@ -723,6 +723,10 @@
 <summary>Disabled for Terraform</summary>
 <p>This rule is disabled for Terraform, as the current linter only support static values in expressions. See <a href="https://github.com/awslabs/serverless-rules/issues/107">this issue</a> for more information.</p>
 </details>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For <code>AWS::Serverless::Function</code> resources, this rule checks the effective <code>EventInvokeConfig.DestinationConfig.OnFailure</code> setting (including values inherited from <code>Globals.Function</code>) whenever the function declares one of these asynchronous event types: <code>CloudWatchEvent</code>, <code>EventBridgeRule</code>, <code>IoTRule</code>, <code>S3</code>, <code>Schedule</code>, or <code>SNS</code>. An explicit <code>Destination</code> or a SAM-managed destination declaration with <code>Type: SQS</code> or <code>Type: SNS</code> satisfies the rule.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:5"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><input id="__tabbed_3_4" name="__tabbed_3" type="radio" /><input id="__tabbed_3_5" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">CDK</label><label for="__tabbed_3_2">CloudFormation (JSON)</label><label for="__tabbed_3_3">CloudFormation (YAML)</label><label for="__tabbed_3_4">Serverless Framework</label><label for="__tabbed_3_5">Terraform</label></div>
 <div class="tabbed-content">

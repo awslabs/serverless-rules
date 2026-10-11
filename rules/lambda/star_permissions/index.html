@@ -612,7 +612,8 @@
 <p>With Lambda functions, you should follow least-privileged access and only allow the access needed to perform a given operation. Attaching a role with more permissions than necessary can open up your systems for abuse.</p>
 <details class="warning">
 <summary>Limitations on policies</summary>
-<p>This rule only works with inline policies defined as part of the IAM role resource. It will not check managed policies or policies defined as separate resources.</p>
+<p>This rule only works with inline IAM policy documents: policies defined as part of an IAM role resource and, for <code>AWS::Serverless::Function</code> resources without an explicit <code>Role</code>, inline policy documents in the function's <code>Policies</code> property. It will not check managed policies, policies defined as separate resources, or SAM policy templates such as <code>DynamoDBWritePolicy</code>, which are not expanded into effective permissions.</p>
+<p>IAM <code>Statement</code> elements written either as a single object or as a list are both supported. The rule checks wildcard <strong>actions</strong> (for example <code>*</code> or <code>s3:*</code>); a wildcard in a <code>Resource</code> ARN, such as <code>arn:aws:s3:::my-bucket/*</code>, does not by itself trigger this rule.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CloudFormation</label><label for="__tabbed_1_2">Terraform</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -782,6 +783,10 @@
 </details>
 <h2 id="why-is-this-a-warning">Why is this a warning?<a class="headerlink" href="#why-is-this-a-warning" title="Permanent link">&para;</a></h2>
 <p>If your Lambda function needs a broad range of permissions, you do not know ahead of time which permissions you will need, and you have evaluated the risks of using broad permissions for this function, you might ignore this rule.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For <code>AWS::Serverless::Function</code> resources without an explicit <code>Role</code>, this rule checks inline IAM policy documents in the function's effective <code>Policies</code> property. Named managed policies and SAM policy templates such as <code>DynamoDBWritePolicy</code> are not expanded into effective permissions.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:5"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><input id="__tabbed_2_5" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">CDK</label><label for="__tabbed_2_2">CloudFormation (JSON)</label><label for="__tabbed_2_3">CloudFormation (YAML)</label><label for="__tabbed_2_4">Serverless Framework</label><label for="__tabbed_2_5">Terraform</label></div>
 <div class="tabbed-content">

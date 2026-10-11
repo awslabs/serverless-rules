@@ -622,6 +622,10 @@
 <p class="badge"><strong>tflint (REST)</strong>: aws_apigateway_stage_tracing_rule</p>
 <p class="badge"><strong>tflint (HTTP)</strong>: <em>Not supported</em></p>
 <p>Amazon API Gateway can emit traces to AWS X-Ray, which enable visualizing service maps for faster troubleshooting.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>For <code>AWS::Serverless::Api</code> resources, this rule checks the effective <code>TracingEnabled</code> property, including values inherited from <code>Globals.Api</code>. HTTP APIs (<code>AWS::Serverless::HttpApi</code> and implicit <code>HttpApi</code> events) do not support X-Ray tracing and are not checked. For <code>AWS::Serverless::Api</code> and <code>AWS::Serverless::HttpApi</code> resources, this rule checks the effective stage settings directly, including values inherited from <code>Globals.Api</code> or <code>Globals.HttpApi</code>. Function <code>Api</code> events without <code>RestApiId</code> and <code>HttpApi</code> events without <code>ApiId</code> create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.</p>
+</div>
 <h2 id="implementations-for-rest-apis">Implementations for REST APIs<a class="headerlink" href="#implementations-for-rest-apis" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

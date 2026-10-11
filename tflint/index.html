@@ -866,7 +866,7 @@
 
 <h1 id="tflint-plugin"><code>tflint</code> plugin<a class="headerlink" href="#tflint-plugin" title="Permanent link">&para;</a></h1>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
-<p>This plugin depends on <a href="https://github.com/terraform-linters/tflint#installation">tflint</a>. If you use <code>tflint</code> version 0.29 or newer, you can leverage the <code>tflint --init</code> command to automatically install the plugin. Otherwise, you will need to download the <code>tflint-ruleset-aws-serverless</code> binary corresponding to your system from the <a href="https://github.com/awslabs/serverless-rules/releases">releases page</a>.</p>
+<p>This plugin depends on <a href="https://github.com/terraform-linters/tflint#installation">tflint</a>. The validated host version is <code>tflint</code> v0.64.0 or later; building the plugin from source requires Go 1.27 or later. You can leverage the <code>tflint --init</code> command to automatically install the plugin, or download the <code>tflint-ruleset-aws-serverless</code> binary corresponding to your system from the <a href="https://github.com/awslabs/serverless-rules/releases">releases page</a>.</p>
 <p>You can enable the Serverless Rules plugin by adding a plugin section in the <code>.tflint.hcl</code> file in your project:</p>
 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
 <span class="normal">2</span>
@@ -984,8 +984,8 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="normal">16</span>
 <span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># TODO: replace "v0.61.0" with the latest version of tflint</span>
-<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.61.0"</span>
+<span class="w">    </span><span class="c1"># TODO: replace "0.64.0" with the latest version of tflint</span>
+<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.64.0"</span>
 <span class="w">    </span><span class="nt">TFLINT_OS</span><span class="p">:</span><span class="w"> </span><span class="s">"amd64"</span>
 
 <span class="nt">phases</span><span class="p">:</span>
@@ -1025,8 +1025,8 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="normal">21</span>
 <span class="normal">22</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nt">env</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># TODO: replace "v0.61.0" with the latest version of tflint</span>
-<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.61.0"</span>
+<span class="w">    </span><span class="c1"># TODO: replace "0.64.0" with the latest version of tflint</span>
+<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.64.0"</span>
 <span class="w">    </span><span class="nt">TFLINT_OS</span><span class="p">:</span><span class="w"> </span><span class="s">"amd64"</span>
 
 <span class="nt">phases</span><span class="p">:</span>
@@ -1092,11 +1092,11 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="w">  </span><span class="nt">tflint-serverless</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v7</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup TFLint</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform-linters/setup-tflint@v4</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform-linters/setup-tflint@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">tflint_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.61.0</span>
+<span class="w">          </span><span class="nt">tflint_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.64.0</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Terraform plugins</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflint --init</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Terraform files</span>
@@ -1144,21 +1144,21 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="w">  </span><span class="nt">tflint-serverless</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
 <span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v7</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Setup TFLint</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform-linters/setup-tflint@v4</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform-linters/setup-tflint@v6</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">tflint_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.61.0</span>
+<span class="w">          </span><span class="nt">tflint_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v0.64.0</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install Terraform plugins</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflint --init</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Terraform files</span>
 <span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflint -f junit &gt; tflint_report.xml</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Publish test report</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mikepenz/action-junit-report@v4</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mikepenz/action-junit-report@v6</span>
 <span class="w">        </span><span class="c1"># Only run this step on failure</span>
 <span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ failure() }}</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">report_paths</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cfn_lint_report.xml</span>
+<span class="w">          </span><span class="nt">report_paths</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tflint_report.xml</span>
 </code></pre></div></td></tr></table></div>
 </div>
 </div>
@@ -1184,8 +1184,8 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="normal">14</span>
 <span class="normal">15</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nt">tflint-serverless</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># TODO: replace "v0.61.0" with the latest version of tflint</span>
-<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.61.0"</span>
+<span class="w">    </span><span class="c1"># TODO: replace "0.64.0" with the latest version of tflint</span>
+<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.64.0"</span>
 <span class="w">    </span><span class="nt">TFLINT_OS</span><span class="p">:</span><span class="w"> </span><span class="s">"amd64"</span>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge_requests</span>
@@ -1220,8 +1220,8 @@ tflint<span class="w"> </span>--disable-rule<span class="w"> </span>aws_lambda_f
 <span class="normal">18</span>
 <span class="normal">19</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nt">tflint-serverless</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">variables</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># TODO: replace "v0.61.0" with the latest version of tflint</span>
-<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.61.0"</span>
+<span class="w">    </span><span class="c1"># TODO: replace "0.64.0" with the latest version of tflint</span>
+<span class="w">    </span><span class="nt">TFLINT_VERSION</span><span class="p">:</span><span class="w"> </span><span class="s">"0.64.0"</span>
 <span class="w">    </span><span class="nt">TFLINT_OS</span><span class="p">:</span><span class="w"> </span><span class="s">"amd64"</span>
 <span class="w">  </span><span class="nt">only</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merge_requests</span>

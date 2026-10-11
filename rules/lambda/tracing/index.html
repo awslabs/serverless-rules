@@ -612,6 +612,10 @@
 <p>AWS Lambda can emit traces to AWS X-Ray, which enables visualizing service maps for faster troubleshooting.</p>
 <h2 id="why-is-this-a-warning">Why is this a warning?<a class="headerlink" href="#why-is-this-a-warning" title="Permanent link">&para;</a></h2>
 <p>You might use <a href="https://aws.amazon.com/lambda/partners/">third party solutions</a> for monitoring serverless applications. If this is the case, enabling tracing for your AWS Lambda functions might be optional. Refer to the documentation of your monitoring solutions to see if you should enable AWS X-Ray tracing or not.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>This rule also checks <code>AWS::Serverless::Function</code> resources directly using their effective <code>Tracing</code> property (<code>Active</code> or <code>PassThrough</code>), including values inherited from <code>Globals.Function</code>. No SAM translation step is required.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="1:5"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><input id="__tabbed_1_4" name="__tabbed_1" type="radio" /><input id="__tabbed_1_5" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">CDK</label><label for="__tabbed_1_2">CloudFormation (JSON)</label><label for="__tabbed_1_3">CloudFormation (YAML)</label><label for="__tabbed_1_4">Serverless Framework</label><label for="__tabbed_1_5">Terraform</label></div>
 <div class="tabbed-content">

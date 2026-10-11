@@ -707,6 +707,10 @@
 </details>
 <h2 id="why-is-this-a-warning">Why is this a warning?<a class="headerlink" href="#why-is-this-a-warning" title="Permanent link">&para;</a></h2>
 <p>Since <code>serverless-rules</code> evaluate infrastructure-as-code template, it cannot check if you use a solution that will automatically change the configuration of log groups after the fact.</p>
+<div class="admonition note">
+<p class="admonition-title">AWS SAM templates</p>
+<p>This rule also checks <code>AWS::Serverless::Function</code> resources directly, matching log groups by reference to the function's logical ID or by an explicitly declared <code>FunctionName</code>. No SAM translation step is required.</p>
+</div>
 <h2 id="implementations">Implementations<a class="headerlink" href="#implementations" title="Permanent link">&para;</a></h2>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:5"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><input id="__tabbed_2_4" name="__tabbed_2" type="radio" /><input id="__tabbed_2_5" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">CDK</label><label for="__tabbed_2_2">CloudFormation (JSON)</label><label for="__tabbed_2_3">CloudFormation (YAML)</label><label for="__tabbed_2_4">Serverless Framework</label><label for="__tabbed_2_5">Terraform</label></div>
 <div class="tabbed-content">
