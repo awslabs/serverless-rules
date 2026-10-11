@@ -16,6 +16,10 @@ Lambda allocates CPU power in proportion to the amount of memory configured. By 
 
 You can use tools such as [AWS Lambda Power Tuning](https://github.com/alexcasalboni/aws-lambda-power-tuning) to test your function at different memory settings to find the one that matches your cost and performance requirements the best.
 
+!!! note "AWS SAM templates"
+
+    This rule also checks `AWS::Serverless::Function` resources directly for an effective `MemorySize` property, including values inherited from `Globals.Function`. No SAM translation step is required.
+
 ## Implementations
 
 === "CDK"

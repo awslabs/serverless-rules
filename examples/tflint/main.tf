@@ -1,13 +1,15 @@
 terraform {
+  required_version = ">= 1.13"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "5.40.0"
+      version = "6.68.0"
     }
 
     random = {
       source = "hashicorp/random"
-      version = "3.7.1"
+      version = "3.9.1"
     }
   }
 }
@@ -36,7 +38,7 @@ resource "aws_iam_role" "lambda_role" {
 resource "aws_lambda_function" "this" {
   function_name = "${random_pet.this.id}-function"
 
-  runtime = "python3.9"
+  runtime = "python3.13"
   handler = "main.handler"
   role    = aws_iam_role.lambda_role.arn
 

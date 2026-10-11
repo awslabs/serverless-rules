@@ -16,6 +16,10 @@ You can define the timeout value, which restricts the maximum duration of a sing
 
 If your timeout value is too short, Lambda might terminate invocations prematurely. On the other side, setting the timeout much higher than the average execution may cause functions to execute for longer upon code malfunction, resulting in higher costs and possibly reaching concurrency limits depending on how such functions are invoked.
 
+!!! note "AWS SAM templates"
+
+    This rule also checks `AWS::Serverless::Function` resources directly for an effective `Timeout` property, including values inherited from `Globals.Function`. No SAM translation step is required.
+
 ## Implementations
 
 === "CDK"

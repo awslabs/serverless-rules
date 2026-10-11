@@ -8,6 +8,23 @@ from typing import List, Tuple, TypeVar, Union
 SUB_PATTERN = re.compile(r"\${(?P<ref>[^}]+)}")
 
 
+def ensure_list(value) -> List:
+    """
+    Normalize a value that may be a single object or a list into a list.
+
+    IAM documents, for example, allow `Statement` to be either one statement
+    object or a list of statement objects.
+    """
+
+    if value is None:
+        return []
+
+    if isinstance(value, list):
+        return value
+
+    return [value]
+
+
 TValue = TypeVar("TValue", bound="Value")
 
 

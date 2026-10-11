@@ -2,11 +2,18 @@
 
 Ruleset for [cfn-lint](https://github.com/aws-cloudformation/cfn-lint) to validate CloudFormation templates for serverless applications against recommended best practices.
 
+## Requirements
+
+- Python 3.10 or later (up to 3.14)
+- cfn-lint 1.57.0 or later
+
 ## Installation
 
 ```bash
 pip install cfn-lint cfn-lint-serverless
 ```
+
+For a reproducible development environment, install [uv](https://docs.astral.sh/uv/) and run `make dev` in this directory, which creates a locked virtual environment with `uv sync --all-groups`.
 
 ## Usage
 

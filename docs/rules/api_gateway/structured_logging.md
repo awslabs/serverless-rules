@@ -23,6 +23,10 @@ The rule in `serverless-rules` only checks if the structured log is JSON-formatt
 
 While CloudWatch Logs Insights will automatically discover fields in JSON log entries, you can use the `parse` command to parse custom log entries to extract fields from custom format.
 
+!!! note "AWS SAM templates"
+
+    For SAM APIs, this rule checks literal `AccessLogSetting.Format` (REST) and `AccessLogSettings.Format` (HTTP) values as JSON after `$context` substitutions. An unresolved intrinsic format expression is skipped: it is not parsed, does not raise an error, and is not treated as proof of a passing JSON format. For `AWS::Serverless::Api` and `AWS::Serverless::HttpApi` resources, this rule checks the effective stage settings directly, including values inherited from `Globals.Api` or `Globals.HttpApi`. Function `Api` events without `RestApiId` and `HttpApi` events without `ApiId` create implicit APIs, which are also checked using the applicable global settings; each implicit API finding is reported once per owning function, so functions sharing an implicit API can each receive a finding.
+
 ## Implementations
 
 See the implementations for [Logging on API Gateway](logging.md).

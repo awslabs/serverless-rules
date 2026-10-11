@@ -3,10 +3,10 @@ dev:
 	uv sync --all-groups
 
 format:
-	ruff format
+	uv run ruff format
 
 lint: format
-	ruff check
+	uv run ruff check
 
 test:
 	PYTHONPATH=".:$$PYTHONPATH" uv run pytest -vvv --cov=./ --cov-report=xml

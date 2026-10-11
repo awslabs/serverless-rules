@@ -1,0 +1,72 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+
+Globals:
+  Function:
+    Runtime: python3.12
+    MemorySize: 128
+    Timeout: 15
+
+Resources:
+  # Untraced function without a retained log group: WS1000 and WS1004,
+  # but no ES1005/ES1006 thanks to inherited memory and timeout
+  Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+
+  # Same violation, suppressed through resource metadata
+  SuppressedFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      cfn-lint:
+        config:
+          ignore_checks:
+            - WS1000
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+
+  # Traced function with retained log group: no WS1000/WS1004
+  HealthyFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: main.handler
+      Tracing: Active
+
+  HealthyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/${HealthyFunction}"
+      RetentionInDays: 7
+
+  # REST API with logging and default throttling but no tracing: WS2002 only
+  Api:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      DefinitionBody:
+        "Fn::Include":
+          location: ./openapi.yaml
+      AccessLogSetting:
+        DestinationArn: arn:aws:logs:eu-west-1:123456789012:log-group:api-logs
+        Format: '{"request_id": "$context.requestId"}'
+      MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          ThrottlingBurstLimit: 1000
+          ThrottlingRateLimit: 10
+
+  # Non-Lambda single-object trust policy: must not crash WS1003
+  ApiRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: apigateway.amazonaws.com
+          Action: sts:AssumeRole

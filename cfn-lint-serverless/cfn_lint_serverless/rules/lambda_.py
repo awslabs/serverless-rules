@@ -7,7 +7,8 @@ from typing import Dict, List, Union
 
 from cfnlint.rules import CloudFormationLintRule, RuleMatch
 
-from ..utils import Value
+from .. import sam
+from ..utils import Value, ensure_list
 
 
 class LambdaTracingRule(CloudFormationLintRule):
@@ -32,6 +33,12 @@ class LambdaTracingRule(CloudFormationLintRule):
 
         for key, value in cfn.get_resources(["AWS::Lambda::Function"]).items():
             tracing_mode = value.get("Properties", {}).get("TracingConfig", {}).get("Mode", None)
+
+            if tracing_mode != "Active":
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        for key, value in sam.get_functions(cfn).items():
+            tracing_mode = value.get("Properties", {}).get("Tracing", None)
 
             if tracing_mode != "Active":
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
@@ -66,6 +73,18 @@ class LambdaESMDestinationRule(CloudFormationLintRule):
 
             if not destination:
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        # SAM Kinesis and DynamoDB events back stream-based event source
+        # mappings. SQS polling events do not support this destination.
+        for key, value in sam.get_functions(cfn).items():
+            for name, event_type, properties, path in sam.iter_events(key, value):
+                if event_type not in sam.STREAM_EVENT_TYPES:
+                    continue
+
+                destination = properties.get("DestinationConfig", {}).get("OnFailure", {}).get("Destination", False)
+
+                if not destination:
+                    matches.append(RuleMatch(path, self._message.format(f"{key}/{name}")))
 
         return matches
 
@@ -105,7 +124,18 @@ class LambdaPermissionPrincipalsRule(CloudFormationLintRule):
 
         matches = []
 
-        for key, value in self._get_permissions(cfn).items():
+        permissions = self._get_permissions(cfn)
+
+        # Supported SAM function events also imply resource-based invocation
+        # permissions. Polling event sources are not included in the mapping.
+        for key, value in sam.get_functions(cfn).items():
+            for _, event_type, _, _ in sam.iter_events(key, value):
+                principal = sam.EVENT_PRINCIPALS.get(event_type, None)
+
+                if principal is not None:
+                    permissions[key].append(principal)
+
+        for key, value in permissions.items():
             if len(set(value)) > 1:
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
@@ -124,6 +154,7 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
     tags = ["lambda"]
 
     _message = "IAM Role {} with Lambda as principal has policy actions with stars"
+    _message_sam = "Lambda function {} has an inline policy with stars in actions"
 
     def _get_principals(self, properties) -> List[str]:
         """
@@ -132,18 +163,14 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
 
         principals = []
 
-        for statement in properties.get("AssumeRolePolicyDocument", {}).get("Statement", []):
+        for statement in ensure_list(properties.get("AssumeRolePolicyDocument", {}).get("Statement")):
             if not isinstance(statement, dict):
                 continue
 
-            principal = statement.get("Principal", {})
-            if not isinstance(principal, dict):
+            if "Service" not in statement.get("Principal", {}):
                 continue
 
-            if "Service" not in principal:
-                continue
-
-            services = principal["Service"]
+            services = statement.get("Principal", {}).get("Service")
 
             if isinstance(services, str):
                 principals.append(services)
@@ -160,11 +187,11 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
 
         actions = []
 
-        for policy in properties.get("Policies", []):
+        for policy in ensure_list(properties.get("Policies")):
             if not isinstance(policy, dict):
                 continue
 
-            for statement in policy.get("PolicyDocument", {}).get("Statement", []):
+            for statement in ensure_list(policy.get("PolicyDocument", {}).get("Statement")):
                 if not isinstance(statement, dict):
                     continue
 
@@ -178,9 +205,53 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
 
         return actions
 
+    def _get_sam_actions(self, properties) -> List[str]:
+        """
+        Retrieve actions from inline policy documents in SAM function Policies
+
+        Named managed policies and SAM policy templates are not expanded, and
+        an explicit Role means SAM does not deploy the function Policies.
+        """
+
+        actions = []
+
+        if properties.get("Role", None) is not None:
+            return actions
+
+        for policy in ensure_list(properties.get("Policies")):
+            # Managed policy name or ARN
+            if not isinstance(policy, dict):
+                continue
+
+            # SAM policy template, e.g. DynamoDBWritePolicy
+            if "Statement" not in policy:
+                continue
+
+            for statement in ensure_list(policy.get("Statement")):
+                if not isinstance(statement, dict):
+                    continue
+
+                action = statement.get("Action")
+
+                if isinstance(action, str):
+                    actions.append(action)
+                elif isinstance(action, list):
+                    actions.extend(action)
+
+        return actions
+
+    @staticmethod
+    def _has_star(actions: List[str]) -> bool:
+        """
+        Return True if any action is a literal or service-level wildcard
+        """
+
+        return any([a == "*" or ":*" in a for a in actions])
+
     def match(self, cfn):
         """
-        Match against IAM roles with Lambda as principal and stars in actions
+        Match against IAM roles with Lambda as principal and stars in actions,
+        and against inline SAM function policies with stars in actions
         """
 
         matches = []
@@ -189,8 +260,14 @@ class LambdaStarPermissionRule(CloudFormationLintRule):
             principals = self._get_principals(value.get("Properties", {}))
             actions = self._get_actions(value.get("Properties", {}))
 
-            if "lambda.amazonaws.com" in principals and any([a == "*" or ":*" in a for a in actions]):
+            if "lambda.amazonaws.com" in principals and self._has_star(actions):
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
+        for key, value in sam.get_functions(cfn).items():
+            actions = self._get_sam_actions(value.get("Properties", {}))
+
+            if self._has_star(actions):
+                matches.append(RuleMatch(["Resources", key], self._message_sam.format(key)))
 
         return matches
 
@@ -241,7 +318,7 @@ class LambdaLogRetentionRule(CloudFormationLintRule):
 
         matches = []
 
-        functions = cfn.get_resources(["AWS::Lambda::Function"])
+        functions = cfn.get_resources(["AWS::Lambda::Function", sam.SAM_FUNCTION_TYPE])
         log_groups = cfn.get_resources(["AWS::Logs::LogGroup"])
 
         known = self._get_valid_functions(log_groups)
@@ -289,6 +366,12 @@ class LambdaDefaultMemorySizeRule(CloudFormationLintRule):
             if memory_size is None:
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
+        for key, value in sam.get_functions(cfn).items():
+            memory_size = value.get("Properties", {}).get("MemorySize", None)
+
+            if memory_size is None:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
         return matches
 
 
@@ -318,6 +401,12 @@ class LambdaDefaultTimeoutRule(CloudFormationLintRule):
             if timeout is None:
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
+        for key, value in sam.get_functions(cfn).items():
+            timeout = value.get("Properties", {}).get("Timeout", None)
+
+            if timeout is None:
+                matches.append(RuleMatch(["Resources", key], self._message.format(key)))
+
         return matches
 
 
@@ -333,6 +422,9 @@ class LambdaAsyncNoDestinationRule(CloudFormationLintRule):
     tags = ["lambda"]
 
     _message = "Lambda permission {} has an asynchronous permission but doesn't have an EventInvokeConfig resource related to it"  # noqa: E501
+    _message_sam = (
+        "Lambda function event {} is invoked asynchronously but doesn't have an on-failure destination configured"  # noqa: E501
+    )
 
     _async_principals = [
         "events.amazonaws.com",
@@ -393,4 +485,43 @@ class LambdaAsyncNoDestinationRule(CloudFormationLintRule):
             if value not in found:
                 matches.append(RuleMatch(["Resources", key], self._message.format(key)))
 
+        # SAM functions with supported asynchronous event types
+        for key, value in sam.get_functions(cfn).items():
+            matches.extend(self._match_sam_function(key, value))
+
         return matches
+
+    @staticmethod
+    def _has_sam_failure_destination(properties: dict) -> bool:
+        """
+        Return True for an explicit destination or a SAM-managed destination declaration
+        """
+
+        event_invoke_config = properties.get("EventInvokeConfig", {})
+        if not isinstance(event_invoke_config, dict):
+            event_invoke_config = {}
+
+        on_failure = event_invoke_config.get("DestinationConfig", {}).get("OnFailure", {})
+        if not isinstance(on_failure, dict):
+            on_failure = {}
+
+        return (
+            on_failure.get("Destination", None) is not None
+            or on_failure.get("Type", None) in sam.SAM_MANAGED_DESTINATION_TYPES
+        )
+
+    def _match_sam_function(self, key: str, value: dict):
+        """
+        Match against SAM function events invoked asynchronously without a destination
+        """
+
+        properties = value.get("Properties", {})
+
+        if self._has_sam_failure_destination(properties):
+            return []
+
+        return [
+            RuleMatch(path, self._message_sam.format(f"{key}/{name}"))
+            for name, event_type, _, path in sam.iter_events(key, value)
+            if event_type in sam.ASYNC_EVENT_TYPES
+        ]

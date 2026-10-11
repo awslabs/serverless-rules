@@ -98,6 +98,10 @@ When an asynchronous calls fail, they should be captured and retried whenever po
 
     This rule is disabled for Terraform, as the current linter only support static values in expressions. See [this issue](https://github.com/awslabs/serverless-rules/issues/107) for more information.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Function` resources, this rule checks the effective `EventInvokeConfig.DestinationConfig.OnFailure` setting (including values inherited from `Globals.Function`) whenever the function declares one of these asynchronous event types: `CloudWatchEvent`, `EventBridgeRule`, `IoTRule`, `S3`, `Schedule`, or `SNS`. An explicit `Destination` or a SAM-managed destination declaration with `Type: SQS` or `Type: SNS` satisfies the rule.
+
 ## Implementations
 
 === "CDK"

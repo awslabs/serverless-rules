@@ -170,3 +170,6 @@ dmypy.json
 .vscode/settings.json
 tflint-ruleset-aws-serverless/tflint-ruleset-aws-serverless
 .DS_Store
+
+# MkDocs build output
+site/

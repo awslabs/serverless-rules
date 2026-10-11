@@ -5,15 +5,23 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   update_docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - name: Install pinned documentation requirements
+        run: pip install -r requirements-dev.txt
+      - name: Build documentation
+        run: mkdocs build --strict
       - name: Deploy docs
-        uses: mhausenblas/mkdocs-deploy-gh-pages@1.26
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          REQUIREMENTS: requirements.txt
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

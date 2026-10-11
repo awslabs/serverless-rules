@@ -16,6 +16,10 @@ Sometimes, an event isn't successfully delivered to the target(s) specified in a
 
 If EventBridge cannot deliver an event after all its retries, it can send it to a dead-letter queue. You can then inspect the event and remediate the underlying issue.
 
+!!! note "AWS SAM templates"
+
+    For `AWS::Serverless::Function` resources, this rule checks `CloudWatchEvent`, `EventBridgeRule`, and `Schedule` event declarations for a `DeadLetterConfig`. An explicit `Arn` or a SAM-managed declaration with `Type: SQS` satisfies the rule. `ScheduleV2` events use a different mechanism and are not checked.
+
 ## Implementations
 
 === "CDK"

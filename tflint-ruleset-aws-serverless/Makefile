@@ -16,7 +16,7 @@ build:
 
 install: build
 	mkdir -p ~/.tflint.d/plugins
-	mv ./tflint-ruleset-template ~/.tflint.d/plugins
+	mv ./tflint-ruleset-aws-serverless ~/.tflint.d/plugins
 
 # Check if the number of rules in provider.go corresponds to the total number of rules
 check-rules:

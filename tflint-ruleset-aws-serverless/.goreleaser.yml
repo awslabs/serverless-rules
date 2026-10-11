@@ -16,7 +16,8 @@ builds:
 archives:
   - id: zip
     name_template: "tflint-ruleset-aws-serverless_{{ .Os }}_{{ .Arch }}"
-    format: zip
+    formats:
+      - zip
     files:
       - none*
 changelog:

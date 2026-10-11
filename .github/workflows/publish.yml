@@ -14,28 +14,28 @@ jobs:
   run_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set release notes tag
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           echo "RELEASE_TAG_VERSION=${TAG:1}" >> $GITHUB_ENV
       - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - name: Check version tags
         run: make release-check
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
-          go-version: "1.24"
+          go-version: "1.27"
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@6e87008f9dd1fe3e34e66aca6c97b4a69f72a7f4 # v4
+        uses: terraform-linters/setup-tflint@6ffdbaa3be476b3431f7275c26966ef32ff60337 # v6
         with:
-          tflint_version: v0.61.0
+          tflint_version: v0.64.0
       - name: Install dependencies
         run: make dev
       - name: Run all checks
@@ -45,18 +45,18 @@ jobs:
     needs: run_tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set release notes tag
         env:
           TAG: ${{ github.event.release.tag_name }}
         run: |
           echo "RELEASE_TAG_VERSION=${TAG:1}" >> $GITHUB_ENV
       - name: Install uv
-        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
       - name: Install dependencies
         run: make -C cfn-lint-serverless dev
       - name: Upload to PyPi
@@ -71,16 +71,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v7
         with:
-          go-version: "1.24"
+          go-version: "1.27"
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6
+        uses: goreleaser/goreleaser-action@f06c13b6b1a9625abc9e6e439d9c05a8f2190e94 # v7
         with:
           distribution: goreleaser
-          version: "~> v2"
+          version: "~> v2.18"
           args: release --clean
           workdir: tflint-ruleset-aws-serverless/
         env:
