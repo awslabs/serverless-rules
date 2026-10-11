@@ -7,5 +7,5 @@ plugin "aws" {
 plugin "aws-serverless" {
   enabled = true
   source  = "github.com/awslabs/serverless-rules"
-  version = "0.3.5"
+  version = "0.3.6"
 }

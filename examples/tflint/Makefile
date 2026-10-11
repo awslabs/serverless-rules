@@ -9,5 +9,5 @@ test-example:
 	tflint --init
 	$(MAKE) -C $(TFLINT_FOLDER) build
 	mkdir -p $(TFLINT_PLUGINS_FOLDER)
-	mv -f $(TFLINT_FOLDER)/$(TFLINT_BINARY) $(TFLINT_PLUGINS_FOLDER)/github.com/awslabs/serverless-rules/0.3.5/$(TFLINT_BINARY)
+	mv -f $(TFLINT_FOLDER)/$(TFLINT_BINARY) $(TFLINT_PLUGINS_FOLDER)/github.com/awslabs/serverless-rules/0.3.6/$(TFLINT_BINARY)
 	tflint
